@@ -8,4 +8,5 @@ tex/*.synctex.gz
 tex/*.txt
 tex/*.eps
 tex/paper-diff*
-/macros/dictionary-development.tex
+tex/macros/dictionary-development.tex
+tex/macros/keyword.tex
