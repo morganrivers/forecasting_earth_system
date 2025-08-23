@@ -1,4 +1,4 @@
-# Laurence Kedward 2021
+# Laurence Kedward 2021 
 # Licensed for use under the MIT license
 # (See LICENSE file)
 
@@ -12,7 +12,8 @@ on:
   workflow_dispatch:
 
 env:
-  APT_DEPS: texlive-latex-recommended texlive-latex-extra texlive-extra-utils latexdiff perl rubber texlive-science
+  env:
+  APT_DEPS: texlive-latex-recommended texlive-latex-extra texlive-extra-utils latexdiff perl rubber texlive-science texlive-bibtex-extra biber
   REPO_URL: https://github.com/${{ github.repository }}
   TEXTIDOTE_URL: https://github.com/sylvainhalle/textidote/releases/download/v0.8.2/textidote_0.8.2_all.deb
 
@@ -79,8 +80,8 @@ jobs:
     - name: Collect pdf previews for upload
       run: |
         mkdir -p previews/${{env.BUILD_DIR}}
-        cp tex/paper.pdf previews/${{env.BUILD_DIR}}/
-        test -f tex/main.pdf && cp tex/main.pdf previews/${{env.BUILD_DIR}}/paper-diffmain.pdf || true
+        cp tex/thesis.pdf previews/${{env.BUILD_DIR}}/
+        test -f tex/main.pdf && cp tex/main.pdf previews/${{env.BUILD_DIR}}/thesis-diffmain.pdf || true
 
     - name: Upload paper preview
       uses: EndBug/add-and-commit@v9
@@ -114,8 +115,8 @@ jobs:
         comment-id: ${{ steps.fc.outputs.comment-id }}
         issue-number: ${{github.event.number}}
         body: |
-          Preview this branch rendered at <${{env.REPO_URL}}/blob/previews/${{env.BUILD_DIR}}/paper.pdf>
-          Preview the latexdiff rendered at <${{env.REPO_URL}}/blob/previews/${{env.BUILD_DIR}}/paper-diffmain.pdf>
+          Preview this branch rendered at <${{env.REPO_URL}}/blob/previews/${{env.BUILD_DIR}}/thesis.pdf>
+          Preview the latexdiff rendered at <${{env.REPO_URL}}/blob/previews/${{env.BUILD_DIR}}/thesis-diffmain.pdf>
           <details>
           <summary>Click to view TexCount output</summary>
 
