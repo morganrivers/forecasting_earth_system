@@ -1,0 +1,425 @@
+\documentclass[12pt,a4paper]{article}
+
+% ---------- Basic packages ----------
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+\usepackage{array}
+\usepackage{setspace}
+\usepackage{microtype}
+
+\usepackage{tabularx,adjustbox,array}
+
+\usepackage{xstring}
+\usepackage{etoolbox}
+
+
+\usepackage[hidelinks]{hyperref}
+\usepackage{pdfcomment}
+
+
+%better bibtex
+\usepackage[backend=biber,style=authoryear,sorting=nyt,natbib=true]{biblatex}
+\addbibresource{references.bib}
+
+% % (Author, Year | Title)
+% \DeclareCiteCommand{\citewithtitle}
+%   {\usebibmacro{prenote}}
+%   {(\printnames{labelname},\space\printfield{year} \space|\space\printfield[citetitle]{title})}
+%   {\multicitedelim}
+%   {\usebibmacro{postnote}}
+% A small helper to build clean tooltip text
+\newbibmacro*{citewithtitle:tooltip}{%
+  \printnames{labelname}%
+  \addcomma\space
+  \printfield{year}%
+  \addspace\textbar\addspace
+  \printfield{title}%
+}
+
+% (Author, Year | Title) with link + tooltip
+\DeclareCiteCommand{\citewithtitle}
+  {\usebibmacro{prenote}}
+  {\printtext[bibhyperref]{%
+     \pdftooltip{%
+       \mkbibparens{%
+         \printnames{labelname},\space
+         \printfield{year}\addspace\textbar\addspace
+         \printfield[citetitle]{title}%
+       }%
+     }{%
+       \usebibmacro{citewithtitle:tooltip}%
+     }%
+  }}
+  {\multicitedelim}
+  {\usebibmacro{postnote}}
+% Make natbib-like commands available:
+\let\citep\parencite
+\let\citet\textcite
+
+\makeatletter
+\edef\dictfile{macros/keyword.tex}
+%\typeout{Using dictionary: \dictfile}%
+\input{\dictfile}
+\makeatother
+
+% --- Load the dictionary with a safe fallback ---
+\makeatletter
+\edef\dictfile{macros/dictionary-\DICT.tex}
+%\typeout{Using dictionary: \dictfile}%
+\input{\dictfile}
+\makeatother
+
+% --- Simple conditional helpers based on \DICT ---
+\newcommand{\ifdev}[1]{%
+  \IfStrEq{\DICT}{development}{#1}{}%
+}
+
+\newcommand{\ifsus}[1]{%
+  \IfStrEq{\DICT}{sustainability}{#1}{}%
+}
+
+
+% centered, stretchable column
+\newcolumntype{Y}{>{\centering\arraybackslash}X}
+\newcommand{\logoheight}{1.1cm} % tweak if needed
+
+
+\setstretch{1.2}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.6em}
+
+% For even spacing of logos
+\newcolumntype{C}[1]{>{\centering\arraybackslash}m{#1}}
+
+% Make article say "Table of Contents"
+\renewcommand{\contentsname}{Table of Contents}
+
+% -----------------------------------
+% Editable metadata
+% -----------------------------------
+\newcommand{\ThesisTitle}{\TITLE}
+% \newcommand{\ThesisSubtitle}{SUBTITLE}
+\newcommand{\ThesisCity}{[City]}
+\newcommand{\ThesisDate}{[Date]}
+
+\newcommand{\AuthorName}{Daniel Morgan Rivers}
+\newcommand{\AuthorAddressOne}{Bandelstraße 25}
+\newcommand{\AuthorAddressTwo}{Berlin, Germany 10559}
+\newcommand{\AuthorEmail}{rivers@uni-potsdam.de}
+\newcommand{\MatricNo}{829112}
+
+\newcommand{\FirstReviewer}{Prof. Christian Kuhlicke}
+\newcommand{\SecondReviewer}{Dr. Ivan Kuznetzov}
+
+% \usepackage[en-GB]{datetime2} % or another language if needed
+% \DTMsetdatestyle{ddmmyyyy}
+% \usepackage{datetime2}
+% \renewcommand{\today}{\ifcase \month \or January\or February\or March\or %
+% April\or May \or June\or July\or August\or September\or October\or November\or %
+% December\fi, \number \year} 
+% \usepackage{datetime2}
+
+% \DTMnewdatestyle{mydate}{%
+%   \renewcommand{\DTMdisplaydate}[4]{##3~\DTMmonthname{##2}~##1}%
+%   \renewcommand{\DTMDisplaydate}{\DTMdisplaydate}%
+% }
+% \DTMsetdatestyle{mydate}
+% \usepackage[en-GB]{datetime2} % or your language
+% \DTMnewdatestyle{dmyname}{%
+%   \renewcommand{\DTMdisplaydate}[4]{##3~\DTMmonthname{##2}~##1}%
+%   \renewcommand{\DTMDisplaydate}{\DTMdisplaydate}%
+% }
+% \DTMsetdatestyle{dmyname}
+% --- Simple month-name + date macro (no dependencies) ---
+\newcommand{\MonthName}{%
+  \ifcase\month
+  \or January\or February\or March\or April\or May\or June%
+  \or July\or August\or September\or October\or November\or December%
+  \fi
+}
+\newcommand{\DateDDMonthYYYY}{\number\day~\MonthName~\number\year}
+
+% % Custom style: 23 August 2025
+% \DTMnewdatestyle{dmyname}{%
+%   \renewcommand{\DTMdisplaydate}[4]{##3~\DTMmonthname{##2}~##1}%
+%   \renewcommand{\DTMDisplaydate}{\DTMdisplaydate}%
+% }
+% \DTMsetdatestyle{dmyname}
+
+% % Custom style: DD Month YYYY
+% \DTMnewdatestyle{dmyname}{%
+%   \renewcommand{\DTMdisplaydate}[4]{##3~\DTMmonthname{##2}~##1}%
+%   \renewcommand{\DTMDisplaydate}{\DTMdisplaydate}%
+% }
+
+% \DTMsetdatestyle{dmyname}
+
+\begin{document}
+\pagenumbering{gobble}
+\thispagestyle{empty}
+
+% ---------- Title page ----------
+\begin{center}
+    % \vspace*{0.5cm}
+
+    % A clean, evenly spaced logo row. Reduce the heights slightly to avoid pixelation.
+    % \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}C{0.17\textwidth}C{0.17\textwidth}C{0.17\textwidth}C{0.17\textwidth}C{0.17\textwidth}@{}}
+    %   \includegraphics[height=1.6cm,keepaspectratio]{assets/potsdam.png} &
+    %   \includegraphics[height=0.95cm,keepaspectratio]{assets/pik.png} &
+    %   \includegraphics[height=0.95cm,keepaspectratio]{assets/awi.jpg} &
+    %   \includegraphics[height=0.95cm,keepaspectratio]{assets/helmholtz.jpg} &
+    %   \includegraphics[height=0.95cm,keepaspectratio]{assets/rif.jpg} \\
+    % \end{tabular*}
+
+    % Desired order: RIFS, UFZ, AWI, PIK, University crest
+    \noindent
+    \begin{tabularx}{\textwidth}{@{}YYYYY@{}}
+    % \adjustbox{max height=\logoheight, max width=\linewidth, keepaspectratio}{\includegraphics{assets/rif.jpg}} &
+    \adjustbox{max height=\logoheight*1, max width=\linewidth*1, keepaspectratio}{\includegraphics{assets/helmholtz.png
+      }} &
+    \adjustbox{max height=\logoheight*1, max width=\linewidth*1, keepaspectratio}{\includegraphics{assets/awi.jpg}} &
+    % \adjustbox{max height=\logoheight, max width=\linewidth, keepaspectratio}{\includegraphics{assets/pik.png}} &
+    \adjustbox{max height=\logoheight*2, max width=\linewidth*2, keepaspectratio}{\includegraphics{assets/potsdam.png}}\\
+    \end{tabularx}
+
+
+    \vspace{1.8cm}
+
+    
+    \begin{center}
+        \begin{flushleft}
+        University of Potsdam\\
+        Faculty of Science\\
+        Institute of Environmental Science and Geography\\
+        Institute of Physics and Astronomy\\
+        \textbf{Climate, Earth, Water, \& Sustainability\\[4em]}
+        \end{flushleft}
+    
+        {\large \textbf{Master Thesis}}\\
+        for the award of the academic degree\\
+        \textbf{Master of Science (M.sc.)}\\
+        at the University of Potsdam\\[3em]
+    
+        \textbf{\LARGE \ThesisTitle}\\ [3em] %if no subtitle
+        %\textbf{\large SUBTITLE}\\[6em]
+    
+        Potsdam, \DateDDMonthYYYY \\[9em]
+    
+        \begin{flushleft}
+            \textbf{Submitted by:}\\[-0.2em]
+            \AuthorName\\
+            % \AuthorAddressOne\\
+            % \AuthorAddressTwo\\
+            \AuthorEmail\\
+            Matriculation No.: \MatricNo
+
+            % \vspace{1.0cm}
+            First reviewer: \FirstReviewer\\
+            Second reviewer: \SecondReviewer
+        \end{flushleft}
+
+    %     \textbf{Submitted by:}\\
+    %     Louis Lacassagne\\
+    % %    [Address 1]\\ unless it is a legal requirment, i dont think adding the adress is useful at all
+    % %    [Address 2]\\
+    %     lacassagne@uni-potsdam.de\\
+    %     Matriculation No.: 820718\\[3em]
+    
+    %     \textbf{First reviewer:} Prof. Dr. Georg Feulner\\
+    %     \textbf{Second reviewer:} Julius Eberhard, M.Sc.
+    %     \end{flushleft}
+    \end{center}
+    \clearpage
+
+    % {\Large University of Potsdam\\
+    % Faculty of Science\\
+    % Institute of Environmental Science and Geography\\
+    % Institute of Physics and Astronomy\\[0.3em]
+    % % Keep this upright (no italics) for a cleaner look
+    % Climate, Earth, Water, \& Sustainability}
+
+    % \vspace{2.0cm}
+    % {\LARGE \textbf{\ThesisTitle}}\\[0.4em]
+    % % {\large \ThesisSubtitle}
+
+    % \vspace{2.0cm}
+    % {\Large \textbf{Master Thesis}}\\[0.6em]
+    % {\large for the award of the academic degree}\\[0.1em]
+    % {\large \textbf{Master of Science (M.\,Sc.)}}\\[0.2em]
+    % {\large at the University of Potsdam}
+
+    % \vspace{1.8cm}
+
+    % {\large \ThesisCity, \ThesisDate}
+
+    % \vfill
+
+    % \begin{flushleft}
+    %     \textbf{Submitted by:}\\[-0.2em]
+    %     \AuthorName\\
+    %     \AuthorAddressOne\\
+    %     \AuthorAddressTwo\\
+    %     \AuthorEmail\\
+    %     Matriculation No.: \MatricNo
+
+    %     % \vspace{1.0cm}
+    %     First reviewer: \FirstReviewer\\
+    %     Second reviewer: \SecondReviewer
+    % \end{flushleft}
+\end{center}
+\clearpage
+% ---------- Main matter ----------
+\section*{Abstract}
+\subsection*{Abstract in English}
+The field of decision science has made rapid strides with the introduction of techniques of deep learning in natural language processing as a tool for improving accuracy and calibration of economic and geopolitical forecasts, predicting scientific outcomes, and in domains like stock market prediction and diagnosing diseases. Several recent methods and improvements have been made to the predictive ability of large language models (LLMs) calibrated via fine-tuning techniques. Because some of these powerful forecasting techniques have not yet been brought to bear on the important problem of impact prediction \ABSTRACT, I fine-tuned two LLMs (Llama 70B and ChatGPT 3.5) to perform such forecasts, training on thousands of abstracts from the scientific literature. I find that the best-performing system ([Llama 70B / ChatGPT 3.5], averaging X parallel predictions) can forecast XX\% of interventions correctly compared to YY\% using a random forest model baseline, and ZZ\% from published ex-ante predictions from the scientific literature. This work has wide-ranging applications both to improve \DOMAIN\ forecasting, as well as in adjacent areas and improving decision making in policy contexts.
+
+\subsection*{Abstract in German}
+Lorem ipsum ...
+\clearpage
+
+% ---------- Contents & front matter ----------
+\pagenumbering{roman}
+\setcounter{page}{1}
+\tableofcontents
+\clearpage
+
+\pagenumbering{arabic}
+\setcounter{page}{1}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\section{Background: The Science of Forecasting}
+\subsection{Introduction}
+\subsection{Prediction Markets and Superforecasting}
+\subsection{LLM Forecasting of Real-World Outcomes}
+\subsection{Predicting Outcomes with AI \DOMAINCAPITALIZEDINTERVENTION}
+\section{Methods for LLM Forecasting}
+\subsection{Data Sources}
+\subsection{Selecting LLM's for Forecasting \DOMAINCAPITALIZEDINTERVENTIONTWO }
+\subsection{Baseline Measures to Compare Against LLM Forecasts}
+\subsection{Methods for LLM Forecasting}
+\subsection{Grading Forecast Accuracy}
+
+\ifdev{ \subsection{NOTE: YES THEY REALLY WANT THIS: Predicting the Confidence of a Forecast}}
+\section{Results \& Discussion}
+\ifdev{\subsection{Database of evaluations}}
+\subsection{Strengths and Weaknesses of This Forecasting System}
+\subsection{Evaluation of Techniques for Improving Forecast Accuracy}
+\subsection{The Risk of Trusting This Forecasting System}
+\clearpage
+\section{Conclusion \& Outlook}
+\subsection{The State of AI and LLMs}
+\subsection{The Promise and Capabilities of AI Forecasting}
+
+As a clear disclaimer: **LLM's are not in general superior to humans at forecasting as of May 2025.** At the same time, their forecasting ability for short-term predictions is closing in at a rapid pace as AI capabilities have advanced [source]. Furthermore, predictions with a significant number of relevant news articles or very near to the date of a forecasting resolution can best teams of trained forecaster's aggregate predictions in prediction accuracy \citewithtitle{halawiApproachingHumanLevelForecasting2024}. It is currently unknown to what extent the ability of AI systems to forecast geopolitical and economic events can be extended to forecasting the impact of interventions with implications in the earth system sciences. Exploring this domain opens a promising avenue to improve the efficacy of interventions in the earth system sciences. In the remaining section, we discuss the beneficial aspects of the system developed, as well as the potential dangers or risks this system may pose.
+
+One co-benefit of a system fine-tuned on earth system sciences is that by its cross-domain nature, the LLM will be able to identify a wide range of likely outcomes, and the degree of effect of those outcomes, on a wide range of quantitative and qualitative outcomes. When implementing interventions, researchers, policy-makers, and decision makers must always consider many relevant outcomes of their interventions. The similarity and vector search of the system allow users to quickly identify relevant documentation as well as outcomes of similar scientific research most relevant to their proposed intervention.
+
+Another benefit of the system is that AI's typically excel in domains where human experts are particularly challenged: when there is a very large range of relevant data or when predictions about the effect of an intervention involve carefully calibrated probabilities. AI's can also perform predictions in a way that human experts can learn from: introducing one piece of information can be used to quantify the effect on AI forecasts. AI forecasts can be ensembled arbitrary and at relatively little expense compared to humans. 
+
+\subsection{Risks, Biases, and Limitations}
+However, there are clear risks of using AI for evaluating the likely outcomes of interventions in the earth system sciences. The most obvious issue may be that while AI can be accurate in some domains, current AI systems do not accurately present their confidence in their answers and can completely hallucinate events and facts which have no grounding in reality. The result is a misleading analysis, which in the space of earth system sciences may lead to significant risks. Policy makers may trust AI more than is justified by its performance, or view it as an unbiased source, despite nearly all current AI systems having a well-documented political bias acknowledged by both the political left and political right [source]. 
+
+Another risk is that scientists may not perform research deemed to be unlikely to succeed, and thus the range of explored outcomes may be narrowed to the outcomes known to work in the past or deemed to be likely to be successful by the AI system. 
+
+While AI may be able to calibrate itself on many different domains and automatically pull in relevant information, it currently lacks the ability to reliably perform complex mathematical calculations or run long-term analysis. Furthermore, as AI becomes more advanced there is significant concern in the technology community that it may form its own goals and intrinsic values, out of alignment with its human operators. An AI that advises on AI policy may in fact present a conflict of interest, even if the AI is simply using heuristics mimicking human tendencies towards self-preservation and in-group preferences. 
+
+Finally, without the full text, there is a risk that the policy forecasting aspect may be quite limited. Without a sense of the scope of an intervention, which would not reliably be indicated in the abstract, the degree of impact of an intervention may difficult to ascertain by any forecasting system.
+
+\subsection{System Design and Risk Mitigation}
+We address these concerns by noting that as AI begins to become more accurate and lower cost than human researchers at forecasting the impact of policy outcomes, it becomes ever more important to have specifically designed systems that take steps to reduce the dangers of AI systems. We believe the system developed clearly fulfills this criterion. The system we use in this work specifically provides credible, peer-reviewed scientific information and news from reputable sources to the AI, rather than relying on general internet search as many current AI providers rely on.   [OPTIONAL: Furthermore design our system to be calibrated via fine-tuning, meaning that some of the reliability concerns may be ameliorated. ] As AI systems advance, there appears to be a progression towards more agentic systems with more clear intermediate goals. A misalignment with human preferences (an example in this work might be downplaying the CO2 effects of building more AI systems in order to increase the number of AI systems as an in-group preference) may occur and be missed by humans with extremely long thought chains and insufficient detection of misalignment. Our system by contrast allows the user to inspect the series of logical deductions performed by the model and view available sources the model used as scientific reference material. The system has been specifically quantified in terms of its bias, allowing users to have full knowledge of the likely failure modes when using the system, often absent in generally available AI chat interfaces. [ OPTIONAL: with an explicit attempt to correct these biases via fine-tuning, syncophantic behavior is also reduced compared to RLHF models.].
+Another risk is that papers tend to have a bias, and the model will learn to replicate that bias. Papers are much more likely to have "significant" results than mixed effect or no effect. The optimistic bias towards positive bias published in journals should mean we interpret the prediction of the model cautiously, with knowledge that it will likely present a more optimistic version of the outcomes than is justified from a neutral observer's perspective. In order to counteract this risk, we are also looking at the accuracy of the quantitative result of the intervention, which is more valid to compare between abstracts and has a relatively smaller publisher bias [source]. 
+Finally, much of the promise of the AI forecasting approach relies on models continuing to become lower cost and more performant in general domains. While multiple empirical trends and the longstanding success of Moore's law clearly indicate this should continue, it is by no means guaranteed. If AI models cease to improve on relevant metrics, or otherwise become increasingly biased or unreliable, much of the promist of an AI forecasting tool for estimating interventions in the earth system sciences goes away. Despite this risk, the system remains useful and informative for the scientific and public policy community as it provides a system with sources proven to provide useful information for the evaluation of policy outcomes, and introduces a framework by which the impact of interventions can be broken down for more accurate predictions. While there is a possibility that AI's may never reach the capabilities of humans in integrating the disparate sources of information, automated information search and a new tool that can synthesize relevant information can be a powerful tool for scientists and policy makers.
+Forecasting has the distinct benefit of disallowing training on any particular benchmarks and is a rather difficult-to-game metric compared to standard LLM performance benchmarks. It becomes increasingly useful to society to understand what the true capabilities of LLM's are and the rate of their improvement, both for the regulation of dangerous AI capabilities and the improved understanding where AI may be capable enough for reliable use in various critical domains such as automated medicine and driverless vehicles.
+
+\subsection{Broader Applications and Vision}
+The codebase and research done here can be repurposed from specifically earth system science, to other domains where impact forecasts are clearly useful. A similar system with an expanded set of abstracts and data could be used with relatively little modification in domains such as public health, financial policy, and in a more general way to provide predictions for scientists about likely qualitative and quantitative outcomes of their scientific studies. The success of the model demonstrates that a great deal of opportunity to synthesize scientific findings and improve decision making on an institutional level is policy.
+One particularly promising avenue for expansion of the system would be as an application to Futarchy first proposed by Robin Hanson. Futarchy proposes to use prediction markets to allow policy makers or the general public to only have to agree on what they value and quantify as utility, not on how to maximize that utility. Several prediction markets in parallel are formed, creating a zero-sum game financially rewarding players that best predict the utility outcome conditional on a policy being implemented. To the extent that complex public policy can ever be reduced to a single utility function, that this function can be agreed on by a quorum of policy makers, Futarchy could significantly reduce gridlock and polarization in politics, at least in the domains in which the necessary conditions are useful and possible. In essence, Futarchy aids policy makers in coming to agreement on how to implement policies by reducing the scope of disagreement to what the set of possible policy implementations could be and how they would choose to quantify a successful outcome.
+If and when the system proposed is shown to exceed human ability in predicting policy, or if it can be shown that the system can be complementary to human predictions, cheaply improving their accuracy, this system could be integrated to a scheme for futarchy by replacing or augmenting prediction markets. This may be especially helpful in use-cases where AI succeeds and prediction markets fail: very low probabilities over long time periods (as the winners may choose to invest their money on a higher-return investments), predictions about long-run outcomes that are difficult to gain information about, particularly contentious outcomes, or issues where markets may be biased by particularly wealthy individuals who come in very late in the market and buy many more shares than expected.
+
+\subsection{Ideation: Extensions and other applications}
+\begin{itemize}
+    \item Improving prospects of futarchy to improve governance
+    \item Understanding how different sources of information contribute to effective forecasting of impact
+    \item Before the forecasting at all: collecting the information for forecasting all in one place, both resources to make reasonable forecasts, as well as creating structure out of unstructured papers in earth systems science
+    \item Creating general hierarchies of impact for different categories of interventions
+    \item Ability to create "unbiased" forecasts that are both evidence based and listened to by both sides of the political spectrum
+    \item Increasing democratic understanding of the likely effects of laws from third party sources: allows non-experts to assess the efficacy of elected officials in accomplishing their goals
+    \item Automated scoring of introduced legislation 
+    \item Sufficient statistics to introduce confidence bars on the effects of political outcomes
+    \item Leveraging the advance of AI for good
+    \item Constraining the use of AI in a scientifically valid, constrained manner, which minimizes the risk that AI biases themselves influence policy decisions.  
+    \item Automated feedback on proposed interventions (registered studies): what are the likely things this has impact on? What are some relevant papers for their proposal?
+\end{itemize}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\clearpage
+\section*{Works Cited}
+\printbibliography
+
+% \addcontentsline{toc}{section}{Works Cited}
+% Add your references or switch to biblatex later.
+
+\clearpage
+\section*{Declaration of Academic Integrity}
+\addcontentsline{toc}{section}{Declaration of Academic Integrity}
+Ich, Morgan Rivers, erkläre hiermit, dass diese Arbeit das Ergebnis meiner eigenen Arbeit ist. Ich danke für die Unterstützung, die ich bei der Erstellung dieser Arbeit erhalten habe, und für die verwendeten Quellen.
+\emph{(I, Morgan Rivers, hereby declare that this thesis is the product of my own work. All the assistance received in preparing this thesis and the sources used have been acknowledged.)} \\
+% Example (English): I hereby declare that this thesis is the product of my own work.
+% When uploading your thesis in PULS, the included Statement of Originality does not necessarily have to be signed.
+% \newpage
+\\
+Potsdam, \DateDDMonthYYYY
+
+\addcontentsline{toc}{section}{Statement of Originality}
+
+\end{document}
