@@ -24,13 +24,6 @@
 \usepackage[backend=biber,style=authoryear,sorting=nyt,natbib=true]{biblatex}
 \addbibresource{references.bib}
 
-% % (Author, Year | Title)
-% \DeclareCiteCommand{\citewithtitle}
-%   {\usebibmacro{prenote}}
-%   {(\printnames{labelname},\space\printfield{year} \space|\space\printfield[citetitle]{title})}
-%   {\multicitedelim}
-%   {\usebibmacro{postnote}}
-% A small helper to build clean tooltip text
 \newbibmacro*{citewithtitle:tooltip}{%
   \printnames{labelname}%
   \addcomma\space
@@ -113,27 +106,6 @@
 
 \newcommand{\FirstReviewer}{Prof. Christian Kuhlicke}
 \newcommand{\SecondReviewer}{Dr. Ivan Kuznetzov}
-
-% \usepackage[en-GB]{datetime2} % or another language if needed
-% \DTMsetdatestyle{ddmmyyyy}
-% \usepackage{datetime2}
-% \renewcommand{\today}{\ifcase \month \or January\or February\or March\or %
-% April\or May \or June\or July\or August\or September\or October\or November\or %
-% December\fi, \number \year} 
-% \usepackage{datetime2}
-
-% \DTMnewdatestyle{mydate}{%
-%   \renewcommand{\DTMdisplaydate}[4]{##3~\DTMmonthname{##2}~##1}%
-%   \renewcommand{\DTMDisplaydate}{\DTMdisplaydate}%
-% }
-% \DTMsetdatestyle{mydate}
-% \usepackage[en-GB]{datetime2} % or your language
-% \DTMnewdatestyle{dmyname}{%
-%   \renewcommand{\DTMdisplaydate}[4]{##3~\DTMmonthname{##2}~##1}%
-%   \renewcommand{\DTMDisplaydate}{\DTMdisplaydate}%
-% }
-% \DTMsetdatestyle{dmyname}
-% --- Simple month-name + date macro (no dependencies) ---
 \newcommand{\MonthName}{%
   \ifcase\month
   \or January\or February\or March\or April\or May\or June%
@@ -142,37 +114,12 @@
 }
 \newcommand{\DateDDMonthYYYY}{\number\day~\MonthName~\number\year}
 
-% % Custom style: 23 August 2025
-% \DTMnewdatestyle{dmyname}{%
-%   \renewcommand{\DTMdisplaydate}[4]{##3~\DTMmonthname{##2}~##1}%
-%   \renewcommand{\DTMDisplaydate}{\DTMdisplaydate}%
-% }
-% \DTMsetdatestyle{dmyname}
-
-% % Custom style: DD Month YYYY
-% \DTMnewdatestyle{dmyname}{%
-%   \renewcommand{\DTMdisplaydate}[4]{##3~\DTMmonthname{##2}~##1}%
-%   \renewcommand{\DTMDisplaydate}{\DTMdisplaydate}%
-% }
-
-% \DTMsetdatestyle{dmyname}
-
 \begin{document}
 \pagenumbering{gobble}
 \thispagestyle{empty}
 
 % ---------- Title page ----------
 \begin{center}
-    % \vspace*{0.5cm}
-
-    % A clean, evenly spaced logo row. Reduce the heights slightly to avoid pixelation.
-    % \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}C{0.17\textwidth}C{0.17\textwidth}C{0.17\textwidth}C{0.17\textwidth}C{0.17\textwidth}@{}}
-    %   \includegraphics[height=1.6cm,keepaspectratio]{assets/potsdam.png} &
-    %   \includegraphics[height=0.95cm,keepaspectratio]{assets/pik.png} &
-    %   \includegraphics[height=0.95cm,keepaspectratio]{assets/awi.jpg} &
-    %   \includegraphics[height=0.95cm,keepaspectratio]{assets/helmholtz.jpg} &
-    %   \includegraphics[height=0.95cm,keepaspectratio]{assets/rif.jpg} \\
-    % \end{tabular*}
 
     % Desired order: RIFS, UFZ, AWI, PIK, University crest
     \noindent
