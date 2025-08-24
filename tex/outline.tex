@@ -1,7 +1,7 @@
 \documentclass[12pt,a4paper]{article}
 
-% \newcommand{\DICT}{sustainability}
-\newcommand{\DICT}{development}
+\newcommand{\DICT}{sustainability}
+% \newcommand{\DICT}{development}
 
 
 % ---------- Basic packages ----------
@@ -96,7 +96,7 @@
 \section*{Background: The Science of Forecasting}
 \subsection*{Introduction}
 \begin{itemize}
-  \item Historical context of predicting effects of interventions in \ABSTRACT. \citewithtitle{dellavignaPredictScienceImprove2019} \citewithtitle{HowCanYou}
+  \item Historical context of predicting effects of interventions in \ABSTRACT. \ifdev{\citewithtitle{dellavignaPredictScienceImprove2019} \citewithtitle{HowCanYou} \citewithtitle{toetzkeMonitoringGlobalDevelopment2022}}
   \ifsus{ The MIT Emissions Prediction and Policy Analysis (EPPA) model \citewithtitle{MITEmissionsPrediction}}
 
   \item Brief survey of existing works which attempt to forecast real-world outcomes with language models:
@@ -111,9 +111,9 @@
       \item LLMs can accurately simulate and predict the outcomes of social science and field experiments
       \citewithtitle{hewittPredictingResultsSocial}\citewithtitle{chenPredictingFieldExperiments2025}
       \item Retrieval‑augmented and ensemble‑based systems are approaching or surpassing human‑level forecasting 
-      \citewithtitle{halawiApproachingHumanLevelForecasting2024}\citewithtitle{WisdomSiliconCrowd} \citewithtitle{abolghasemiHumansVsLarge2025} \citewithtitle{yanq.serajr.hej.mengl.andsylvaint.AutoCastEnhancingWorld2024}
+      \citewithtitle{halawiApproachingHumanLevelForecasting2024} \citewithtitle{WisdomSiliconCrowd} \citewithtitle{abolghasemiHumansVsLarge2025} \citewithtitle{yanq.serajr.hej.mengl.andsylvaint.AutoCastEnhancingWorld2024}
       \item AI‑driven scientific discovery systems and benchmarks for predicting research outcomes illustrate both successes and current limitations
-      \citewithtitle{luAIScientistFully2024}\citewithtitle{wenPredictingEmpiricalAI2025} 
+      \citewithtitle{luAIScientistFully2024} \citewithtitle{wenPredictingEmpiricalAI2025} 
     \end{itemize}
   \item Methods for forecasting real-world outcomes, generally: \citewithtitle{halawiApproachingHumanLevelForecasting2024}
     \begin{itemize}
@@ -150,7 +150,7 @@
 \begin{itemize}
 \item MAYBE Registered studies
 \end{itemize}
-
+\ifdev{\item Maps exist of global development aid with machine learning tools \citewithtitle{toetzkeMonitoringGlobalDevelopment2022}}
 \ifdev{\item UN pre-evaluations (NOTE: Need to double check name)}
 \ifdev{\item Looking at distributions of outcomes (whether went well or not)}
 \ifdev{\item What sort of interventions and indicators do we have for the data we use (And specifically for BMZ)}
@@ -283,7 +283,7 @@ definitions of effectiveness, sustainability etc}
 \subsection*{The State of AI and LLMs}
 \begin{itemize}
   \item Timelines for AI surpassing human ability in forecasting \citewithtitle{AI4ResearchSurveyArtificial}\citewithtitle{leeAdvancingEventForecasting2025}
-  \item Scaling up language models improves few‑shot and task‑agnostic performance \citewithtitle{brownLanguageModelsAre2020}a
+  \item Scaling up language models improves few‑shot and task‑agnostic performance \citewithtitle{brownLanguageModelsAre2020}
   \item AI safety and regulation
 \end{itemize}
 \subsection*{The Risks of Forecasting \DOMAINCAPITALIZED\ Outcomes}
