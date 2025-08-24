@@ -5,7 +5,6 @@ SHELL=/bin/bash
 SRC=tex/thesis.tex
 
 all:
-	$(MAKE) spellcheck
 	rubber --pdf --into tex $(SRC)
 clean:
 	rubber --clean  --into tex $(SRC)
