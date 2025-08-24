@@ -5,8 +5,8 @@ SHELL=/bin/bash
 SRC=tex/thesis.tex
 
 all:
+	$(MAKE) spellcheck
 	rubber --pdf --into tex $(SRC)
-
 clean:
 	rubber --clean  --into tex $(SRC)
 
@@ -20,9 +20,11 @@ diff:
 	rubber --clean --into tex $(DIFF_FILE_CMD)
 
 spellcheck: $(SRC).txt
+	textidote --clean $(SRC) > $(SRC).txt
 	codespell -I dictionary.txt $(SRC).txt
 
 fixspellcheck: $(SRC).txt
+	textidote --clean $(SRC) > $(SRC).txt
 	codespell -w -I dictionary.txt $(SRC).txt
 
 count2: $(SRC).txt
