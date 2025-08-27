@@ -6,10 +6,13 @@
 \usepackage{lmodern}
 \usepackage[margin=1in]{geometry}
 \usepackage{graphicx}
+\usepackage{tcolorbox}
 \usepackage{array}
 \usepackage{setspace}
 \usepackage{microtype}
-
+% \usepackage{breakable}
+\usepackage{subcaption}
+\usepackage{caption}
 \usepackage{tabularx,adjustbox,array}
 
 \usepackage{xstring}
@@ -168,54 +171,9 @@
             Second reviewer: \SecondReviewer
         \end{flushleft}
 
-    %     \textbf{Submitted by:}\\
-    %     Louis Lacassagne\\
-    % %    [Address 1]\\ unless it is a legal requirment, i dont think adding the adress is useful at all
-    % %    [Address 2]\\
-    %     lacassagne@uni-potsdam.de\\
-    %     Matriculation No.: 820718\\[3em]
-    
-    %     \textbf{First reviewer:} Prof. Dr. Georg Feulner\\
-    %     \textbf{Second reviewer:} Julius Eberhard, M.Sc.
-    %     \end{flushleft}
     \end{center}
     \clearpage
 
-    % {\Large University of Potsdam\\
-    % Faculty of Science\\
-    % Institute of Environmental Science and Geography\\
-    % Institute of Physics and Astronomy\\[0.3em]
-    % % Keep this upright (no italics) for a cleaner look
-    % Climate, Earth, Water, \& Sustainability}
-
-    % \vspace{2.0cm}
-    % {\LARGE \textbf{\ThesisTitle}}\\[0.4em]
-    % % {\large \ThesisSubtitle}
-
-    % \vspace{2.0cm}
-    % {\Large \textbf{Master Thesis}}\\[0.6em]
-    % {\large for the award of the academic degree}\\[0.1em]
-    % {\large \textbf{Master of Science (M.\,Sc.)}}\\[0.2em]
-    % {\large at the University of Potsdam}
-
-    % \vspace{1.8cm}
-
-    % {\large \ThesisCity, \ThesisDate}
-
-    % \vfill
-
-    % \begin{flushleft}
-    %     \textbf{Submitted by:}\\[-0.2em]
-    %     \AuthorName\\
-    %     \AuthorAddressOne\\
-    %     \AuthorAddressTwo\\
-    %     \AuthorEmail\\
-    %     Matriculation No.: \MatricNo
-
-    %     % \vspace{1.0cm}
-    %     First reviewer: \FirstReviewer\\
-    %     Second reviewer: \SecondReviewer
-    % \end{flushleft}
 \end{center}
 \clearpage
 % ---------- Main matter ----------
@@ -260,55 +218,69 @@ Lorem ipsum ...
 \subsection{Introduction}
 
 \textbf{Background} 
+\ifsus{The earth system sciences concern the complex interaction between biological, chemical, physical, and anthropogenic processes. A broad goal of the earth system sciences is to model and accurately predict the outcomes of interventions with regard to the environment and its impact on humans. Much of the progress in earth system science has been on linking these complex phenomena into large models, such as integrated assessment models (IAMs), computable general equilibrium models (CGEs), or agent-based models (ABMs). While many attempts have been made to model specific subsystems within the earth system, such as the carbon cycle, environmental and economic linkages, or understanding human impacts in the climate-water-food nexus, there have been few attempts to create a comprehensive model which can predict quantitative or qualitative outcomes of a wide range of cross-domain interventions in the earth system which could be described in natural language.
 
-The earth system sciences concern the complex interaction between biological, chemical, physical, and anthropogenic processes. A broad goal of the earth system sciences is to model and accurately predict the outcomes of interventions with regard to the environment and its impact on humans. Much of the progress in earth system science has been on linking these complex phenomena into large models, such as integrated assessment models (IAMs), computable general equilibrium models (CGEs), or agent-based models (ABMs). While many attempts have been made to model specific subsystems within the earth system, such as the carbon cycle, environmental and economic linkages, or understanding human impacts in the climate-water-food nexus, there have been few attempts to create a comprehensive model which can predict quantitative or qualitative outcomes of a wide range of cross-domain interventions in the earth system which could be described in natural language.
+In particular, the earth system is a ``complex system'' - characterized by difficult-to-predict, emergent phenomena, and both positive and negative feedback loops.
 
-Thus far, models in the earth system sciences have relied on mechanistic, theoretically-based models of the underlying complex systems. 
-However, this is not the only way to predict outcomes - statistical, or ``Machine Learning'' (ML) outcomes, while lacking the rigorous mechanistic underlying processes, have recently been shown to perform better in many cases to model complex systems such as language modelling \citewithtitle{brownLanguageModelsAre2020}, protein folding \citewithtitle{jumperHighlyAccurateProtein2021}, biodiversity protection \citewithtitle{silvestroImprovingBiodiversityProtection2022}, and weather forecasting \citewithtitle{lamLearningSkillfulMediumrange2023}.
+Thus far, models in the earth system sciences have largely relied on mechanistic, theoretically-based models of the underlying complex systems they analyzed.
+However, this is not the only way to predict outcomes - }
+\ifdev{
+Choice of funding for developmental interventions, while critically important for wellbeing in developing countries, have historically failed to reach their full potential to achieve the broader goals of wellbeing, in a sustainable, empowering way. Meeting these goals has relied on past evaluations from trained, expert evaluators. However, these evaluators typically lack sufficient access to the wide range of thousands of evaluations that are scattered about the internet. The system of interactions between people, their wellbeing, medical, educational, and career outcomes, the economy, the government, and the natural environment surrounding developmental interventions displays difficult to understand emergent phenomena such as regime changes, disease spread, and economic collapse. These properties allow us to characterize the system being improved by development interventions as a ``complex system'', where by definition decision making about outcomes is challenging and may have many positive reinforcing and negative reinforcing feedback loops.
+}
 
-The collective failure of the scientific community to model complex outcomes in the earth system has severe implications. For example, work from \citewithtitle{stechemesserClimatePoliciesThat2024} has demonstrated that out of 1500 policies between 1998 and 2022, only 68 had statistically significant causal effect to reduce country emissions with a 99\% or higher confidence. Furthermore, they find that more than four times the effort witnessed so far in emissions reductions from implementing more successful policies in line with past reductions would have to be exerted to close the emissions gap to remain below 2 degrees C in global temperature rise. Broadly, their findings support the claim that even when climate policy is implemented, it is largely ineffective, and in the future it will need to be much more effective to avoid dangerous levels of CO$_2$ concentrations. In terms of biodiversity,  achieving sustainability cannot be met by current trajectories, and goals for 2030 and beyond may only be achieved through transformative changes across economic, social, political and technological factors \citewithtitle{watsonGlobalAssessmentReport2019}. As of 2022 pollution remains responsible for approximately 9 million deaths per year, corresponding to one in six deaths worldwide \citewithtitle{fullerPollutionHealthProgress2022}.
+``Machine Learning'' (ML) outcomes \ifsus{, while lacking the rigorous mechanistic underlying processes characterizing IAMs, CGEs, and ABMS,} have recently been shown to perform better than human or other computer modelling techniques to model complex systems in domains such as language modelling \citewithtitle{brownLanguageModelsAre2020}, protein folding \citewithtitle{jumperHighlyAccurateProtein2021}, biodiversity protection \citewithtitle{silvestroImprovingBiodiversityProtection2022}, and weather forecasting \citewithtitle{lamLearningSkillfulMediumrange2023}.
 
-While much scientific effort has been expended on understanding underlying systems, much less effort has been directly focused on predicting which specific policies, if enacted, would realistically improve outcomes on the indicators of interest in the earth system sciences. Meanwhile, examples exist in the literature where regulation can greatly reduce or even eliminate environmental problems - the Montreal protocol has met with great success in closing the hole in the ozone layer [CITE IF KEEP THIS SENTENCE!]. 
+\ifsus{The collective failure of the scientific community to model complex outcomes in the earth system has severe implications. For example, work from \citewithtitle{stechemesserClimatePoliciesThat2024} has demonstrated that out of 1500 policies between 1998 and 2022, only 68 had statistically significant causal effect to reduce country emissions with a 99\% or higher confidence. Furthermore, they find that more than four times the effort witnessed so far in emissions reductions from implementing more successful policies in line with past reductions would have to be exerted to close the emissions gap to remain below 2 degrees C in global temperature rise. Broadly, their findings support the claim that even when climate policy is implemented, it is largely ineffective, and in the future it will need to be much more effective to avoid dangerous levels of CO$_2$ concentrations. In terms of biodiversity,  achieving sustainability cannot be met by current trajectories, and goals for 2030 and beyond may only be achieved through transformative changes across economic, social, political and technological factors \citewithtitle{watsonGlobalAssessmentReport2019}. As of 2022 pollution remains responsible for approximately 9 million deaths per year, corresponding to one in six deaths worldwide \citewithtitle{fullerPollutionHealthProgress2022}.
 
+While much scientific effort has been expended on understanding underlying systems, much less effort has been directly focused on predicting which specific policies, if enacted, would realistically improve outcomes on the indicators of interest in the earth system sciences. Meanwhile, examples exist in the literature where regulation can greatly reduce or even eliminate environmental problems - the Montreal protocol has met with great success in closing the hole in the ozone layer [CITE IF KEEP THIS SENTENCE!]. }
 
-IAMs have shown promise in modelling outcomes of specific policies, with the disadvantage that they are harder to use and set up, require a high computational power and expertise to use effectively, and are not rigorously benchmarked on large databases of existing interventions and associated outcomes. For any user-defined policy package (for example, introducing efficient clean-burning cookstoves in India), GAINS can calculate the reduction in emissions (PM-2.5, NO$_x$, CO$_2$, etc), the improvement in ambient air quality, and the health impacts such as lives saved from lower PM-2.5 exposure \citewithtitle{CosteffectiveControlAir2011}. Other IAMs include the MIT Emissions Prediction and Policy Analysis (EPPA) model, which requires manually entering assumptions of the effects of policies into models of the world economy, calculates the implications on health and runs a CGE to estimate the economic effects \citewithtitle{MITEmissionsPrediction}. 
+\ifdev{ML is not the only tool used in modelling complex systems.} IAMs have shown promise in modelling outcomes of specific policies, with the disadvantage that they are harder to use and set up, require a high computational power and expertise to use effectively, and are not rigorously benchmarked on large databases of existing interventions and associated outcomes. For any user-defined policy package (for example, introducing efficient clean-burning cookstoves in India), GAINS can calculate the reduction in emissions (PM-2.5, NO$_x$, CO$_2$, etc), the improvement in ambient air quality, and the health impacts such as lives saved from lower PM-2.5 exposure \citewithtitle{CosteffectiveControlAir2011}. Other IAMs include the MIT Emissions Prediction and Policy Analysis (EPPA) model, which requires manually entering assumptions of the effects of policies into models of the world economy, calculates the implications on health and runs a CGE to estimate the economic effects \citewithtitle{MITEmissionsPrediction}. 
+
 In the domain of biodiversity, an ML-based framework called CAPTAIN uses a reinforcement learning (RL) agent coupled with a spatially explicit ecosystem simulation to statistically learn which areas to protect over time in order to maximize species survival under budget constraints, to maximize cost-effectiveness in protecting biodiversity \citewithtitle{silvestroImprovingBiodiversityProtection2022}. 
 Other techniques used to predict outcomes of interventions include linear optimisation combined with econometric theory, such as the Open Source Energy Modelling System (OSeMOSYS). OSeMOSYS simulates energy production and consumption under policy constraints including a model of the energy grid. By incorporating physical and known constraints, such models have the potential to predict outcomes of policy interventions over longer time horizons \citewithtitle{OSeMOSYSOpenSource2011}. An even more fine-grained, bottom up approach of modelling intervention outcomes is possible. For example, combining bio-economic farm optimization models with ABMs, researchers have modelled evolution of pesticide-related risks for the country of Switzerland \citewithtitle{dueriModelingImplicationsPolicy2024}.
 
-Despite all these examples, in many relevant sub-domains, such as climate policy, ex ante analysis of mitigation action and of mitigation plans is limited \citewithtitle{intergovernmentalpanelonclimatechangeipccMitigationDevelopmentPathways2023}. Given the overwhelming complexity of the earth system, and the corresponding failures to properly model many of the system components in the earth system and especially how they interact with human interventions, complementing mechanistic understanding and prediction with ML approaches is urgently needed. 
+\ifsus{Despite all these examples, in many relevant sub-domains, such as climate policy, ex ante analysis of mitigation action and of mitigation plans is limited \citewithtitle{intergovernmentalpanelonclimatechangeipccMitigationDevelopmentPathways2023}. Given the overwhelming complexity of the earth system, and the corresponding failures to properly model many of the system components in the earth system and especially how they interact with human interventions, complementing mechanistic understanding and prediction with ML approaches is urgently needed.}
+
 
 
 \textbf{Proposal}
+We set out to predicting near-term, future states in a wide array of different contexts. One method that has shown a great deal of promise in such domains is ``judgemental forecasting'', which allows experts in the skill of forecasting generally, to use tools including fermi estimates, intuition, and information gathering to make a calibrated prediction on the likelihood of a given outcome \citewithtitle{halawiApproachingHumanLevelForecasting2024}. This can be contrasted with ``statistical forecasting'' which typically uses time-series prediction methods or purely quantitative approaches.
 
-This thesis proposes the use of LLMs to close this research gap. I will briefly review current progress in specific domains of outcome prediction in the earth system sciences, and then discuss progress with LLMs in adjacent domains. To my knowledge, there has been no attempt at predicting real-world outcomes of interventions in the earth system sciences while also rigorously quantifying the skill of such a system.
+This thesis proposes the use of Large Language Models (LLMs) to implement judgemental forecasting to predict how effective interventions will be in the earth system. By splitting records of the effectiveness of thousands of interventions in the earth system from the scientific literature into an intervention and an outcome, I will use language models to mimic the reasoning and data gathering skills of trained forecasters, hoping to replicate the success at using judgemental forecasting from language models in adjacent domains. Ultimately, the goal is to learn whether it is possible to compliment a scientifically founded prediction for the effectiveness of a given intervention with the reasoning produced from a system involving a system with LLMs that are specifically trained for the task at its core. Given the difficulty of field testing ideas, policymakers often rely on expert forecasts on how an intervention will meet its intended goals to select which interventions will be implemented. Replacing or augmenting that advisory role could greatly improve decision making in this context \citewithtitle{hewittPredictingResultsSocial}.
+
+I will briefly review current progress in specific domains of outcome prediction in the earth system sciences, and then discuss progress with LLMs in adjacent domains. To my knowledge, there has been no attempt at predicting real-world outcomes of interventions in the earth system sciences while also rigorously quantifying the skill of such a system.
 
 Within the domain of LLM use, there has been some progress. A recent tool called ``climsight'' summarizes and aggregates information about climate adaptation and mitigation \citewithtitle{koldunovLocalClimateServices2024}, but stops short of making predictions towards adaptation. Machine learning and LLMs have been used to collect over 80,000 articles about climate adaptation and provide analysis about which areas of implementation are lacking and point out gaps in attention towards promising categories of policies.
 
-Finally, limited work has been done using LLMs such as ChatGPT-4 to serve as data sources for policy deliberation and multi‑criteria assessment of climate and sustainability interventions, finding GPT-4 is in rough agreement with the policy rankings of human experts for the expected outcomes \citewithtitle{binaLargeLanguageModels2025}. However, very little is done to improve on GPT4's abilities, the assessment was made on only a few dozen generic policy examples, and no attempt was made to compare outcomes between these policies and real-world outcomes. Despite these limitations, the findings are promising. For multiple criteria decision making (MCDM), GPT-4 provided a useful collaborative starting point, eased the process of considering multiple criteria effectively, and aided policy deliberation on climate change and sustainability.
+Limited work has also been done using LLMs such as ChatGPT-4 to serve as data sources for policy deliberation and multi‑criteria assessment of climate and sustainability interventions, finding GPT-4 is in rough agreement with the policy rankings of human experts for the expected outcomes \citewithtitle{binaLargeLanguageModels2025}. However, very little is done to improve on GPT4's abilities, the assessment was made on only a few dozen generic policy examples, and no attempt was made to compare outcomes between these policies and real-world outcomes. Despite these limitations, the findings are promising. For multiple criteria decision making (MCDM), GPT-4 provided a useful collaborative starting point, eased the process of considering multiple criteria effectively, and aided policy deliberation on climate change and sustainability.
 
+One study with the bottom-up technique of simulating individual respondents using GPT4 according to their demographic profiles (while matching demographic data in the US), found that the ``social policy'' papers had a relatively low correlation with prediction accuracy at an accuracy of 0.64 compared to an average of about 0.9 compared to other studies \citewithtitle{hewittPredictingResultsSocial}. Although the methodology may lead to differing outcomes (simulating individual profiles versus the direction of this thesis which prompts the LLM to directly reason out the answer), this may hint that public policy may be more difficult to predict than other scientific results. In the soical science prediction work, they separately analyzed 346 treatment effects estimated from the responses of over one million participants, with hundreds of ex-ante predictions made before the outcomes from experts. The interventions included surveys that simulated the effect of informational content which promoted pro-democratic attitudes, encouraged respondents to increase beneficial choiced with respect to climate change, and increase their vaccination rates. LLM predictions were more accurate for survey experiments than field experiments (79\% vs 64\% accurate respectively). LLMs also matched or exceeded expert prediction accuracy.
 
 \subsection{Prediction Markets and Superforecasting}
-
-In recent years, significant progress has been made on accurate near-term forecasting outside of specific domains. The most promising approaches appear to be a mix of prediction markets, and specialized, trained experts known as ``superforecasters'' \citewithtitle{tetlockSuperforecastingArtScience2015}. Prediction markets have gained recent prominence in the domain of geopolitical forecasting, with significant volumes of transactions on predicting future geopolitical outcomes with a broad purview, including election results, the outcomes of treaties, or whether a regime will topple. Predictions are typically more accurate than a guess of 50\% chance on a given outcome only within approximately one year time horizon, with the accuracy notably improving as the event reaches only a few months until the question is closed \citewithtitle{tetlockSuperforecastingArtScience2015} NOTE: CHECK+REFINE THIS STATEMENT.  In a broad range of complex, human-involved outcomes, prediction markets are superior to expert analysis. In the words of the economist Robin Hanson, ``racetrack market odds improve on the prediction of racetrack  experts; orange juice commodity futures improve on government weather forecasts;  stocks fingered the guilty firm in the Challenger crash long before the official NASA  panel; Oscar markets beat columnist forecasts; gas demand markets beat gas  demand experts; betting markets beat Hewlett Packard official printer sale  forecasts; and betting markets beat Eli Lily official drug trial forecasts.''  \citewithtitle{hansonShallWeVote2013}. 
+In recent years, significant progress has been made on accurate near-term forecasting outside of specific domains. The most promising approaches appear to be a mix of prediction markets, and specialized, trained experts known as ``superforecasters'' \citewithtitle{tetlockSuperforecastingArtScience2015}. Prediction markets have gained recent prominence in the domain of geopolitical forecasting, with significant volumes of transactions on predicting future geopolitical outcomes with a broad purview, including election results, the outcomes of treaties, or whether a regime will topple. Predictions are typically more accurate than a guess of 50\% chance on a given outcome only within approximately one year time horizon, with the accuracy notably improving as the event reaches only a few months until the question is closed \citewithtitle{tetlockSuperforecastingArtScience2015} TODO: CHECK+REFINE THIS STATEMENT.  In a broad range of complex, human-involved outcomes, prediction markets are superior to expert analysis. In the words of the economist Robin Hanson, ``racetrack market odds improve on the prediction of racetrack  experts; orange juice commodity futures improve on government weather forecasts;  stocks fingered the guilty firm in the Challenger crash long before the official NASA  panel; Oscar markets beat columnist forecasts; gas demand markets beat gas  demand experts; betting markets beat Hewlett Packard official printer sale  forecasts; and betting markets beat Eli Lily official drug trial forecasts.''  \citewithtitle{hansonShallWeVote2013}. 
 
 However, prediction markets have demonstrated that a smaller subset of forecasters in the market, known as ``superforecasters'', are statistically much better forecasters than the prediction market, and ensembling these forecasters and letting them exchange information among themselves leads to higher accuracy predictions than prediction markets alone \citewithtitle{mellersIdentifyingCultivatingSuperforecasters2015}. Due to the relatively high expense and human effort required to organize superforecasters, the efforts have been largely focused on specific geopolitical and economic questions, some of which may fall under the domain of intervention impact in the earth system sciences, although most point to broad trends where information may be gathered from the news and informal internet searches, and deep expertise in any single domain would not be required for an accurate forecast. In fact, in terms of ``calibration'', superforecasters usually beat domain experts in their own fields by maintaining a broad sense of good judgement and cultivating a trained skill at accurately estimating prediction probabilities, rather than overly relying on a single strategy (such as econometric analysis, or specific statistical methods).
 
 \subsection{LLM Forecasting of Real-World Outcomes}
 
+\textbf{Methods and Capabilities}
 Assembling superforecasters to predict the efficacy of interventions such as laws, specific interventions such as introduction of cleaner burning ovens, or regulations on air quality would be prohibitively costly. Instead, this work focuses on the mimicking of techniques known to be effective for superforecasters with LLMs. 
 
 As might be expected given the lack of world knowledge and complex reasoning abilities of LLMs, simply replacing a crowd of humans with a crowd of untrained LLMs does not generally outperform the crowd average \citewithtitle{abolghasemiHumansVsLarge2025} \citewithtitle{schoeneggerLargeLanguageModel2023} CHECK THESE REFS.
 
-While the base models appear to underperform compared to crowds of humans, more recent work on the question has shown that increasing model reasoning ability increases the forecasting accuracy \citewithtitle{yanq.serajr.hej.mengl.andsylvaint.AutoCastEnhancingWorld2024}, and that with proper techniques and careful prompting, LLMs will approach or sometimes exceed accuracy of superforecasters on questions with a high degree of context and with proper ensembling and fine-tuning of the LLM system \citewithtitle{halawiApproachingHumanLevelForecasting2024}. \citewithtitle{WisdomSiliconCrowd} \citewithtitle{abolghasemiHumansVsLarge2025} \citewithtitle{yanq.serajr.hej.mengl.andsylvaint.AutoCastEnhancingWorld2024}.  NOTE: CHECK THIS STATEMENT
+While the base models appear to underperform compared to crowds of humans, more recent work on the question has shown that increasing model reasoning ability increases the forecasting accuracy \citewithtitle{yanq.serajr.hej.mengl.andsylvaint.AutoCastEnhancingWorld2024}, and that with proper techniques and careful prompting, LLMs will approach or sometimes exceed accuracy of superforecasters on questions with a high degree of context and with proper ensembling and fine-tuning of the LLM system \citewithtitle{halawiApproachingHumanLevelForecasting2024}. \citewithtitle{WisdomSiliconCrowd} \citewithtitle{abolghasemiHumansVsLarge2025} \citewithtitle{yanq.serajr.hej.mengl.andsylvaint.AutoCastEnhancingWorld2024}.  TODO: CHECK THIS STATEMENT
 
 The best results are achieved by capitalizing on the broad world-knowledge of LLMs and the augmentation of their knowledge in high-news or near-term contexts \citewithtitle{halawiApproachingHumanLevelForecasting2024}. A few crucial improvements to the base-level prediction ability can be applied to approach superforecasting level calibration and accuracy. These improvements are: 
 \begin{enumerate}
-\item Fine-tuning the LLMs to replicate the format of good forecasts, using hundreds or thousands of correct forecasts as the fine-tuning dataset
+\item Fine-tuning the LLMs to replicate the format of good forecasts, using hundreds or thousands of correct forecasts as the fine-tuning dataset (or in some cases, directly fine-tuning on existing content in the target area \citewithtitle{wenPredictingEmpiricalAI2025})
 \item Have the LLM integrate relevant and timely information into the context to improve the forecast (such as NewsCatcher and Google News API)
 \item Have the LLM split questions into sub-questions before being used to query news API
 \item Prompting techniques: Have the LLM think step-by-step, rephrase the question to improve comprehension, and reason over chains of crafted prompts to ensure sufficient reasoning effort has gone into the answer
 \item Reduce error rates by aggregating the final predictions (``Wisdom of the crowd'')
 \end{enumerate}
+
+TODO: Would be good to go through and see which of the cited papers have adopted these techniques, and which were successful.
+
 
 In one similar work, the technique of Chain of Thought (CoT) has been used to improve the reasoning abilities of GPT4 in predicting the outcome of 1261 conclusions from 276 papers which analyze the real-world outcomes of field experiments in the social sciences. While not specifically investigating outcomes with relevance in the earth system sciences, they do investigate the prediction ability for the impact of educational incentives, household finance behavior, healthcare enrollment, and financial planning. Remarkably, over the 1261 outcomes, 78\% were predicted accurately by the system \citewithtitle{chenPredictingFieldExperiments2025}.
 
@@ -324,14 +296,144 @@ Insofar as identifying whether results from social science papers will replicate
 
 If LLMs are able to approach or surpass human ability in predicting unpublished results in complex domains of predicting which techniques in improving state of the art AI system performance, predicting the outcomes of neuroscience papers, predicting social science replicability, or predicting geopolitical events such as election results, then it stands to reason that they may be able to predict the outcomes of interventions in the earth system sciences. While geopolitical forecasting may not be amenable to scientific techniques, neuroscience and AI algorithm improvements certainly are - yet LLMs still beat human experts in these domains. Furthermore, LLM systems are far simpler to use, and far less costly to run and maintain than IAMs, CGEs, or ABMs, while having the benefit of human-interpretable reasoning and the ability to be extremely flexible as to their domain of application. Finally, given their low cost to use, LLMs can often be used as starting points or augmentation to expert judgement in ex-ante outcome prediction, rather than being the sole source of judgement about expected intervention outcomes, and the collaboration often bests forecast accuracy when compared to expert forecasts or LLM forecasts alone  \citewithtitle{schoeneggerAIAugmentedPredictionsLLM2025}\citewithtitle{schoeneggerPromptEngineeringLarge2025}.
 
-The use of LLMs to inform decision making for promising interventions in the earth system comes with several downsides. Notably, LLMs do not reason like humans, and are prone to ``hallucinations''  where facts are fabricated. These hallucinations can be either factual fabrications attributed to external source material, or false statements which come intrinsically from the model \citewithtitle{huangSurveyHallucinationLarge2025}. As mentioned previously, LLMs are more computationally costly than other machine learning methods. There are also issues (which we will leave for the \hyperref[sec:conclusion_outlook]{Conclusion \& Outlook} section) with overly trusting LLMs, false beliefs from users of LLMs that they are less biased than humans or not biased at all, and issues with AI safety, if LLMs begin to replace or distort, rather than augment, human decision making.
+\textbf{Limitations}
+The use of LLMs to inform decision making for promising interventions in the earth system comes with several downsides. Notably, LLMs do not reason like humans, and are prone to ``hallucinations''  where facts are fabricated. These hallucinations can be either factual fabrications attributed to external source material, or false statements which come intrinsically from the model \citewithtitle{huangSurveyHallucinationLarge2025}. For the purposes of probabilistic reasoning, LLM's are not typically skilled at ensuring probabilities sum to 100\%, or related quantitative skilled, even after fine-tuning on the task of probability predictions \citewithtitle{lyuCalibratingLargeLanguage2025}. As mentioned previously, LLMs are more computationally costly than other machine learning methods. There are also issues (which we will leave for the \hyperref[sec:conclusion_outlook]{Conclusion \& Outlook} section) with overly trusting LLMs, false beliefs from users of LLMs that they are less biased than humans or not biased at all, and issues with AI safety, if LLMs begin to replace or distort, rather than augment, human decision making.
+
+Furthermore, the majority of work thus far has focused on classification, or fixed categories. At best, assigning a numerical score to a list of fixed objectives  \citewithtitle{binaLargeLanguageModels2025}. Open-ended future event prediction will be increasingly necessary for specific event prediction which cannot be easily quantified into a series of rankings or clear outcome categories. Some of the most important outcomes of interventions are the unexpected effects and learnings from the work, which cannot be captured by rigid outcome category schemes. Past work has used LLMs such as GPT4 to evaluate free-form event prediction on Accuracy, Completeness, Relevance (how pertinent the prediction is to the actual outcomes), Specificity (not overly broad nor vague), and Reasonableness (logical coherence and believability of the prediction) \citewithtitle{guanOpenEPOpenEndedFuture2024}. However, the work finds that accurately predicting future events in open-ended settings is challenging for existing LLMs, as predictions are often incomplete, underspecified, irrelevant, or illogical.
 
 % \subsection{Predicting Outcomes with AI \DOMAINCAPITALIZEDINTERVENTION} % DON'T THINK I'LL KEEP THIS SECTION
 \section{Methods for LLM Forecasting}
 \subsection{Data Sources}
+
 \subsection{Selecting LLM's for Forecasting \DOMAINCAPITALIZEDINTERVENTIONTWO }
 \subsection{Baseline Measures to Compare Against LLM Forecasts}
 \subsection{Methods for LLM Forecasting}
+\textbf{Data Filtering}
+In order to ensure sufficient numbers of interventions are collected, openalex was used to collect published works \citewithtitle{priemOpenAlexFullyopenIndex2022}. openalex used LLM categorization to sort the papers into thousands of ``topics'' \citewithtitle{OpenAlexTopicClassification}. Regex filtering on the abstract and restricting the publication year to 2021 or later was first used to identify papers which were likely to contain relevant interventions in the abstracts (See Figure XY).
+
+\emph{Figure XY: The keyword query for openalex
+("evaluate the program" OR "causal impact" OR "empirical result" OR "case study" OR "life cycle" OR "evaluate the effectiveness" OR "insights from" OR "first report" OR "quasi-experimental" OR "estimate the impact" OR "to control for" OR "impact evaluation" OR "adoption of" OR "percent of" OR "project was" OR "the project" OR "efficacy of" OR "the beneficiaries" OR "electricity use" OR "this evaluation" OR "of improved" OR "randomly selected" OR "intervention" OR "highest values" OR "achieved the" OR "gave the" OR "conducted" OR "RCBD" OR "RCT" OR "randomiz" OR "randomis" OR "difference-in-difference" OR "score matching" OR "triple difference" OR "event study" OR "before-after design" OR "pre-post design" OR "two-stage least squares" OR "2SLS" OR "propensity score" OR "inverse probability weighting" OR "matching estimator" OR "kernel matching" OR "coarsened exact matching" OR "Mahalanobis matching" OR "entropy balancing" OR "doubly robust estimation" OR "RDD" OR "RKD" OR "interrupted time series" OR "interrupted time-series analysis" OR "synthetic control") AND ("law" OR "ban" OR "tax" OR "subsid" OR "policies" OR "policy" OR "regulation" OR "regulatory" OR "instrument" OR "levy" OR "grant" OR "tariff" OR "mandate" OR "ordinance" OR "directive" OR "beneficiary" OR "statute" OR "campaign" OR "rollout" OR "legislation" OR "pilot" or "treatment" OR "program" OR "programme") NOT ("simulation" OR "2018" OR "2017" OR "2016" OR "2015" OR "2014" OR "2012" OR "2011" OR "2010" OR "2009" OR "2008" OR "2007" OR "2006" OR "2005" OR "2004" OR "2003" OR "2002" OR "2001" OR "2000" OR "1999" OR "1998" OR "1997" OR "1996" OR "1995" OR "1994" OR "1993" OR "1992" OR "1991" OR "1990" OR "1985" OR "1980" OR "1975" OR "1970" OR "1960")
+}
+
+After a preliminary filtering of approximately 600 topics within the earth system sciences, 135 of these topics were chosen as containing a high proportion of papers analyzing outcomes of interventions in the earth system, which do not reference interventions before the model cutoff date. 
+
+Next, GPT o4-mini was used to categorize the topics (see Figure \ref{fig:scoringfigure}).
+\begin{figure}[htbp]
+  \centering
+  \begin{tcolorbox}[left=4pt, right=4pt, top=4pt, bottom=4pt]
+\ttfamily\footnotesize
+
+\emph{
+Below is the title and abstract of a scientific article. 
+You will score the degree to which the abstract of the paper below reports the result(s) of some program(s) or policy/policies, conditional on the following criteria: 
+ 1. The abstract must provide quantitative or qualitative information informing decision makers, or other members of government civil society the impact of the program or policy. 
+ 2. The abstract cannot only describe theoretical work to simply improve models or scientific understanding, it must evaluate a program or policy. 
+ 3. The abstract below must provide at least one qualitative or quantitative statement regarding the extent to which the specific program or policy achieved relevant outcomes, including the overall success of the policy.  
+On the first line of your response, provide a best guess for the four digit year the evaluated program(s) or policy/policies took effect. Use background knowledge or context clues if no date is mentioned. You may assume surveys and interventions implemented by the authors occurred two years prior to publication, if the date is not mentioned. If there is no possibility to estimate the timeframe, return N/A.
+On the second line, provide a score between 1 and 10 for the degree to which this abstract fits the criteria, where 1 is no fit, and 10 is a perfect fit for the criteria.}
+  \end{tcolorbox}
+  \caption{The GPT4o-mini query for scoring the degree of fit of an abstract.}
+  \label{fig:scoringfigure}
+\end{figure}
+
+
+After these filtering stages, 1741 abstracts remained.
+
+\textbf{Outcome and Intervention Classification}
+GPT-o4-mini was used to extract descriptions of interventions from abstracts (See Figure XZ (a)). In addition, a series of outcome categories were defined to allow intercomparison between the intervention and the result (See Figure XZ (b)). 
+\begin{figure}[htbp]
+  \centering
+  \begin{tcolorbox}[left=4pt, right=4pt, top=4pt, bottom=4pt]
+\ttfamily\footnotesize
+Figure XY: The keyword query for openalex
+("evaluate the program" OR "causal impact" OR "empirical result" OR "case study" OR "life cycle" OR "evaluate the effectiveness" OR "insights from" OR "first report" OR "quasi-experimental" OR "estimate the impact" OR "to control for" OR "impact evaluation" OR "adoption of" OR "percent of" OR "project was" OR "the project" OR "efficacy of" OR "the beneficiaries" OR "electricity use" OR "this evaluation" OR "of improved" OR "randomly selected" OR "intervention" OR "highest values" OR "achieved the" OR "gave the" OR "conducted" OR "RCBD" OR "RCT" OR "randomiz" OR "randomis" OR "difference-in-difference" OR "score matching" OR "triple difference" OR "event study" OR "before-after design" OR "pre-post design" OR "two-stage least squares" OR "2SLS" OR "propensity score" OR "inverse probability weighting" OR "matching estimator" OR "kernel matching" OR "coarsened exact matching" OR "Mahalanobis matching" OR "entropy balancing" OR "doubly robust estimation" OR "RDD" OR "RKD" OR "interrupted time series" OR "interrupted time-series analysis" OR "synthetic control") AND ("law" OR "ban" OR "tax" OR "subsid" OR "policies" OR "policy" OR "regulation" OR "regulatory" OR "instrument" OR "levy" OR "grant" OR "tariff" OR "mandate" OR "ordinance" OR "directive" OR "beneficiary" OR "statute" OR "campaign" OR "rollout" OR "legislation" OR "pilot" or "treatment" OR "program" OR "programme") NOT ("simulation" OR "2018" OR "2017" OR "2016" OR "2015" OR "2014" OR "2012" OR "2011" OR "2010" OR "2009" OR "2008" OR "2007" OR "2006" OR "2005" OR "2004" OR "2003" OR "2002" OR "2001" OR "2000" OR "1999" OR "1998" OR "1997" OR "1996" OR "1995" OR "1994" OR "1993" OR "1992" OR "1991" OR "1990" OR "1985" OR "1980" OR "1975" OR "1970" OR "1960")
+  \end{tcolorbox}
+  \caption{Keyword query used for the OpenAlex search to identify policy‐ and program‐evaluation abstracts.}
+  \label{fig:openalex-query}
+\end{figure}
+
+After a preliminary filtering of approximately 600 topics within the earth system sciences, 135 of these topics were chosen as containing a high proportion of papers analyzing outcomes of interventions in the earth system, which do not reference interventions before the model cutoff date. 
+
+Next, GPT o4-mini was used to categorize the topics (see Figure~\ref{fig:o4mini-scorer}).
+
+\begin{figure}[htbp]
+  \centering
+  \begin{tcolorbox}[left=4pt, right=4pt, top=4pt, bottom=4pt]
+\ttfamily\footnotesize
+Figure XX: The gpt o4-mini query
+Below is the title and abstract of a scientific article. 
+You will score the degree to which the abstract of the paper below reports the result(s) of some program(s) or policy/policies, conditional on the following criteria: 
+ 1. The abstract must provide quantitative or qualitative information informing decision makers, or other members of government civil society the impact of the program or policy. 
+ 2. The abstract cannot only describe theoretical work to simply improve models or scientific understanding, it must evaluate a program or policy. 
+ 3. The abstract below must provide at least one qualitative or quantitative statement regarding the extent to which the specific program or policy achieved relevant outcomes, including the overall success of the policy.  
+On the first line of your response, provide a best guess for the four digit year the evaluated program(s) or policy/policies took effect. Use background knowledge or context clues if no date is mentioned. You may assume surveys and interventions implemented by the authors occurred two years prior to publication, if the date is not mentioned. If there is no possibility to estimate the timeframe, return N/A.
+On the second line, provide a score between 1 and 10 for the degree to which this abstract fits the criteria, where 1 is no fit, and 10 is a perfect fit for the criteria.
+  \end{tcolorbox}
+  \caption{Scoring prompt given to GPT-o4-mini for identifying abstracts that evaluate programs or policies and report outcomes.}
+  \label{fig:o4mini-scorer}
+\end{figure}
+
+After these filtering stages, 1741 abstracts remained.
+
+\textbf{Outcome and Intervention Classification}
+GPT-o4-mini was used to extract descriptions of interventions from abstracts (See Figure~\ref{fig:prompts-ib} (a)). In addition, a series of outcome categories were defined to allow intercomparison between the intervention and the result (See Figure~\ref{fig:prompts-ib} (b)). 
+
+\begin{figure}[htbp]
+  \centering
+  \begin{subfigure}{0.48\textwidth}
+    \begin{tcolorbox}[left=4pt, right=4pt, top=4pt, bottom=4pt]
+\ttfamily\footnotesize
+(a)
+What is the intervention that is described in the abstract? 
+This is an abstract for an impact evaluation report about an intervention in a developing country. 
+Do not mention the outcomes or analysis method, only describe the intervention with as much detail as is present in the abstract. 
+Ensure to include any contextual information about what was done and where in your response. 
+If nothing is said about the intervention write: No Intervention Described.
+    \end{tcolorbox}
+    \caption{Intervention extraction prompt.}
+  \end{subfigure}\hfill
+  \begin{subfigure}{0.48\textwidth}
+    \begin{tcolorbox}[left=4pt, right=4pt, top=4pt, bottom=4pt]
+\ttfamily\footnotesize
+(b)
+What does the abstract say regarding the \[outcome\_category\] outcome? 
+Be sure to include relevant quantitative or categorical information where present. 
+If nothing is said about the outcome write: No Information.
+    \end{tcolorbox}
+    \caption{Outcome extraction prompt.}
+  \end{subfigure}
+  \caption{Prompts used to extract (a) intervention descriptions and (b) outcome statements from abstracts.}
+  \label{fig:prompts-ib}
+\end{figure}
+
+\textbf{Outcome Grading}
+Next, each outcome was evaluated in multiple ways.
+
+First, a grading scheme was identified as a useful taxonomy, which could allow easy comparison between the predictions and the test set:
+\begin{itemize}
+\item [1.] \textbf{Very significant}: Substantial improvement with robust evidence
+\item [2.] \textbf{Significant}: Noticeable improvement with moderate evidence
+\item [3.] \textbf{Neutral/mixed results}: Some improvement but limited or unclear
+\item [4.] \textbf{No effect}: No discernible impact
+\item [5.] \textbf{Outcome was worsened}: Negative impact
+\end{itemize}
+
+Grading for free-form prediction was also allowed, whereby o4-mini was used to directly compare a free-form prediction of the outcome, to the outcome described in the abstract.
+
+\textbf{Outcome Forecasting}
+Next, the outcome itself was forecasted. At this stage, we used the forecast techniques (scratchpad, RAG, fine-tuning, ensembling) to produce a single most accurage prediction.
+
+Forecasting context was restricted to RAG context obtained, the GPT-generated intervention description, and the name of the outcome metric.
+
+For each forecast, a qualitative free-form forecast is generated. Subsequently, a grade on the 5-point scale is also generated.
+
+\textbf{Forecast Evaluation}
+
+The last stage of forecasting was the evaluation of the forecast itself. I compare forecasted grades against actual outcome grades using the Root Mean Square Error (RMSE), Accuracy (fraction of exact match), Macro-F1 score, and the Brier score (binary classification where "positive" $\ge$ 0.75)
+
+The forecast is also compared against two baselines:
+- Most-common grade baseline
+- Most-similar abstract and outcome (using vector similarity search)
 \subsection{Grading Forecast Accuracy}
 
 \ifdev{ \subsection{NOTE: YES THEY REALLY WANT THIS: Predicting the Confidence of a Forecast}}
