@@ -1,0 +1,149 @@
+\documentclass[12pt,a4paper]{article}
+
+% \newcommand{\DICT}{sustainability}
+\newcommand{\DICT}{development}
+
+
+% ---------- Basic packages ----------
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[margin=.9in]{geometry}
+\usepackage{graphicx}
+\usepackage{array}
+\usepackage{setspace}
+\usepackage{microtype}
+
+\usepackage{tabularx,adjustbox,array}
+
+\usepackage{xstring}
+\usepackage{etoolbox}
+
+
+\usepackage[hidelinks]{hyperref}
+\usepackage{pdfcomment}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.8em} % optional: adds vertical spacing between paragraphs
+
+%better bibtex
+\usepackage[backend=biber,style=authoryear,sorting=nyt,natbib=true]{biblatex}
+\addbibresource{references.bib}
+% Drop "note" (and similar) from every bibliography entry
+\AtEveryBibitem{%
+  \clearfield{note}%        kill the note field
+  \clearfield{addendum}%    (often used like a note)
+  \clearfield{annotation}%  (some exporters use this)
+}
+
+% % (Author, Year | Title)
+% \DeclareCiteCommand{\citewithtitle}
+%   {\usebibmacro{prenote}}
+%   {(\printnames{labelname},\space\printfield{year} \space|\space\printfield[citetitle]{title})}
+%   {\multicitedelim}
+%   {\usebibmacro{postnote}}
+% A small helper to build clean tooltip text
+\newbibmacro*{citewithtitle:tooltip}{%
+  \printnames{labelname}%
+  \addcomma\space
+  \printfield{year}%
+  \addspace\textbar\addspace
+  \printfield{title}%
+}
+
+% (Author, Year | Title) with link + tooltip
+\DeclareCiteCommand{\citewithtitle}
+  {\usebibmacro{prenote}}
+  {\printtext[bibhyperref]{%
+     \pdftooltip{%
+       \mkbibparens{%
+         \printnames{labelname},\space
+         \printfield{year}\addspace\textbar\addspace
+         \printfield[citetitle]{title}%
+       }%
+     }{%
+       \usebibmacro{citewithtitle:tooltip}%
+     }%
+  }}
+  {\multicitedelim}
+  {\usebibmacro{postnote}}
+% Make natbib-like commands available:
+\let\citep\parencite
+\let\citet\textcite
+
+% --- Load the dictionary with a safe fallback ---
+\makeatletter
+\edef\dictfile{macros/dictionary-\DICT.tex}
+%\typeout{Using dictionary: \dictfile}%
+\input{\dictfile}
+\makeatother
+
+% --- Simple conditional helpers based on \DICT ---
+\newcommand{\ifdev}[1]{%
+  \IfStrEq{\DICT}{development}{#1}{}%
+}
+
+\newcommand{\ifsus}[1]{%
+  \IfStrEq{\DICT}{sustainability}{#1}{}%
+}
+\newcommand{\AuthorName}{Morgan Rivers}
+
+
+\begin{document}
+\pagenumbering{gobble}
+\thispagestyle{empty}
+
+% ---------- Contents & front matter ----------
+\pagenumbering{roman}
+\setcounter{page}{1}
+\clearpage
+
+\pagenumbering{arabic}
+\setcounter{page}{1}
+\section*{Literature Overview}
+\emph{\AuthorName}\\
+\emph{August 31, 2025}\\
+
+
+This is a summary of the ``literature overview'' work product produced for BMZ, with a due date of August 31st, 2025. The full work product I summarize below is a preliminary draft of my thesis focused on collecting all the relevant literature. The thesis is currently lacking any experimental results, and the methodology is not yet fully determined (as this also requires more progress on the programming side). I have now a mostly complete Introduction section, an outlined Methods section, a few points added to the Results \& Discussion section regarding result interpretation, and a rough draft written of the Conclusion \& Outlook section. Below, I briefly explain the progress that was made in looking through the literature. For the full details, including the complete list of references, please see the full report available as the separate pdf attachment in this email. \\ 
+
+\textbf{Summary.}
+
+To ground a forecasting system for the impacts of environmental and development–cooperation interventions, I reviewed (i) foundations of event forecasting science; (ii) varying approaches to intervention evaluation; (iii) prediction markets and ``superforecasting''; (iv) large language model (LLM) forecasting methods in adjacent domains to developmental aid and cooperation; (v) scoring rules and evaluation pitfalls; and (vi) the data landscape and curation workflow for impact evaluations. The aim has been to map what is known to work, where it tends to fail, and which evaluation practices are defensible for forecasting in \ABSTRACT.\\
+
+
+\textbf{Background: forecasting in complex systems.}
+
+I contrast mechanistic modeling traditions in the earth–system and policy space—integrated assessment models (IAMs), computable general equilibrium (CGE) models, agent-based models—with recent machine–learning successes on complex tasks (language modeling, protein folding, conservation planning, and medium-range weather) \citep{brownLanguageModelsAre2020,jumperHighlyAccurateProtein2021,silvestroImprovingBiodiversityProtection2022,lamLearningSkillfulMediumrange2023}. Within mechanistic work, I note exemplar tools (e.g., GAINS; MIT EPPA; OSeMOSYS) and fine-grained hybrid approaches (bio-economic models coupled to ABMs) that quantify emissions, health, and grid outcomes under policy scenarios \citep{CosteffectiveControlAir2011,MITEmissionsPrediction,OSeMOSYSOpenSource2011,dueriModelingImplicationsPolicy2024}.\\
+
+
+
+\textbf{Prediction markets and superforecasters.}
+
+I survey the empirical record on market calibration and accuracy for geopolitical/economic questions and the systematic edge of small, trained forecaster teams over raw market aggregates \citep{tetlockSuperforecastingArtScience2015,hansonShallWeVote2013,mellersIdentifyingCultivatingSuperforecasters2015}. These results justify treating ``judgmental forecasting’’ as an important way to predict near-term, context-rich outcomes.\\
+
+
+
+\textbf{LLM forecasting and adjacent domains.}
+
+I then document what has been shown to improve LLM forecasting in the literature: explicit reasoning (CoT/scratchpads), retrieval-augmented generation (RAG), diverse prompting, ensembling, and fine-tuning \citep{halawiApproachingHumanLevelForecasting2024,yanq.serajr.hej.mengl.andsylvaint.AutoCastEnhancingWorld2024,abolghasemiHumansVsLarge2025,schoeneggerLargeLanguageModel2023}. I include evidence that carefully engineered LLM systems can outperform humans in certain contexts (and even be profitable in prediction markets doing so) \citep{turtelLLMsCanTeach2025} \citep{halawiApproachingHumanLevelForecasting2024}. Adjacent literatures show strong LLM skill in forecasting unpublished or out-of-sample results in field experiments (social science), neuroscience, and AI-improving–algorithms \citep{chenPredictingFieldExperiments2025,hewittPredictingResultsSocial,xLargeLanguageModels2025,ghasemlooInformedForecastingLeveraging2025,wenPredictingEmpiricalAI2025}. I also review evidence that raw probabilities (without explicit reasoning) sometimes carry much of the predictive power in scientific domains, implying a trade-off between ``intuition-like’’ and explicit reasoning \citep{xLargeLanguageModels2025}.\\
+
+
+\textbf{Evaluation: scoring rules and pitfalls.}
+
+Because single metrics can mislead, I synthesize best practice around strictly proper rules (Brier, log score) and calibration/accuracy, and I detail known failure modes in LLM evaluation (data taught to model past training cutoff cutoff, post-resolution contamination in retrieval) \citep{gneitingStrictlyProperScoring2007,palekaPitfallsEvaluatingLanguage2025}.\\
+
+
+\textbf{Data sources and filtering for impact evaluations.}
+
+I catalogued sources that index program/policy effects: OpenAlex (topic-labeled scholarly graph) \citep{priemOpenAlexFullyopenIndex2022,OpenAlexTopicClassification}; development–evaluation repositories such as 3ie and KfW’s IDEaL; and BMZ/GIZ/KfW–adjacent compilations \citep{3ieDevelopmentEvidence,kfwdevelopmentbankIDEaL,DatenlaborbmzAwesomedevelopmentcooperationdata2025}. I then briefly document the concrete filtering steps already attempted and relevant literature to support these choices: (1) topic pre-selection in development domains; (2) regex and year filters (post-2021) to surface abstracts that report intervention outcomes; (3) LLM-assisted scoring of abstract fit (1–10) to prioritize genuine ex-post evaluations; and (4) structured extraction of (a) the intervention description and (b) outcome statements across a standardized set of outcome categories using specified prompts.\\
+
+
+\textbf{Limitations and biases covered.}
+
+Finally, I discuss limitations and issues in LLM forecasting: LLM hallucinations and miscalibration \citep{huangSurveyHallucinationLarge2025,lyuCalibratingLargeLanguage2025}; publication and positivity biases \citep{duyxStrongFocusPositive2019,ioannidisWhyMostPublished2005}; the mistaken trust in algorithms (``automation bias'') \citep{AlgorithmAppreciationPeople2019}; social and political biases in models \citep{nadeemStereoSetMeasuringStereotypical2021,bangMeasuringPoliticalBias2024}; unfaithfulness of generated rationales \citep{turpinLanguageModelsDont2023}; and evidence that simpler ML baselines can be surprisingly competitive on replication-style tasks \citep{yangEstimatingDeepReplicability2020}. I also note issues of domain skew likely reducing performance out-of-training \citep{palekaPitfallsEvaluatingLanguage2025}.\\
+
+
+\printbibliography
+
+\end{document}
