@@ -1,0 +1,7 @@
+PWD /home/dmrivers/Documents/Potsdam_Files/thesis/forecasting_impact_thesis/tex/macros
+INPUT /etc/texmf/web2c/texmf.cnf
+INPUT /usr/share/texmf/web2c/texmf.cnf
+INPUT /usr/share/texlive/texmf-dist/web2c/texmf.cnf
+INPUT /var/lib/texmf/web2c/pdftex/pdflatex.fmt
+INPUT dictionary-sustainability.tex
+OUTPUT dictionary-sustainability.log

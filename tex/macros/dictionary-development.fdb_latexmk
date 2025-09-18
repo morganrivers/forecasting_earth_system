@@ -1,0 +1,13 @@
+# Fdb version 4
+["pdflatex"] 1755976332.63742 "dictionary-development.tex" "dictionary-development.pdf" "dictionary-development" 1755976332.73021 2
+  "/etc/texmf/web2c/texmf.cnf" 1740771983.60558 475 c0e671620eb5563b2130f56340a5fde8 ""
+  "/usr/share/texlive/texmf-dist/web2c/texmf.cnf" 1707919699 40399 f2c302f7d2af602abb742093540a5834 ""
+  "/usr/share/texmf/web2c/texmf.cnf" 1707919699 40399 f2c302f7d2af602abb742093540a5834 ""
+  "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1740772675 6800795 71c11a1a483e5dea0287594c413e7839 ""
+  "dictionary-development.aux" 1755790402.41156 32 3985256e7290058c681f74d7a3565a19 "pdflatex"
+  "dictionary-development.tex" 1755976331.90097 606 ae0022fe05e7401fa0a431c1e21a26bc ""
+  (generated)
+  "dictionary-development.aux"
+  "dictionary-development.log"
+  "dictionary-development.pdf"
+  (rewritten before read)
