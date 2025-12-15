@@ -110,7 +110,7 @@
 % Editable metadata
 % -----------------------------------
 % \newcommand{\ThesisTitle}{\TITLE}
-\newcommand{\ThesisTitle}{Forecasting Environmental Outcomes of International Development Cooperation with Language Models}
+\newcommand{\ThesisTitle}{Forecasting the Success of Environmental and Sustainability Activities in International Development Using Language Models}
 % \newcommand{\ThesisSubtitle}{SUBTITLE}
 \newcommand{\ThesisCity}{[City]}
 \newcommand{\ThesisDate}{[Date]}
@@ -196,17 +196,8 @@
 % ---------- Main matter ----------
 \section*{Abstract}
 \subsection*{Abstract in English}
-The field of decision science has made rapid strides with the introduction of techniques of deep learning in natural language processing as a tool for improving accuracy and calibration of economic and geopolitical forecasts, predicting scientific outcomes, and in domains like stock market prediction and diagnosing diseases. Several recent methods and improvements have been made to the predictive ability of large language models (LLMs) calibrated via fine-tuning techniques. Because some of these powerful forecasting techniques have not yet been brought to bear on the important problem of impact prediction in developmental aid and cooperation interventions affecting the environment, I fine-tune three LLMs (Llama 70B, ChatGPT-3.5, [SOME MODERN LLM I CHOOSE]) %TODO: clarify what I actually did, replace model name
-to perform such forecasts, training on thousands of abstracts from the scientific literature. I find that the best-performing system ([Llama 70B / ChatGPT-3.5 / [SOME MODERN LLM I CHOOSE], averaging X %TODO: fill in
-parallel predictions) can forecast XX\% %TODO: fill in
-of interventions correctly compared to YY\% %TODO: fill in
-using the most-similar-abstract baseline.
-%, and ZZ\% %TODO: fill in
-%from published ex-ante predictions from the scientific literature. % CURRENTLY DON'T THINK WILL DO THIS
-Through the use of conformal prediction, I show that QQ\% %TODO: fill in
-of outcome prediction forecasts can be made using the system with >90\% confidence in a true positive outcome prediction. This work has wide-ranging applications both to improve environmental developmental aid cooperation outcome forecasting, as well as in adjacent areas and improving decision making in policy contexts. I also release the largest extant structured database of RR thousand %todo: fill in
-interventions and associated outcomes in developmental aid and cooperation interventions affecting the environment. 
 
+International aid and cooperation creates a profound difference in the rate of development in growing economies, improves the lives of the world's poorest, and often safeguards the environment and materially promotes sustainability. However, international aid has non-significant rates of failure in achieving its objectives. There have been few attempts in the literature to create models to predict the success of aid activities, and none focused on environmental outcomes. This thesis produces a forecasting system for the overall success of international aid activities at time of evaluation from the International Aid and Transparency Initiative (IATI) database, combining classical statistical methods with modern language model techniques. I find that the information available at the start of the activity all contribute to prediction accuracy, including quantifiable information used in previous studies, averaging the success rates of semantically similar activities, and using the reasoning abilities and information gathering ability of large language models (LLMs) to improve forecasts. Testing against the held-out, latest-starting 200 activities in a dataset of 1,800 environmental and sustainability improving activities, the full forecasting system improves success forecasting at the beginning of the activity by X.XX\% (95\% CI: XX\% to XX\%), improving the prediction from XX.X\% to XX.X\% accuracy compared to a baseline adapted from prior literature. For overall success ratings on a scale from approximately 1 to 6, the system can explain XX\% (95\% CI: XX\% to XX\%) of the variation compared to XX\% for the baseline. I also release a freely available dataset of LLM-generated activity grades, summaries, success ratings, and various other quantitative activity outcomes and extracted information for 1,800 IATI activities. This work lays the foundation to improve decision making for a wide range of initiatives and policies in developing countries and also in other data-rich institutional contexts.
 
 \subsection*{Abstract auf Deutsch}
 Will do, once abstract is finalized %TODO
@@ -256,12 +247,12 @@ Together, these characteristics allow us to characterize the system being improv
 
 The collective failure of the scientific community to model complex outcomes in the Earth system has severe implications. For example, work from \citewithtitle{stechemesserClimatePoliciesThat2024} has demonstrated that out of 1500 policies between 1998 and 2022, only 68 had statistically significant causal effect to reduce country emissions with a 99\% or higher confidence. Furthermore, they find that more than four times the effort witnessed so far in emissions reductions from implementing more successful policies in line with past reductions would have to be exerted to close the emissions gap to remain below 2 degrees C in global temperature rise. Broadly, their findings support the claim that even when climate policy is implemented, it is largely ineffective, and in the future it will need to be much more effective to avoid dangerous levels of CO$_2$ concentrations. In terms of biodiversity,  achieving sustainability cannot be met by current trajectories, and goals for 2030 and beyond may only be achieved through transformative changes across economic, social, political and technological factors \citewithtitle{watsonGlobalAssessmentReport2019}. As of 2022 pollution remains responsible for approximately 9 million deaths per year, corresponding to one in six deaths worldwide \citewithtitle{fullerPollutionHealthProgress2022}.
 
-While much scientific effort has been expended on understanding underlying systems, much less effort has been directly focused on predicting which specific interventions would realistically improve outcomes on the indicators of interest in the Earth system sciences. 
+While much scientific effort has been expended on understanding underlying systems, much less effort has been directly focused on predicting which specific interventions would realistically improve outcomes for activities in the Earth system sciences. 
 %Meanwhile, examples exist in the literature where regulation can greatly reduce or even eliminate environmental problems - the Montreal protocol has met with great success in closing the hole in the ozone layer [CITE IF KEEP THIS SENTENCE!]. 
 
 Despite many examples of other computer models which have some success (see section XXYY), in many relevant sub-domains, such as climate policy, ex ante analysis of mitigation action and of mitigation plans is limited \citewithtitle{intergovernmentalpanelonclimatechangeipccMitigationDevelopmentPathways2023}. Given the overwhelming complexity of the Earth system, and the corresponding failures to properly model many of the system components in the Earth system and especially how they interact with human interventions, complementing mechanistic understanding and prediction with ML approaches is urgently needed.
 
-This thesis was written in conjunction with the German Federal Ministry for Economic Cooperation and Development (BMZ) in order to improve their environment-related international aid decision making. In the context of official development aid (ODA), German development finance commitments on behalf of the German Federal Government were the second largest ODA source in 2023 at approximately 40 billion USD  \citewithtitle{NetODAOECD}. This was the case before recent major reductions in the US ODA in 2025, which indicate that Germany may soon be the largest source. However, despite significant care and effort put forth in documenting development cooperation outcomes at the the BMZ, ex-post evaluations are rarely read at the BMZ or the affiliated KfW Development Bank, even though around 19\% of evaluated projects are unsuccessful \citewithtitle{sustainabilityidosLearningKfWsExpost}. Given the large volume of directed aid and the likely gaps in knowledge due to low utilization of ex-post evaluations, an opportunity arises to close these gaps using recent advances in ML, especially large language models (LLMs), which can quickly search and synthesize findings over a much larger quantity of information than aid funding decision makers (FDMs). At BMZ, these are the BMZ officers. 
+This thesis was written in conjunction with the German Federal Ministry for Economic Cooperation and Development (BMZ) in order to improve their environment-related international aid decision making. In the context of official development aid (ODA), German development finance commitments on behalf of the German Federal Government were the second largest ODA source in 2023 at approximately 40 billion USD  \citewithtitle{NetODAOECD}. This was the case before recent major reductions in the US ODA in 2025, which indicate that Germany may soon be the largest source. However, despite significant care and effort put forth in documenting development cooperation outcomes at the the BMZ, ex-post evaluations are rarely read at the BMZ or the affiliated KfW Development Bank, even though around 19\% of evaluated projects are unsuccessful \citewithtitle{sustainabilityidosLearningKfWsExpost}. Given the large volume of directed aid and the likely gaps in knowledge due to low utilization of ex-post evaluations, an opportunity arises to close these gaps using recent advances in ML, especially large language models (LLMs), which can quickly search and synthesize findings over a much larger quantity of information than aid funding decision makers (from here on we will refer to them as ``evaluators''). At BMZ, these are the BMZ officers. 
 
 \textbf{Proposal}
 We set out to predict near-term, future states in a wide array of different contexts. One method that has shown a great deal of promise in such domains is ``judgemental forecasting'', which allows expert forecasters to use tools including Fermi estimates, intuition, and information gathering to make a calibrated prediction on the likelihood of a given outcome \citewithtitle{halawiApproachingHumanLevelForecasting2024}. This can be contrasted with ``statistical forecasting'' which typically uses time-series prediction methods or purely quantitative approaches.
@@ -305,17 +296,16 @@ Due to the relatively high expense and human effort required to organize superfo
 
 \subsection{LLM Forecasting of Outcomes for Development Cooperation}
 \subsubsection{Ex-post Evaluations and Other Data Sources}
-Before turning to the possibility of LLM forecasting, we first consider what data we could use as context for their forecasts, and how useful it is for human FDMs. FDMs already use evaluations and other sources to inform their work at the BMZ. While evaluations are rigorous, surveys of FDMs find that evaluations come too late after the ends of projects, often several years after, to be strongly relevant to current projects and that ex-post evaluations are of limited relevance to FDMs, either individually or in aggregate form. \citewithtitle{sustainabilityidosLearningKfWsExpost}. This suggests both that the specific relevance of evaluations is unlikely to produce high accuracy results alone, and that information gathered in the few years immediately prior to the project is of particular importance to predicting project outcomes.
+Before turning to the possibility of LLM forecasting, we first consider what data we could use as context for their forecasts, and how useful it is for human evaluators. evaluators already use evaluations and other sources to inform their work at the BMZ. While evaluations are rigorous, surveys of evaluators find that evaluations come too late after the ends of projects, often several years after, to be strongly relevant to current projects and that ex-post evaluations are of limited relevance to evaluators, either individually or in aggregate form. \citewithtitle{sustainabilityidosLearningKfWsExpost}. This suggests both that the specific relevance of evaluations is unlikely to produce high accuracy results alone, and that information gathered in the few years immediately prior to the project is of particular importance to predicting project outcomes.
 
 Thus far, several repositories of high-quality intervention evaluations have been published. These databases document thousands of examples of ex-post predictions which allow us to infer how future development cooperation outcomes will proceed. In particular, the Interactive Database for Evaluation and Learning (IDEaL) contains over 1,200 rigorous studies with 6 separate evaluation criteria grading how well the intervention proceeded \citewithtitle{kfwdevelopmentbankIDEaL}. Collectively, over 10,000 intervention examples over the past few decades have been collected, although the quality and format of these additional interventions is relatively unknown \citewithtitle{DatenlaborbmzAwesomedevelopmentcooperationdata2025}. 
 
 Social Science Prediction Platform (SSPP) has collected thousands of examples of studies where social science results have been collected and compared to obtain informative priors in Bayesian analysis \citewithtitle{HowCanYou}. SSPP provides hundreds of evaluations, including a leaderboard and mean absolute error of the top 10 performing forecasters with at least 10 forecasts each. As the results become open source in the coming years, this can be a valuable resource for development impact forecasting.
 
-
 Finally, the largest extant database of recorded interventions available is that of the International Aid and Transparency Initiative (IATI) \citep{IATIDashboardIATI}. The full database contains over 800,000 records of interventions, the majority of which are marked as to whether they were closed or cancelled. Within this dataset, tens of thousands are relevant to interventions in ESS, and a large fraction of those contain date-stamped project appraisal and evaluation documents. However, due to the inclusion of over 1,000 distinct contributing international aid organizations, IATI is known for its difficulty to interpret and inconsistency in structure of each activity record.
 
 
-At BMZ, even when ex-post evaluations are read by FDM, they usually only read the cover sheet.  FDM typically have to read a large number of documents, including activity reports. Ex post evaluations are a small part of the material used to make funding decisions in development cooperation interventions \citewithtitle{sustainabilityidosLearningKfWsExpost}. This further indicates that information outside the purely evaluative nature of past projects is quite important for funding decisions.
+At BMZ, even when ex-post evaluations are read by evaluators, they usually only read the cover sheet. Evaluators typically have to read a large number of documents, including activity reports. Ex post evaluations are a small part of the material used to make funding decisions in development cooperation interventions \citewithtitle{sustainabilityidosLearningKfWsExpost}. This further indicates that information outside the purely evaluative nature of past projects is quite important for funding decisions.
 
 
 \subsubsection{Determinants of Success in Development Cooperation Interventions}
@@ -348,6 +338,9 @@ The underlying workings of these models are highly variable. What unifies them i
 %TODO: add ARINA? Examples from here? https://onlinelibrary.wiley.com/doi/full/10.1002/aaai.12085
 
 \subsubsection{Methods and Capabilities}
+This thesis implements an LLM-based forecasting method, predicting what the evaluation results will be for thousands of IATI records containing both a pre-intervention description of the activity, as well as a post- or mid-intervention evaluation of the results. To do so, thousands of pdfs were downloaded, ranked from most to least relevant for forecasting future outcomes or evaluating the end result of the activities, had their pages ranked and graded for relevance to the task, had quantitative and qualitative descriptions and results transcribed into a unified format, and next several versions of the LLM forecasting system were trialed on the validation set. Finally, the most promising version was used to predict evaluation outcomes on hundreds of evaluations that were written at least one year after the model's training cutoff.
+
+
 Implementing the gold standard prediction method - superforecaster tournaments - to predict the efficacy of interventions such as new environmental laws in low and middle income countries (LMIC), specific interventions such as introduction of cleaner burning ovens, or regulations on air quality would be worthwhile, but also costly and logistically challenging given the very large number of annual interventions over wide geographic regions. Even if such a tournament were to be ran, ML methods to estimate the outcomes could be complementary and increase the accuracy for such a tournament. This work focuses on the mimicking of techniques known to be effective for tournaments of superforecasters with LLMs, both to aid expert forecasters and grantmakers, and to provide direct, useful predictions for those without access to expert knowledge. While there has been no attempt at predicting real-world outcomes of interventions in developmental aid and cooperation interventions affecting the environment\ while also rigorously quantifying the skill of such a system, much encouraging progress has been made in closely adjacent domains which I will survey below.
 
 If using LLMs to directly output probabilities or yes/no answers to forecasting questions, the base models appear to underperform compared to crowds of humans \citewithtitle{abolghasemiHumansVsLarge2025} \citewithtitle{schoeneggerLargeLanguageModel2023}. In such a context, more recent work on the question has shown that increasing model reasoning ability increases the forecasting accuracy \citewithtitle{yanq.serajr.hej.mengl.andsylvaint.AutoCastEnhancingWorld2024}, and that with proper techniques and careful prompting, LLMs will approach or sometimes exceed accuracy of assemblages of superforecasters on questions with a high degree of context and with proper ensembling and fine-tuning of the LLM system \citewithtitle{halawiApproachingHumanLevelForecasting2024}. \citewithtitle{WisdomSiliconCrowd} \citewithtitle{abolghasemiHumansVsLarge2025} \citewithtitle{yanq.serajr.hej.mengl.andsylvaint.AutoCastEnhancingWorld2024}. 
@@ -437,7 +430,7 @@ One issue is that the interventions in the literature are highly skewed toward a
 
 Model skill may not transfer when releasing a model into a real-world domain where the predicted outcome is truly in the future. Model cutoff dates are often not truly leakage free - some training, such as Reinforcement Learning from Human Feedback (RLHF) can introduce coarse details about events occurring after the model cutoff date. The system prompt (which cannot be directly inspected in closed-source LLMs such as GPT-3.5) can also contain unintended information leakage, and post-resolution documents in search results can further leak hints or the outcome itself\citewithtitle{palekaPitfallsEvaluatingLanguage2025}.
 
-Even if there is no leakage, ranking forecasting skill using single scoring metrics can be misleading - each evaluation metric has its own issues \citewithtitle{palekaPitfallsEvaluatingLanguage2025} (See Table \ref{tab:forecasting-metrics-pitfalls} and section \ref{sub:scoringrules}). Therefore what may appear to be the best combination of accuracy-improving techniques and the best selection of base LLM may not in fact be the same outside of the test and validation sets.  Language models themselves contain both political and stereotype biases which can bleed into both the rationales and the probabilities a system outputs \citewithtitle{nadeemStereoSetMeasuringStereotypical2021} \citewithtitle{bangMeasuringPoliticalBias2024}. 
+Even if there is no leakage, ranking forecasting skill using single scoring metrics can be misleading - each evaluation metric has its own issues \citewithtitle{palekaPitfallsEvaluatingLanguage2025} (See Table \ref{tab:forecasting-metrics-pitfalls} and section \ref{sub:scoringmetrics}). Therefore what may appear to be the best combination of accuracy-improving techniques and the best selection of base LLM may not in fact be the same outside of the test and validation sets.  Language models themselves contain both political and stereotype biases which can bleed into both the rationales and the probabilities a system outputs \citewithtitle{nadeemStereoSetMeasuringStereotypical2021} \citewithtitle{bangMeasuringPoliticalBias2024}. 
 
 Language models also don't always report their true reasoning  - even if they reason something through scratchpads or CoT, the true reasons behind the answer may differ significantly. This can make using free-form reasoning for forecasts unreliable \citewithtitle{turpinLanguageModelsDont2023}. 
 
@@ -446,142 +439,362 @@ Language models also don't always report their true reasoning  - even if they re
 % \subsection{Predicting Outcomes with AI \DOMAINCAPITALIZEDINTERVENTION} % DON'T THINK I'LL KEEP THIS SECTION
  \section{Methods for LLM Forecasting}
 \subsection{Selecting LLMs for Forecasting Outcomes in Development Cooperation Interventions Affecting the Environment}
+% TODO: update this once we know whether we're fine-tuning
 Multiple studies have measured zero-shot LLM forecasting capability against the base model performance, and found better general ability base models tend to perform better on forecasting tasks \citewithtitle{halawiApproachingHumanLevelForecasting2024} \citewithtitle{kargerForecastBenchDynamicBenchmark2024}: In one study with dozens of base models and a dynamically updating benchmark on prediction market forecasting questions, an inverse linear relationship was found between the human preference of a model's answer (in terms of an ELO score) and the Brier score, and similarly a log-linear inverse relationship between the compute used to train the model and the Brier score \citewithtitle{kargerForecastBenchDynamicBenchmark2024}.
 
 In order to guard against leakage of information from the training, we select ChatGPT-3.5 and Llama 70B \citewithtitle{touvronLlama2Open2023} as our base models due to their strong performance and early training cutoff date (approximately the beginning of 2022 for both models). NOTE: IN THE CASE THAT TRAINING DATA LEAKAGE IS NOT SIGNIFICANT We also run the YET TO DETERMINED - DEEPSEEK? OPENAI OSS? as an example of a stronger, more recently trained model in order to establish whether base model performance correlates with forecasting skill in developmental aid and cooperation interventions affecting the environment. 
 
 Llama 70B is notable as it is a strong open source model with a relatively early training cutoff date of 2022, allowing us to inspect more directly the system prompt, the direct probabilities of sets of output tokens (the ``logits''), and the degree of memorization of the training via use of the zlib entropy and the perplexity ratio (See Section \ref{sub:strengths_and_weaknesses_of_this_forecasting_system} for more details).
 
-\subsection{Baseline Measures to Compare Against LLM Forecasts}
-Several baselines are required in order to justify as expensive and complex a scheme as fine-tuning an LLM for forecasting. We choose three simple baseline methods, in order to ensure our predictions are significantly better than the baseline methods of emission reduction predictions.
+\subsection{Data Sources} \label{sec:methods_for_llm_forecasting}
+The IATI database was used as a source of thousands of interventions. The interventions were restricted to those that had some affect on the environment and earth system, by restricting the category codes in IATI to those records pertaining to ESS. 
 
-\textbf{Prediction baseline: Same outcome as most similar policy}
-This baseline technique provides a sanity check that more sophisticated methods are worthwhile. By selecting the most similar policy (defined YET TO BE DETERMINED), we can see if more complex techniques are being mislead by their usage of large amounts of less relevant data. While other ML methods would be a useful baseline as well, training additional ML models is time-consuming, and the results are not as readily interpretable as other baselines. I leave the development of simpler machine learning methods for future work.
+\subsection{Data Filtering}
 
+
+\textbf{IATI records for prediction}
+
+Out of the approximately 800,000 international aid activities recorded in IATI, we reduced the set of activities of interest to 3,000 records which related to the environment, sustainability, or climate adaptation, and had an appraisal/intervention description document which could be converted to PDF format, and an evaluation document at least one year after the appraisal document. Dates were determined using the ``created by'' or ``last modified'' date if available in the metadata of the original PDF, ODT, DOC, or DOCX file as these were found more reliably and usually matched the stated activity dates better than the IATI `date'  recorded within the activity record.
+
+The activity filtering for the topic was done by-hand to filter only those activities relating to improving the environment or sustainability. These were:
+
+The broadest sets of codes selected were as follows:
+140: Water Supply \& Sanitation
+231: Energy Policy
+232: Energy generation, renewable sources
+234: Hybrid energy plants
+235: Nuclear energy plants
+312: Forestry
+410: General Environment Protection
+
+
+Some more specific 5-digit codes were also selected:
+14015: Water resources conservation (including data collection)
+14020: Water supply and sanitation - large systems
+14021: Water supply - large systems
+14022: Sanitation - large systems
+14032: Basic sanitation
+14050: Waste management/disposal
+23110: Energy policy and administrative management
+23111: Energy sector policy, planning and administration
+23112: Energy regulation
+23183: Energy conservation and demand-side efficiency
+23210: Energy generation, renewable sources - multiple technologies
+23220: Hydro-electric power plants
+23230: Solar energy for centralised grids
+23231: Solar energy for isolated grids and standalone systems
+23232: Solar energy - thermal applications
+23240: Wind energy
+23250: Marine energy
+23260: Geothermal energy
+23270: Biofuel-fired power plants
+23350: Fossil fuel electric power plants with carbon capture and storage (CCS)
+23360: Non-renewable waste-fired electric power plants
+23410: Hybrid energy electric power plants
+23510: Nuclear energy electric power plants and nuclear safety
+23630: Electric power transmission and distribution (centralised grids)
+23631: Electric power transmission and distribution (isolated mini-grids)
+23642: Electric mobility infrastructures
+31192: Plant and post-harvest protection and pest control
+31210: Forestry policy and administrative management
+31220: Forestry development
+31281: Forestry education/training
+31282: Forestry research
+31291: Forestry services
+32174: Clean cooking appliances manufacturing
+32210: Mineral/mining policy and administrative management
+41010: Environmental policy and administrative management
+41020: Biosphere protection
+41030: Biodiversity
+41081: Environmental education/training
+41082: Environmental research
+43060: Disaster Risk Reduction
+
+At least one 3-digit or 5-digit codes above must be one of the codes indicated in the activity metadata for it to be considered.
+
+\textbf{Document-related Filtering}
+
+The IATI database contains a collection of thousands of links to pdfs, word documents, html documents, and other document formats. These were first automatically converted to pdf format via a custom python script, and subsequently needed to pass several criteria before being used as documents for forecasting.
+
+I first wrote a script that directly downloaded these and converted them to pdf format. Specifically for UNDP, I made a custom-query to convert their interactive HTML results pages into a pdf format, all others had the links for the documents downloaded directly with no additional processing.
+
+Next, I look at the pdf metadata date, and determine the creation date of the pdf files. I find this is more often closer to the date of the specific activity description document or activity evaluation document (as determined by reading the document) than metadata at the url indicating upload date, or the date entered in IATI for the document.  UNDP results had the URL specifically included in the JSON payload populating their website, so the latest year indicated in that evaluation payload was used instead for the UNDP results.
+
+All documents are tagged in IATI with one or more of seven tags per document:
+``Pre- and post-project impact appraisal'', ``Objectives / Purpose of activity'', ``Intended ultimate beneficiaries'', ``Conditions'', ``Budget'', ``Summary information about contract'', ``Review of project performance and evaluation'', ``Results, outcomes and outputs'', ``Memorandum of understanding (If agreed by all parties)'', ``Tender'', or ``Contract''. 
+
+I mark documents with ``Objectives / Purpose of activity'',  ``Summary information about contract'', or ``Pre- and post-project impact appraisal'' tags as preliminary ``baseline'' documents - those representing information about the activity before it begins. Documents with ``Review of project performance and evaluation'' or ``Pre- and post-project impact appraisal'' tags are marked as preliminary evaluation documents. In order to ensure the information describing the activity is sufficiently before the activity evaluation, I require at least one ``baseline'' document and at least one ``outcome'' document per activity, with the evaluation document at least one year prior to a preliminary evaluation document (based on the uploaded document metadata). I also require that the activity status code is not ``Pipeline/identification''. Instead, activities are allowed to be in implementation, finalization, closed, cancelled, or suspended, such that either a final or preliminary evaluation document is possible.
+
+I filtered further to ensure that all activity document labels were a subset of "Conditions", "Budget", "Tender", "Contract" with no other tags, indicating the documents involved were purely legal context, often containing very little evaluation or activity information.
+
+In order to properly extract accurate overall success ratings for each activity and useful textual information about the project for forecasting, I processed each pdf document using the following data processing pipeline:
+
+\subsection{Preliminary Data Processing}
+
+All document pages had their rotation detected, and were rotated to vertical before processing via the Gemini API. Documents with ``.odt'', ``.doc'', or ``.docx'' extensions were converted to pdfs with a custom script. The pages when converted to pdfs were counted and zero-page documents were excluded.
+
+\textbf{1. Ranking documents}
+Documents were ranked from most to least useful for forecasting the outcome, or evaluating the results, respectively. \emph{gemini-2.5-flash} structured output with direct pdf input was used to make the rankings. Only documents with c- or better grades on a grading scale from a+ to f were considered for the next stage. Also, the documents were ranked from most to least informative for forecasting among the baseline documents, and most to least valuable for ex-post evaluation among the outcome documents. Baseline documents that were closest to the activity start, and the latest outcome documents were preferenced. Documents with sufficient detail but not excessive lengths, such as executive summaries, were prioritized. Documents that were duplicates in a non-English language were excluded if the equivalent was available in English. For outcomes, if there were multiple progress reports, all the earlier ones were excluded and only the latest were kept in the rankings.
+
+\textbf{2. Categorizing pages within documents}
+The highest ranking documents were then split into 3-page chunks. Each 3-page chunk was sent in pdf form to \emph{gemini-2.5-flash}. The pages were categorized differently based on whether the document was a baseline or outcome. Categories for outcomes allowed retrieval based on whether final evaluation in quantitative or qualitative form are present on the page, deviations from plans or other types of outcomes were detailed, or if the pages were simply overviews of the activity. Specifically, the allowed categorizations were ``condensed summary'', ``sub activities outlined'', ``detailed implementation plans'', ``broad objectives'', ``possible outcomes'', ``quantitative targets'', ``qualitative targets'', ``risks as word or numeric'', ``risks or dangers generally'', ``plans to address key risks'', ``positive indicators'', ``progress reports'', ``similar cases outcomes'', ``implementation context country'', ``contextual challenges'', ``financing details'', ``budget and legal'', ``who implements'', ``whether part of larger program'', ``partner identity or skill'', ``whether skin in the game'', ``other stakeholder engagement'', or ``activity monitoring details'' for baseline document pages, and  ``expected outcomes'', ``deviation from plans'', ``preliminary results'', ``final outcomes'', ``delays or early completion'', ``over or under spending'', ``overview as was planned'', or ``unrelated to evaluation'' for outcome document pages. Only one category choice among these was possible per page.
+
+In order to exclude irrelevant pages, the pages were also given a second category, for outcome document pages as ``glossary'', ``blank  page'', ``table of contents'', ``outcome evaluation'', ``activity description'', ``references'', or ``other'', and for baseline document pages the same categories were options, in addition to ``core activities'', ``theory of change'', ``targets'', ``broader context'', and ``preliminary results''. Only one category choice among these was possible per page.
+
+
+\textbf{3. Extracting Ratings}
+Two separate methods were used to extract rankings. The first method sent each individual outcome page ranked above 7/10 for relevance to evaluation, or with a ``quantitative targets'' categorization, to \emph{gemini-2.5-flash} to extract any overall ratings, and a second script summarized the overall ratings into a single value for the document. However, this was often insufficient to detect the page with overall ratings. The next (``fallback'') script involved a custom generated word search with approximately 500 different rephrasings of ``overall rating'' in english, and searched the pdfs directly for those terms, prioritizing pages with one or more exact text matches of such terms. Otherwise, if such words could not be found, the earliest pages in the document which were not categorized as ``blank page'', ``appendix'', ``glossary'', ``table of context'', or ``activity description'' were included and \emph{gemini-2.5-flash} was queried to extract the overall rating from the documents.
+
+A slightly different process was done for UNDP activities. The fallback script was used again, but documents were judged by \emph{gemini-2.5-flash} for whether the outcomes represented an ``overall successful'' or ``overall unsuccessful'' activity, and this was entered as the result, as UNDP rarely delivers directly an overall rating for the activity.
+
+For BMZ/GIZ/KFW documents, activity baseline documents were extremely rare. For this reason, the evaluation document was treated as a baseline document for the purposes of forecasting activity success. Categorization for these evaluations also was via the ``baseline'' document method described above. When grading or summarizing the features of the evaluation document, \emph{gemini-2.5-flash} was instructed to only describe what could have been known at the beginning of the activity, and to under no circumstances reveal the final outcome of the activity.
+
+\subsection{Baseline Methods}
+
+Three relatively simple baseline methods were attempted, to ensure the relatively complex and expensive LLM-based methods are better than simpler approaches. I choose three simple baseline methods, in order to ensure the predictions were significantly better than the baseline methods of emission reduction predictions.
+
+\textbf{Prediction baseline: always predict the most common rating (`Moderately Satisfactory')}
+This baseline technique provides a sanity check that more sophisticated methods are worthwhile. Because the prediction task is inherently difficult with much of the variation in outcomes unable to be forecasted at the outset of the activity, this is a relatively strong baseline.
 % \subsubsection{Prediction baseline: Random Forest Regression}
 % The random forest regression method is a widely applied method to predict unseen data in machine learning. It has the benefit of requiring relatively little compute, performing quite well for a wide range of dataset sizes, and it doesn't tend to overfit as much as neural-network based machine learning models \cite{randomforest}. As random forest cannot use natural language of the prompt, I intend to instead supply the algorithm with fields in the OECD Open Data with the proposed policy and demographic and trend data from the World Bank dataset. The random forest will then predict a value in tonnes CO$_2$.
 
 % However, random forest cannot use the semantics in the natural language prompt, which leads us to our next baseline.
 
+\textbf{Prediction baseline: GLM Trained with non-LLM categories}
+In order to justify the addition of non-LLM categories, we use the baseline statistical categories apparent in prior literature and train a General Linear Model (GLM) on the outputs. Features include $log(\text{GDP})$, planned activity duration, whether the activity is primarily loan or grant-based, the one-hot encoded funding organization of the top 3 most common organizations in the database (The World Bank (XXX activities), UNDP (XXX activities), BMZ/KFW/GIZ (XXX activities)), the Country Policy and Institutional Assessment (CPIA) score from the World Bank for that country, the activity start date, the scope of the activity, the planned duration of the activity, and the $log(\text{GDP} / \text{capita})$ of the countries where the activity takes place, weighted by the percentage of the activity performed in each country. % todo: what does CPIA stand for? %todo: complete the list of features and countries
+
 \textbf{Prediction baseline: Zero-shot LLM}
-In order to ensure the system is an improvement, to show that the methods used to improve accuracy are indeed increasing accuracy above simply a single generated prediction by a non-finetuned language model such as ChatGPT.
+In order to ensure the series of improvements on the LLM system in fact genuinely improve accuracy above simply querying the model with some basic activity information and requesting a prediction, we insert the summarized information about the category along all of the evaluation axes where the model could find relevant information. This show that the methods used to improve accuracy are indeed increasing accuracy above simply a single generated prediction by ChatGPT-3.5.
+
+\subsection{Experimental methods}
 
 
-\subsection{Data Sources} \label{sec:methods_for_llm_forecasting}
-The IATI database was used as a source of thousands of interventions. The interventions were restricted to those that had some affect on the environment and earth system, by restricting the category codes in IATI to those records pertaining to ESS. 
+\textbf{GLM using IATI Features and Grades}
+
+Similar to the baseline prediction, the GLM is trained with elastic net regression to reduce overfitting on noise, and only high-performing features are kept \{Insert criteria for inclusion\}.
+
+\textbf{Nearest Neighbor (Vector Similarity)}
+
+I first constructed a similarity test using features including countries of the activity, GDP per capita as described previously, the scope of the activity (), and the implementing and funding organization ID.
+I found however that this similarity test significantly underperformed compared to the semantic similarity of the GPT-generated summary of the activity documents. 
+I first weight the similarity proportional to its embedding semantic similarity score, and tested a cutoff for averaging 1, 3, 7, 10, 15, 20, and all remaining activities
+ based on the Gemini embeddings model \emph{gemini-embedding-001}. I found 15 nearest neighbors was the highest-performing using this method, and thus use the weighted average of the nearest neighbor ratings to predict the overall activity score.
+
+\textbf{Random Forest}
+
+I trained a random forest model using the same data as the GLM, however I find it significantly underperforms the GLM and thus do not continue with this method.
+
+\textbf{LLM Forecasting Methods \#1 and \#2}
+
+Two distinct but similar LLM forecasting methods were used for prediction. To generate the LLM forecasting methods, GPT 3.5 was prompted with a series of ``mock forecasts'', generated by Gemini 2.5-pro. The ``mock forecast'' used relevant pages retrieved by ranking the categorized topics by forecast informativeness %todo: specify exactly how
+and retrieving 10 pages of the most relevant activity data and 10 pages of the most relevant evaluation data, prioritizing ``deviations from plans'', etc. %todo, insert the remaining categories that were prioritized
+
+Figure~\ref{fig:mock-forecast-prompt} shows the prompt template used to generate the retrospective ``mock forecasts'' (using \emph{gemini 2.5-pro}), conditioned on retrieved baseline and outcome document excerpts for the same activity.
+
+To generate each mock forecast, we constructed a retrieval-augmented input consisting of up to 10 baseline pages and up to 10 outcome/evaluation pages per activity. Baseline pages were selected from high-scoring passages in predefined ``forecast-informative'' categories (e.g., objectives, implementation plans, risks, financing details, contextual challenges, and stakeholder/implementer information), using a high relevance threshold (minimum categorization score of 9) and including nearby pages when insufficient high-scoring pages were available. Outcome pages were selected from outcome documents emphasizing deviations from plans (including deviations, delays/early completion, and over/under-spending), using a lower relevance threshold (minimum score of 3) and likewise including surrounding pages to reach the target count when needed. We then merged these retrieved excerpts with activity metadata (title, scope, planned start/end dates, planned financing totals when present) and brief model-generated baseline summaries (activity description and risk summary) before prompting Gemini to write a forecast from the ex-ante perspective. Importantly, the prompt required the model to end by outputting the \emph{known} final evaluation rating for that activity (derived from the merged ratings file and converted into scale-specific text via \texttt{get\_ratings\_text}), while also instructing it to ground the narrative in the retrieved evaluation pages and to return ``NO RESPONSE'' if the evaluation excerpts did not contain sufficient justification for the assigned rating.
 
 
-As an additional data source for RAG, OpenAlex was used to collect published works \citewithtitle{priemOpenAlexFullyopenIndex2022}. OpenAlex used LLM categorization to sort the papers into thousands of ``topics'' \citewithtitle{OpenAlexTopicClassification}.
+The most semantically relevant activities which hit their 3/4 mark at the latest 1/4 of the way through the query activity were then retrieved and selected such that there was at least one activity with a score below 2.5, and at least one with a score above 2.5, while prioritizing the most semantically similar activities for mock forecast prompt insertion. In addition, the activity ``risks'' were inserted before each mock forecast, to provide context for the example. Each mock forecast was structured in a way similar to the highest performing scratchpad method from \citep{halawiApproachingHumanLevelForecasting2024}.
 
-Additionally, the 3ie database \citewithtitle{3ieDevelopmentEvidence} was used to identify statistically appropriate outcome categories, and identify the core set of appropriate papers. These papers were used to select the appropriate set of ``OpenAlex topics'' to be used.
+A series of features including the activity title, start date, and activity location were injected into the prompt to provide context for the activity.
 
-\subsection{Data Filtering}
-\textbf{IATI records for prediction}
-Out of the approximately 800,000 international aid activities recorded in IATI, we reduced the set of activities of interest to 3,000 records which related to the environment, sustainability, or climate adaptation, and had an appraisal/intervention description document which could be converted to PDF format, and an evaluation document at least one year after the appraisal document. Dates were determined using the ``created by'' or ``last modified'' date if available in the metadata of the original PDF, ODT, DOC, or DOCX file as these were found more reliably and usually matched the stated activity dates better than the IATI `date'  recorded within the activity record.
+For Method \#1, the Gemini-generated summaries were added to the prompt.
+
+For Method \#2, the most relevant pages of the activity documents were directly converted to text and inserted into the prompt.
+
+In summary, methods \#1 and \#2 shared the same scaffold and response-format constraints; they differed only in whether the activity context was provided as model-generated summaries (Method \#1) or as raw extracted document text (Method \#2).
 
 
-\textbf{OpenAlex records for RAG}
-After the OpenAlex topic filtering to restrict the results to XX thousand from the original X.X million %TODO: fill in
- abstracts within the selected OpenAlex topics %(see Section \sec:methods_for_llm_forecasting)
-Regular Expression (regex) filtering on the abstract and restricting the publication year to 2021 or later was first used to identify papers which were likely to contain relevant interventions in the abstracts (See Figure~\ref{fig:OpenAlex-query}).
+Finally, the distribution of rating outcomes was inserted into the prompt, in order to prevent collapse towards only a few ratings.
 
-After these filtering stages, XX thousand %TODO: fill in
-abstracts remained.
+The full prompt templates for Methods \#1 and \#2 are shown in Figure~\ref{fig:forecast-prompts}.
 
-\begin{figure}[htbp]
-  \centering
-  \begin{tcolorbox}[left=4pt, right=4pt, top=4pt, bottom=4pt]
-\ttfamily\footnotesize
-("evaluate the program" OR "causal impact" OR "empirical result" OR "case study" OR "life cycle" OR "evaluate the effectiveness" OR "insights from" OR "first report" OR "quasi-experimental" OR "estimate the impact" OR "to control for" OR "impact evaluation" OR "adoption of" OR "percent of" OR "project was" OR "the project" OR "efficacy of" OR "the beneficiaries" OR "electricity use" OR "this evaluation" OR "of improved" OR "randomly selected" OR "intervention" OR "highest values" OR "achieved the" OR "gave the" OR "conducted" OR "RCBD" OR "RCT" OR "randomiz" OR "randomis" OR "difference-in-difference" OR "score matching" OR "triple difference" OR "event study" OR "before-after design" OR "pre-post design" OR "two-stage least squares" OR "2SLS" OR "propensity score" OR "inverse probability weighting" OR "matching estimator" OR "kernel matching" OR "coarsened exact matching" OR "Mahalanobis matching" OR "entropy balancing" OR "doubly robust estimation" OR "RDD" OR "RKD" OR "interrupted time series" OR "interrupted time-series analysis" OR "synthetic control") \\ \\ 
-AND ("law" OR "ban" OR "tax" OR "subsid" OR "policies" OR "policy" OR "regulation" OR "regulatory" OR "instrument" OR "levy" OR "grant" OR "tariff" OR "mandate" OR "ordinance" OR "directive" OR "beneficiary" OR "statute" OR "campaign" OR "rollout" OR "legislation" OR "pilot" or "treatment" OR "program" OR "programme") \\ \\
-NOT ("simulation" OR "2018" OR "2017" OR "2016" OR "2015" OR "2014" OR "2012" OR "2011" OR "2010" OR "2009" OR "2008" OR "2007" OR "2006" OR "2005" OR "2004" OR "2003" OR "2002" OR "2001" OR "2000" OR "1999" OR "1998" OR "1997" OR "1996" OR "1995" OR "1994" OR "1993" OR "1992" OR "1991" OR "1990" OR "1985" OR "1980" OR "1975" OR "1970" OR "1960")
-  \end{tcolorbox}
-  \caption{Regex query searching the words within abstract used for the OpenAlex search to reduce policy‐ and program‐evaluation abstracts which evaluated a post-2022 intervention. The query also filtered abstracts to those published after 2022. Further filtering using GPT-o4-mini was required to reduce false positive matches.}
-  \label{fig:OpenAlex-query}
-\end{figure}
 
-After a preliminary filtering of approximately 600 topics within the Earth system sciences, 135 of these topics were chosen as containing a high proportion of papers analyzing outcomes of interventions in the Earth system, which do not reference interventions before the model cutoff date. 
+In both methods, we used a $k$-nearest-neighbors (KNN) few-shot block to provide examples of semantically similar activities with known ex-post evaluation outcomes. Candidate neighbors were restricted to activities with (i) an available retrospective ``mock forecast'' and (ii) an observed final evaluation rating. We then selected up to $k$ neighbors in descending similarity order, while (when possible) enforcing coverage on both sides of the rating-scale midpoint (at least one outcome above and one below the midpoint) and approximately matching the global training-set distribution over outcomes by sampling from coarse outcome bins.
 
-Next, GPT-o4-mini was used to categorize the topics (see Figure~\ref{fig:scoringfigure}).
+Concretely, in order to ensure the few-shot insertions of mock forecasts were informative, we first computed a training-set outcome distribution over a fixed set of six equal-width bins spanning the rating scale from worst to best. Each historical activity with a rating was mapped to a within-scale fraction $f \in [0,1]$ (using its rating and the activity-specific rating scale), and then assigned to a six-bin index $b=\min(5,\lfloor 6f \rfloor)+1$. For a target forecast with budget $k$, we converted the global six-bin percentages into per-bin target counts by taking $\lfloor k \cdot p_b \rfloor$ for each bin (where $p_b$ is the training-set percentage in bin $b$) and allocating any remaining slots to bins with the largest fractional remainders. We then traversed the similarity-ranked candidate neighbors and greedily selected candidates whenever their bin had not yet met its target count. If some bins could not be filled (e.g., due to missing candidates with valid rating scales), we filled remaining slots with the most similar unused candidates regardless of bin. Finally, if the selected set did not include at least one neighbor above the midpoint ($f>0.5$) and one below ($f<0.5$), we attempted a single post-hoc swap: replacing the least-similar selected neighbor on the overrepresented side with the most-similar available candidate on the missing side, when such a candidate existed.
 
-\begin{figure}[htbp]
-  \centering
-  \begin{tcolorbox}[left=4pt, right=4pt, top=4pt, bottom=4pt]
-\ttfamily\footnotesize
-Below is the title and abstract of a scientific article. 
-You will score the degree to which the abstract of the paper below reports the result(s) of some program(s) or policy/policies, conditional on the following criteria: 
+Each example activity in the few-shot block included (i) key metadata (title and, where available, location and a brief summary), (ii) a short ``risks'' summary, (iii) the retrospective mock forecast text (when enabled), and (iv) the final evaluation outcome label.
 
-\begin{itemize}
- \item The abstract must provide quantitative or qualitative information informing decision makers, or other members of government civil society the impact of the program or policy. 
- \item The abstract cannot only describe theoretical work to simply improve models or scientific understanding, it must evaluate a program or policy. 
- \item The abstract below must provide at least one qualitative or quantitative statement regarding the extent to which the specific program or policy achieved relevant outcomes, including the overall success of the policy.  
-\end{itemize}
-On the first line of your response, provide a best guess for the four digit year the evaluated program(s) or policy/policies took effect. Use background knowledge or context clues if no date is mentioned. You may assume surveys and interventions implemented by the authors occurred two years prior to publication, if the date is not mentioned. If there is no possibility to estimate the timeframe, return N/A.
+The forecasting prompt required a structured response format that explicitly considered both lower- and higher-outcome arguments on the rating scale and ended with a single-line prediction. Concretely, the model was instructed to: (1) provide reasons the overall success might be rated \texttt{\{midpoint\_low\_text\}} or lower, (2) provide reasons it might be rated \texttt{\{midpoint\_high\_text\}} or higher, (3) aggregate considerations and select exactly one of the \texttt{\{num\_options\}} outcomes, and (4) output the final forecast on the last line beginning with \texttt{FORECAST: } followed by only the chosen option.
 
-On the second line, provide a score between 1 and 10 for the degree to which this abstract fits the criteria, where 1 is no fit, and 10 is a perfect fit for the criteria.
+Finally, we appended a short description of the empirical distribution of rating outcomes in the training data to reduce mode-collapse toward a narrow subset of ratings.
 
-\[example\_abstract\]
-  \end{tcolorbox}
-  \caption{The GPT-o4-mini query for scoring the degree of fit of an abstract.}
-  \label{fig:scoringfigure}
-\end{figure}
-
-After these filtering stages, 1741 abstracts remained with a score of 6 or higher from GPT-o4-mini, indicating they are high quality, good matches for the intervention-prediction split with appropriate years for the intervention.
-
-GPT-o4-mini was used to extract descriptions of interventions from abstracts (See Figure~\ref{fig:prompts-ib} (a)). In addition, a series of outcome categories were defined to allow intercomparison between the intervention and the result (See Figure~\ref{fig:prompts-ib} (b)). 
 
 \begin{figure}[htbp]
   \centering
   \begin{subfigure}{0.48\textwidth}
     \begin{tcolorbox}[left=4pt, right=4pt, top=4pt, bottom=4pt]
 \ttfamily\footnotesize
-What is the intervention that is described in the abstract? 
-This is an abstract for an impact evaluation report about an intervention in a LMIC. 
-Do not mention the outcomes or analysis method, only describe the intervention with as much detail as is present in the abstract. 
-Ensure to include any contextual information about what was done and where in your response. 
-If nothing is said about the intervention write: No Intervention Described.
+SYSTEM:\newline
+You are an experienced international aid decision maker with a quantitative mindset.
+Forecast the overall evaluation rating from the options:
+\{options\_text\}.\newline\newline
+USER:\newline
+Forecast what the outcome will be for this activity.\newline\newline
+\#\#\# EXAMPLE ACTIVITIES \#\#\#\newline
+[For each neighbor: title; (optional) location/summary; risks; (optional) example forecast;
+rating scale; final evaluation outcome]\newline\newline
+\#\#\# NEW ACTIVITY TO FORECAST \#\#\#\newline
+ACTIVITY ID: \{activity\_id\}\newline
+ACTIVITY TITLE: \{activity\_title\}\newline
+ORIGINAL PLANNED START DATE: \{planned\_start\}\newline
+ORIGINAL PLANNED END DATE: \{planned\_end\}\newline
+ACTIVITY LOCATION(S): \{location\}\newline
+ACTIVITY DESCRIPTION (SUMMARY): \{gemini\_generated\_summary\}\newline
+ACTIVITY RISKS: \{risks\_summary\}\newline\newline
+Provide the following format for your response:\newline
+1. Provide reasons why the overall success might be rated \{midpoint\_low\_text\} or lower.\newline
+2. Provide reasons why the overall success might be rated \{midpoint\_high\_text\} or higher.\newline
+3. Aggregate your considerations, and decide on the final outcome among the \{num\_options\} options.\newline
+4. Provide the final forecast on the last line beginning with 'FORECAST: '
+followed by only the forecast with no extra words.\newline\newline
+[Append: training-set rating distribution text]\newline
+Respond only in English.
     \end{tcolorbox}
-    \caption{Intervention extraction prompt.}
+    \caption{Method \#1 (summary injection).}
   \end{subfigure}\hfill
   \begin{subfigure}{0.48\textwidth}
     \begin{tcolorbox}[left=4pt, right=4pt, top=4pt, bottom=4pt]
 \ttfamily\footnotesize
-What does the abstract say regarding the \[outcome\_category\] outcome? 
-Be sure to include relevant quantitative or categorical information where present. 
-If nothing is said about the outcome write: No Information.
+SYSTEM:\newline
+You are an experienced international aid decision maker with a quantitative mindset.
+Forecast the overall evaluation rating from the options:
+\{options\_text\}.\newline\newline
+USER:\newline
+Forecast what the outcome will be for this activity.\newline\newline
+\#\#\# EXAMPLE ACTIVITIES \#\#\#\newline
+[Same few-shot block as Method \#1]\newline\newline
+\#\#\# NEW ACTIVITY TO FORECAST \#\#\#\newline
+ACTIVITY ID: \{activity\_id\}\newline
+ACTIVITY TITLE: \{activity\_title\}\newline
+ORIGINAL PLANNED START DATE: \{planned\_start\}\newline
+ORIGINAL PLANNED END DATE: \{planned\_end\}\newline
+ACTIVITY LOCATION(S): \{location\}\newline
+EXCERPTS FROM BASELINE ACTIVITY DOCUMENTS:\newline
+\{pdf\_to\_text\_excerpts\}\newline
+ACTIVITY RISKS: \{risks\_summary\}\newline\newline
+Provide the following format for your response:\newline
+1. Provide reasons why the overall success might be rated \{midpoint\_low\_text\}.\newline
+2. Provide reasons why the overall success might be rated \{midpoint\_high\_text\}.\newline
+3. Aggregate your considerations, and decide on the final outcome among the \{num\_options\} options.\newline
+4. Provide the final forecast on the last line beginning with 'FORECAST: '
+followed by only the forecast with no extra words.\newline\newline
+[Append: training-set rating distribution text]\newline
+Respond only in English.
     \end{tcolorbox}
-    \caption{Outcome extraction prompt.}
+    \caption{Method \#2 (raw text injection).}
   \end{subfigure}
-  \caption{Prompts used to extract (a) intervention descriptions and (b) outcome statements from abstracts.}
-  \label{fig:prompts-ib}
+  \caption{Prompt templates for LLM forecasting Methods \#1 and \#2. The methods share the same scaffold (few-shot examples, metadata, risks, and response-format constraints) and differ only in how activity context is injected (summary vs.\ raw document text).}
+  \label{fig:forecast-prompts}
 \end{figure}
+
+
+
+
+\begin{figure}[htbp]
+  \centering
+  \begin{tcolorbox}[left=4pt, right=4pt, top=4pt, bottom=4pt, width=0.96\textwidth]
+\ttfamily\footnotesize
+SYSTEM:\newline
+You are an experienced international aid decision maker with a quantitative mindset.
+Respond as if you were forecasting at the beginning of the activity what the outcome would be,
+ultimately arriving at \{final\_result\_for\_prompt\}, from the options of \{options\_text\}.\newline\newline
+USER:\newline
+You are generating example forecasts that will be used to fine tune a language model.
+Using the uploaded pages from activity documents available for the following activity, respond as if you were forecasting only based on activity documents and original information from the start what the outcome would be.
+You will provide a well-reasoned forecast written from the perspective of an international aid evaluator at the beginning of the activity, only at the very end of your response arriving at the correctly forecasted evaluation success rating of '\{final\_result\_for\_prompt\}'.
+Your response will be balanced and comprehensive, including consideration of the information from the uploaded activity documents.
+Your mock forecast must adhere to the actual reasons for the overall evaluation, as described in the pages from the uploaded evaluation documents.\newline\newline
+Provide the following format for your response:\newline
+1. Provide reasons why the overall success might be rated \{midpoint\_low\_text\}.\newline
+2. Provide reasons why the overall success might be rated \{midpoint\_high\_text\}.\newline
+3. Aggregate your considerations, and decide on the final outcome among the \{num\_options\} options (finally arriving at \{final\_result\_for\_prompt\}).\newline
+4. Provide the final forecast on the last line beginning with 'FORECAST: ' followed by only the forecast with no extra words.\newline
+\newline\newline
+The final prediction should not be made until the very end of the mock forecast.
+Your mock forecast must reflect the uncertainty which would be inherent given the information at the start of the activity.
+If there is insufficient information describing why the '\{final\_result\_for\_prompt\}' evaluation was assigned, respond only with: "NO RESPONSE".
+Respond only in English.\newline\newline
+ACTIVITY TITLE: \{activity\_title\}\newline
+ACTIVITY SCOPE: \{activity\_scope\}\newline
+ORIGINAL PLANNED START DATE: \{planned\_start\}\newline
+ORIGINAL PLANNED END DATE: \{planned\_end\}\newline
+ORIGINAL PLANNED TOTAL DISBURSEMENT: \{disbursement\_total\} \{disbursement\_units\}\newline
+ORIGINAL PLANNED TOTAL LOANS AND CREDIT: \{loan\_total\} \{loan\_units\}\newline
+ACTIVITY DESCRIPTION FROM START: \{chatgpt\_description\}\newline
+ACTIVITY RISKS SUMMARY FROM START: \{risks\_summary\}\newline\newline
+[Uploaded context: up to 10 pages of baseline excerpts + up to 10 pages of outcome/evaluation excerpts]
+  \end{tcolorbox}
+  \caption{Prompt template used to generate retrospective ``mock forecasts'' (Gemini 2.5-pro) from retrieved baseline and outcome/evaluation document pages. Bracketed text indicates injected retrieved excerpts rather than literal prompt text.}
+  \label{fig:mock-forecast-prompt}
+\end{figure}
+
+% \begin{figure}[htbp]
+%   \centering
+%   \begin{subfigure}{0.48\textwidth}
+%     \begin{tcolorbox}[left=4pt, right=4pt, top=4pt, bottom=4pt]
+% \ttfamily\footnotesize
+% What is the intervention that is described in the abstract? 
+% This is an abstract for an impact evaluation report about an intervention in a LMIC. 
+% Do not mention the outcomes or analysis method, only describe the intervention with as much detail as is present in the abstract. 
+% Ensure to include any contextual information about what was done and where in your response. 
+% If nothing is said about the intervention write: No Intervention Described.
+%     \end{tcolorbox}
+%     \caption{Intervention extraction prompt.}
+%   \end{subfigure}\hfill
+%   \begin{subfigure}{0.48\textwidth}
+%     \begin{tcolorbox}[left=4pt, right=4pt, top=4pt, bottom=4pt]
+% \ttfamily\footnotesize
+% What does the abstract say regarding the \[outcome\_category\] outcome? 
+% Be sure to include relevant quantitative or categorical information where present. 
+% If nothing is said about the outcome write: No Information.
+%     \end{tcolorbox}
+%     \caption{Outcome extraction prompt.}
+%   \end{subfigure}
+%   \caption{Prompts used to extract (a) intervention descriptions and (b) outcome statements from abstracts.}
+%   \label{fig:prompts-ib}
+% \end{figure}
 
 \subsection{Techniques for Improving Forecasting Skill}
 Forecasting context was restricted to RAG context obtained, the GPT-generated intervention description, and the name of the outcome metric.
 
 We proceed to discuss how each technique for improving the composite forecasting skill metric was implemented.
 
-\textbf{Scratchpad}
-More details will come, once I am sure exactly how I plan to implement the methods. %TODO
+% \textbf{Scratchpad}
+% More details will come, once I am sure exactly how I plan to implement the methods. %TODO
 
-\textbf{RAG}
-More details will come, once I am sure exactly how I plan to implement the methods. %TODO
+% \textbf{RAG}
+% More details will come, once I am sure exactly how I plan to implement the methods. %TODO
 
 \textbf{Ensembling}
-More details will come, once I am sure exactly how I plan to implement the methods. %TODO
+All methods which demonstrated above-chance skill in forecasting were averaged using the mean value of the forecast. This was found to robustly outperform any individual forecasting method. Ensembles of LLM-generated Method \#1 and Method \#2 forecasts using differing random seeds and differently selected K-Nearest-Neighbors (with a different weight on most recent vs most semantically similar). A summary of the 10 pages was also included (method \#3).
+% More details will come, once I am sure exactly how I plan to implement the methods. %TODO
 
-\textbf{Fine-tuning}
-The Llama 70B model was fine-tuned using past paper results and pairings collected before the model cutoff date. In past work, even though data were in the training data, fine-tuning significantly improved prediction performance \citewithtitle{wenPredictingEmpiricalAI2025}. \\
+% \textbf{Fine-tuning}
+% The Llama 70B model was fine-tuned using past paper results and pairings collected before the model cutoff date. In past work, even though data were in the training data, fine-tuning significantly improved prediction performance \citewithtitle{wenPredictingEmpiricalAI2025}. \\
 
 
-NOTE: MORE DETAILS ON FINE-TUNING TO COME, ONCE ESTABLISH THAT I REALLY HAVE TIME TO DO THIS %TODO
+% NOTE: MORE DETAILS ON FINE-TUNING TO COME, ONCE ESTABLISH THAT I REALLY HAVE TIME TO DO THIS %TODO
 
-\textbf{}
+% \textbf{}
 
-\subsection{Scoring Rules} \label{sub:scoringrules}
+\subsection{Scoring Metrics} \label{sub:scoringmetrics}
 
-We combine Brier score, calibration, and accuracy into a composite forecasting skill metric to attempt to mitigate the various issues in the individual metrics. In general, we only proceed with adding an accuracy boosting feature if it does not worsen any individual metric. We also utilize a held-out test set to ensure the validation metrics remain similarly performant in the final dataset. In event forecasting, scoring rules are typically used to quantify forecaster skills. A scoring rule is ``proper'' if the forecaster maximizes the expected score for an observation drawn from the distribution F if they issue the probabilistic forecast F, rather than G $\neq$ F \citewithtitle{gneitingStrictlyProperScoring2007}. Brier score and log-loss are both strictly proper, but accuracy is not, limiting its comparability to other domains. However, accuracy has the advantage of intuitive simplicity.
+% We combine Brier score, calibration, and accuracy into a composite forecasting skill metric to attempt to mitigate the various issues in the individual metrics. In general, we only proceed with adding an accuracy boosting feature if it does not worsen any individual metric. We also utilize a held-out test set to ensure the validation metrics remain similarly performant in the final dataset. In event forecasting, scoring Metrics are typically used to quantify forecaster skills. A scoring rule is ``proper'' if the forecaster maximizes the expected score for an observation drawn from the distribution F if they issue the probabilistic forecast F, rather than G $\neq$ F \citewithtitle{gneitingStrictlyProperScoring2007}. Brier score and log-loss are both strictly proper, but accuracy is not, limiting its comparability to other domains. However, accuracy has the advantage of intuitive simplicity.
 
+
+\textbf{RMSE (Root Mean Square Error)}
+Take the square of the difference between every prediction and the true value, take the mean of all such squared values, then take the square root. Measure of “average” distance. Lower is better. On a scale from 0 to 5, therefore worst possible value is 5, best possible value is zero. This method heavily penalizes predictions that are significantly incorrect.
+
+\textbf{Coefficient of Determination ($R^2$)}
+$R^2$: Coefficient of determination. Theoretically equals zero, if we always choose the mean (however using the training set mean results in a lower score on the test set in the baseline measure below). If more than 1 regressors are included, $R^2$ is the square of the coefficient of multiple correlation and can be negative. Measures proportion of the variation in the dependent variable that is predictable from the independent variable. Higher is better. This method generally does not penalize outliers significantly.
+
+\textbf{Binary Brier Score}
+The binary Brier score is simply the mean squared error of the forecast (in this case, we measure whether the prediction above or below the midpoint of the scale, set to 2.5). We assume all methods assign a probability of 1 to the side predicted, and 0 to the side they did not predict. 
+
+\textbf{Side Accuracy}
+The percent of correctly predicted above 2.5 or below 2.5, out of all predictions. This has the benefit of clarity of interpretation, but has the downside that 80\% of forecasts are already above 2.5 (moderately satisfactory or better). Therefore, this method is less informative than $R^2$ or RMSE.
 
 % \begin{table}[htbp]
 % \centering
@@ -623,64 +836,64 @@ We combine Brier score, calibration, and accuracy into a composite forecasting s
 % \end{tabular}
 % \end{table}
 
-% NOTE: CHAT_GPT BASED LOG-LOSS - NEED TO DOUBLE-CHECK %TODO
-\begin{table}[htbp]
-\centering
-\caption{Caution when ranking forecasting systems using single metrics: each evaluation metric has its own issues \citewithtitle{palekaPitfallsEvaluatingLanguage2025}.}
-\label{tab:forecasting-metrics-pitfalls}
-\renewcommand{\arraystretch}{1.2}
-\setlength{\tabcolsep}{5pt}
-\begin{tabular}{|p{0.16\textwidth}|p{0.28\textwidth}|p{0.20\textwidth}|p{0.30\textwidth}|}
-\hline
-\textbf{Metric} & \textbf{Method} & \textbf{Equation} & \textbf{Pitfalls when using for comparing forecasting skill} \\
-\hline
-Calibration &
-Consider all questions where the forecaster predicts a probability close to $p$; compare predicted and observed frequencies across bins. &
-$\Pr(Y=1 \mid \hat{p}=p) \approx p.$ &
-Can penalize useful forecasting; depends on binning; see text below. \\
-\hline
-Accuracy &
-Percent of correct classifications after thresholding probabilities (e.g., predict ``Yes'' if $p \ge 0.5$). &
-$\displaystyle \mathrm{Acc}=\frac{1}{N}\sum_{i=1}^N [\hat{y}_i = y_i].$ &
-Rises with class imbalance and fewer options; not comparable across outcomes with different base rates. \\
-\hline
-Brier score &
-Mean squared error between predicted probability and outcome (lower is better). A brier score is strictly proper. More outcome categories will raise the brier score (as the correct outcome is more difficult to predict)&
-$\displaystyle \mathrm{Br}=\frac{1}{N}\sum_{i=1}^N (p_i - y_i)^2.$ &
-Overweights mid-probability discrimination relative to rare-event skill; see text below. \\
-\hline
-
-Logarithmic score &
-Strictly proper scoring rule for multi-category outcomes (often reported as negative log-loss). &
-$ \ell(\mathbf{p}, y)=\log{p_{y}}$ &
-Extremely sensitive to overconfident errors; undefined at $p_{y}=0$ without clipping; scale depends on log base. \\
-\hline
-
+% % NOTE: CHAT_GPT BASED LOG-LOSS - NEED TO DOUBLE-CHECK %TODO
+% \begin{table}[htbp]
+% \centering
+% \caption{Caution when ranking forecasting systems using single metrics: each evaluation metric has its own issues \citewithtitle{palekaPitfallsEvaluatingLanguage2025}.}
+% \label{tab:forecasting-metrics-pitfalls}
+% \renewcommand{\arraystretch}{1.2}
+% \setlength{\tabcolsep}{5pt}
+% \begin{tabular}{|p{0.16\textwidth}|p{0.28\textwidth}|p{0.20\textwidth}|p{0.30\textwidth}|}
+% \hline
+% \textbf{Metric} & \textbf{Method} & \textbf{Equation} & \textbf{Pitfalls when using for comparing forecasting skill} \\
+% \hline
+% Calibration &
+% Consider all questions where the forecaster predicts a probability close to $p$; compare predicted and observed frequencies across bins. &
+% $\Pr(Y=1 \mid \hat{p}=p) \approx p.$ &
+% Can penalize useful forecasting; depends on binning; see text below. \\
+% \hline
+% Accuracy &
+% Percent of correct classifications after thresholding probabilities (e.g., predict ``Yes'' if $p \ge 0.5$). &
+% $\displaystyle \mathrm{Acc}=\frac{1}{N}\sum_{i=1}^N [\hat{y}_i = y_i].$ &
+% Rises with class imbalance and fewer options; not comparable across outcomes with different base rates. \\
+% \hline
+% Brier score &
+% Mean squared error between predicted probability and outcome (lower is better). A brier score is strictly proper. More outcome categories will raise the brier score (as the correct outcome is more difficult to predict)&
+% $\displaystyle \mathrm{Br}=\frac{1}{N}\sum_{i=1}^N (p_i - y_i)^2.$ &
+% Overweights mid-probability discrimination relative to rare-event skill; see text below. \\
+% \hline
 
 % Logarithmic score &
-% Proper log scoring rule (often reported as negative log-loss). &
-% $\displaystyle \ell(p,y)=y\log p + (1-y)\log(1-p).$ &
-% Extremely sensitive to overconfident errors; undefined at $p\in\{0,1\}$ without clipping; scale depends on log base. \\
-\hline
+% Strictly proper scoring rule for multi-category outcomes (often reported as negative log-loss). &
+% $ \ell(\mathbf{p}, y)=\log{p_{y}}$ &
+% Extremely sensitive to overconfident errors; undefined at $p_{y}=0$ without clipping; scale depends on log base. \\
+% \hline
 
 
-\end{tabular}
-\end{table}
+% % Logarithmic score &
+% % Proper log scoring rule (often reported as negative log-loss). &
+% % $\displaystyle \ell(p,y)=y\log p + (1-y)\log(1-p).$ &
+% % Extremely sensitive to overconfident errors; undefined at $p\in\{0,1\}$ without clipping; scale depends on log base. \\
+% \hline
 
-Each form of evaluating the quality of forecasts has its own limitations. 
 
-\paragraph{Calibration issues}
-Calibration can penalize useful forecasting. For example, guessing a card suit and rank in a 52-card deck. A base-rate forecaster that predicts $1/52$ for every card is perfectly calibrated. A more discerning forecaster assigns $10\%$ to five ``front-runners'' and $0.5\%$ to the remaining 47. If their ranking is genuinely informative so that the true card lies among the top five in $60\%$ of rounds, the observed success rates are about $12\%$ in the $10\%$ bin and $0.8\%$ in the $0.5\%$ bin so calibration looks worse, yet this forecaster is far more useful.
+% \end{tabular}
+% \end{table}
 
-\paragraph{Brier score issues}
-Out of 120 ``Good'' or ``Bad'' outcomes, 60 are mid-probability with a 40\% base rate (half 60\% ``Good'' events and half are 20\% ``Good'' events). The remaining 60 are rare, events with a 2\% ``Good'' rate.  
-\begin{itemize}
-\item Forecaster A is perfect on rare events but predicts 0.4 on all mid-prob questions, yielding an average Brier of $0.12$. 
-\item Forecaster B is baseline on rare events (predicts 0.02) but discriminates mid-prob questions (predicts 0.6 for 60\% cases and 0.2 for 20\% cases), yielding an average Brier of $\approx 0.1$. 
+% Each form of evaluating the quality of forecasts has its own limitations. 
 
-Despite being useless on rare events, B is ranked better overall.
+% \paragraph{Calibration issues}
+% Calibration can penalize useful forecasting. For example, guessing a card suit and rank in a 52-card deck. A base-rate forecaster that predicts $1/52$ for every card is perfectly calibrated. A more discerning forecaster assigns $10\%$ to five ``front-runners'' and $0.5\%$ to the remaining 47. If their ranking is genuinely informative so that the true card lies among the top five in $60\%$ of rounds, the observed success rates are about $12\%$ in the $10\%$ bin and $0.8\%$ in the $0.5\%$ bin so calibration looks worse, yet this forecaster is far more useful.
 
-\end{itemize}
+% \paragraph{Brier score issues}
+% Out of 120 ``Good'' or ``Bad'' outcomes, 60 are mid-probability with a 40\% base rate (half 60\% ``Good'' events and half are 20\% ``Good'' events). The remaining 60 are rare, events with a 2\% ``Good'' rate.  
+% \begin{itemize}
+% \item Forecaster A is perfect on rare events but predicts 0.4 on all mid-prob questions, yielding an average Brier of $0.12$. 
+% \item Forecaster B is baseline on rare events (predicts 0.02) but discriminates mid-prob questions (predicts 0.6 for 60\% cases and 0.2 for 20\% cases), yielding an average Brier of $\approx 0.1$. 
+
+% Despite being useless on rare events, B is ranked better overall.
+
+% \end{itemize}
 % Consider 120 ``Good''/``Bad'' outcomes. Sixty are mid-probability with a 40\% base rate (half are 60\% ``Good'' and half are 20\% ``Good''). The remaining 60 are rare events with a 2\% ``Good'' rate.
 % \begin{itemize}
 % \item Forecaster A is perfect on rare events but predicts $0.4$ on all mid-probability questions $\Rightarrow$ average Brier $=0.12$.
@@ -697,31 +910,31 @@ Despite being useless on rare events, B is ranked better overall.
 % \item \textbf{Dataset mix sensitivity:} comparisons can be distorted when outcome prevalence differs across evaluation sets.
 % \end{itemize}
 
-\paragraph{Logarithmic score issues}
-\begin{itemize}
-\item \textbf{Extreme penalties:} overconfident mistakes with $p_y\!\approx\!0$ dominate the average.
-\item \textbf{Undefined at the boundaries:} $\log 0$ is undefined, so implementations clip $p_y\in[\epsilon,1-\epsilon]$ and results depend on $\epsilon$.
-\item \textbf{Unit dependence:} the scale changes with the log base, complicating comparisons across papers.
-\item \textbf{Dataset mix sensitivity:} comparisons can be distorted when outcome prevalence differs across evaluation sets.
-\end{itemize}
+% \paragraph{Logarithmic score issues}
+% \begin{itemize}
+% \item \textbf{Extreme penalties:} overconfident mistakes with $p_y\!\approx\!0$ dominate the average.
+% \item \textbf{Undefined at the boundaries:} $\log 0$ is undefined, so implementations clip $p_y\in[\epsilon,1-\epsilon]$ and results depend on $\epsilon$.
+% \item \textbf{Unit dependence:} the scale changes with the log base, complicating comparisons across papers.
+% \item \textbf{Dataset mix sensitivity:} comparisons can be distorted when outcome prevalence differs across evaluation sets.
+% \end{itemize}
 
 
 \subsection{Outcome Grading}
-Next, each outcome was evaluated in multiple ways.
+% Next, each outcome was evaluated in multiple ways.
 
-First, a grading scheme was identified as a useful taxonomy, which could allow easy comparison between the predictions and the test set:
-\begin{itemize}
-\item [1.] \textbf{Very significant}: Substantial improvement with robust evidence
-\item [2.] \textbf{Significant}: Noticeable improvement with moderate evidence
-\item [3.] \textbf{Neutral/mixed results}: Some improvement but limited or unclear
-\item [4.] \textbf{No effect}: No discernible impact
-\item [5.] \textbf{Outcome was worsened}: Negative impact
-\end{itemize}
+% First, a grading scheme was identified as a useful taxonomy, which could allow easy comparison between the predictions and the test set:
+% \begin{itemize}
+% \item [1.] \textbf{Very significant}: Substantial improvement with robust evidence
+% \item [2.] \textbf{Significant}: Noticeable improvement with moderate evidence
+% \item [3.] \textbf{Neutral/mixed results}: Some improvement but limited or unclear
+% \item [4.] \textbf{No effect}: No discernible impact
+% \item [5.] \textbf{Outcome was worsened}: Negative impact
+% \end{itemize}
 
-Grading for free-form prediction was also allowed, whereby GPT-o4-mini was used to directly compare a free-form prediction of the outcome, to the outcome described in the abstract. NOTE: FURTHER DETAILS WILL COME UPON IMPLEMENTING THIS METHODOLOGY %TODOf
+% Grading for free-form prediction was also allowed, whereby GPT-o4-mini was used to directly compare a free-form prediction of the outcome, to the outcome described in the abstract. NOTE: FURTHER DETAILS WILL COME UPON IMPLEMENTING THIS METHODOLOGY %TODOf
 
 
-For each forecast, a qualitative free-form forecast is generated. Subsequently, a grade on the 5-point scale is also generated.
+% For each forecast, a qualitative free-form forecast is generated. Subsequently, a grade on the 5-point scale is also generated.
 
 % \subsection{Grading Forecast Accuracy}
 
@@ -734,7 +947,7 @@ For each forecast, a qualitative free-form forecast is generated. Subsequently, 
 % }
 
 \subsection{Predicting the Confidence of a Forecast}
-In addition to forecasting the outcome of an intervention, it is also useful to classify just how confident the forecast is. To do so, we prompt the model to produce a confidence score. Research on LLM confidence scoring shows that ``consistency'' based approaches are more accurate than verbally eliciting confidence directly from the model \citewithtitle{lyuCalibratingLargeLanguage2025}. Agreement-based consistency works best for open-source models and Codex, while entropy works best for GPT-3.5 \citewithtitle{lyuCalibratingLargeLanguage2025}. Because I already produce $K$ independent forecasts using differing reasoning prompts, the empirical variance across sample predictions provides an agreement-based forecast confidence for Llama 70B. For Llama 70B I also use the probability of the classified output token as a further reported confidence metric where applicable. We use the entropy metric for those closed-source models.
+In addition to forecasting the outcome of an intervention, it is also useful to classify just how confident the forecast is. To do so, we prompt the model to produce a confidence score. Research on LLM confidence scoring shows that ``consistency'' based approaches are more accurate than verbally eliciting confidence directly from the model \citewithtitle{lyuCalibratingLargeLanguage2025}. Agreement-based consistency works best for open-source models and Codex, while entropy works best for GPT-3.5 \citewithtitle{lyuCalibratingLargeLanguage2025}. Because I already produce $K$ independent forecasts using differing reasoning prompts, the empirical variance across sample predictions provides an agreement-based forecast confidence. % for Llama 70B. For Llama 70B I also use the probability of the classified output token as a further reported confidence metric where applicable. We use the entropy metric for those closed-source models.
 
 The outputs of such predictions can be very helpful when a given minimum confidence is required, such as in developmental aid and cooperation interventions affecting the environment. ``Conformal prediction'' is the form of prediction required from machine learning models such that the model is guaranteed to contain the ground truth within a provided probability (such as 90\%) \citewithtitle{cherianLargeLanguageModel2024}. Techniques above can be useful for conformal prediction methods, so users of the system can have high confidence that the forecast is correct. This also provides a significant advantage over human forecasters, who are unable to provide guarantees of the accuracy of a given prediction with any real statistical significance.
 
@@ -752,7 +965,7 @@ $$
 \mathrm{Ent}(a)=1-\frac{H(p)}{\log{m}}, \qquad H(p)=-\sum{p_j}_{j=1}^{m} \log{p_j}.
 $$
 
-Finally, I separately fine-tune a small language model to predict forecastability using the training dataset based on the intervention description and the log-loss of the outcome score. I report how correlated all of these metrics are and use a weighted combination to provide a final composite ``forecastability'' prediction.
+%Finally, I separately fine-tune a small language model to predict forecastability using the training dataset based on the intervention description and the log-loss of the outcome score. I report how correlated all of these metrics are and use a weighted combination to provide a final composite ``forecastability'' prediction.
 
 
 % \ifdev{
@@ -800,8 +1013,7 @@ Finally, I separately fine-tune a small language model to predict forecastabilit
 \section{Results \& Discussion}
 \subsection{Database of Evaluations}
 \label{sub:database_of_evaluations}
-In addition to producing a useful LLM forecasting system, this work has also (HOPEFULLY) %TODO: remove
-produced the largest extent collection of intervention outcomes in developmental aid and cooperation interventions affecting the environment. This database of abstracts is shared publicly on zenodo at \url{https://zenodo.org/records/XXYYZZ}. %TODO: publish abstracts
+In addition to producing a useful LLM forecasting system, this work has also produced a large collection of intervention outcomes in developmental aid and cooperation interventions affecting the environment. Given the absence of academic publications investigating the IATI dataset specifically regarding evaluations, this thesis provides flexible, powerful tools to gain insights from the IATI dataset. This database of is shared publicly on zenodo at \url{https://zenodo.org/records/XXYYZZ}. %TODO: publish abstracts
 
 One large existing collection can be found in \citewithtitle{vivaltHowMuchCan2020}, with 15,024 estimates from 635 papers on 20 types of interventions in international development. Notably, this work has catalogued 1,932 quantitative results from 307 separate papers over approximately 70 categories, when restricting attention to only those results that can be compared with results from another paper on the same intervention-outcome. A majority of papers were found to be assessing the same outcome, so only the latest results were chosen for the quantitative analysis. Only a small percentage of quantitative outcomes were among the 70 categories.
 
@@ -813,7 +1025,99 @@ Additionally, we will analyze the relationship between stated grade and extracte
 \subsection{Strengths and Weaknesses of This Forecasting System}
 To be analyzed once results are available. %TODO
 \subsection{Evaluation of Techniques for Improving Forecast Accuracy} \label{sub:strengths_and_weaknesses_of_this_forecasting_system}
-To be analyzed once results are available. %TODO
+\subsubsection{Selecting and validating GLM variables}
+
+We use a generalized linear model (GLM) baseline that maps ex-ante structured activity features to a numeric overall rating outcome. In this setting, the GLM is a linear predictor with an intercept and additive feature effects, with coefficients estimated from historical activities. To reduce overfitting and to obtain a stable, interpretable subset of predictors, we use elastic-net regularization, which combines $\ell_1$ (lasso) and $\ell_2$ (ridge) penalties and can both shrink coefficients and set some to exactly zero \citep{zouHastie2005elasticnet}.
+
+We assembled a master dataset of activities with non-missing (i) outcome ratings and (ii) activity start dates, and constructed predictors intended to be available at or near activity start (e.g., graded dimensions such as finance, context, risks, targets, implementer performance, integratedness, complexity; activity scope; macro covariates such as GDP per capita and CPIA score where available; financing-type indicators; organizational identity features; and simple time-derived features such as planned duration). Continuous predictors were standardized using statistics computed on the training data only.
+
+Evaluation used four temporally defined validation sets: a single 69-activity holdout set (Validation~A) corresponding to the activities used in the few-shot forecasting evaluation, and three additional 100-activity validation sets (Validations~B--D) defined as the most recent 300 activities prior to Validation~A, split into three contiguous blocks of 100 by activity start date. For each validation set, the training set consisted of all activities with start dates strictly earlier than the earliest start date in that validation window, excluding the validation activities themselves.
+
+For each run, we selected the elastic-net penalty strength $\lambda$ by grid search over a logarithmic grid (default $\lambda \in \{10^{-3},\dots,10^{1}\}$), choosing the value that minimized validation RMSE; we also recorded validation $R^2$ for reporting. After selecting $\lambda$, we refit the model on the corresponding training set and recorded the set of non-zero coefficients as the selected variables.
+
+To assess selection stability, we performed nonparametric bootstrap resampling of the training set (500 bootstrap replicates) \citep{efronTibshirani1994bootstrap}.
+In each replicate, we resampled training activities with replacement, re-selected $\lambda$ using the same RMSE criterion on the fixed validation set, refit the elastic net, and recorded coefficients. We summarized each predictor by (i) selection frequency across all bootstrap replicates, (ii) selection frequency among replicates whose validation RMSE was at least as good as the baseline fit, and (iii) sign consistency (the fraction of non-zero selections sharing the modal coefficient sign). Predictors were treated as robust if they were selected in at least 60\% of all bootstrap runs, selected in at least 60\% of the better-than-baseline runs, and had sign consistency at least 0.9. Downstream GLM baselines were then refit using only this robust predictor set.
+
+\subsubsection{Ensuring methods improve forecasting skill}
+
+We evaluated whether each forecasting approach demonstrated out-of-sample skill exceeding chance on held-out activities. This analysis was applied to all methods considered: the GLM baseline, the KNN-based baseline, LLM Method~\#1, LLM Method~\#2, and simple ensembles formed by averaging each method with the GLM (GLM+KNN, GLM+Method~\#1, GLM+Method~\#2). Skill was assessed on each validation set (A--D) using RMSE as the primary metric.
+
+For each method (and each GLM-averaged ensemble), we conducted a permutation-based skill exceedance test in which the model's validation predictions were held fixed while the validation outcomes were randomly permuted many times to form a null distribution of RMSE; the empirical $p$-value was computed as the fraction of permutations achieving RMSE less than or equal to the observed RMSE \citep{good2000permutation}.
+
+In addition, to test whether combining a method with the GLM yielded a statistically meaningful improvement over the GLM alone, we used paired bootstrap resampling of the validation activities. Specifically, we resampled validation activities with replacement (500 replicates), recomputed the RMSE difference $\Delta=\mathrm{RMSE}(\text{ensemble})-\mathrm{RMSE}(\text{GLM})$ on each replicate, and summarized the resulting distribution to obtain uncertainty intervals and an empirical one-sided significance measure based on the fraction of replicates with $\Delta<0$ \citep{efronTibshirani1994bootstrap}.
+
+\begin{figure}[htbp]
+  \centering
+  \begin{subfigure}{0.48\textwidth}
+    \begin{tcolorbox}[left=4pt, right=4pt, top=4pt, bottom=4pt]
+\ttfamily\footnotesize
+\textbf{Algorithm 1: Elastic-net variable selection + bootstrap}\newline
+Input: training set $\mathcal{D}_{train}$, validation set $\mathcal{D}_{val}$, feature matrix $X$, outcomes $y$\newline
+1.\ Standardize features using $\mathcal{D}_{train}$ statistics.\newline
+2.\ For $\lambda \in \Lambda$ (log grid): fit elastic net; compute RMSE on $\mathcal{D}_{val}$.\newline
+3.\ Choose $\lambda^\star = \arg\min_{\lambda \in \Lambda} \mathrm{RMSE}_{val}(\lambda)$.\newline
+4.\ Refit elastic net on $\mathcal{D}_{train}$ with $\lambda^\star$; record nonzero coefficients.\newline
+5.\ Bootstrap $b=1..B$ (resample $\mathcal{D}_{train}$ with replacement):\newline
+\ \ \ a.\ Re-select $\lambda^\star_b$ by minimizing validation RMSE.\newline
+\ \ \ b.\ Refit; store coefficient vector $\beta_b$ and validation RMSE.\newline
+6.\ Summarize each predictor by selection frequency and sign consistency; retain robust predictors.\newline
+Output: robust predictor set and refit GLM baseline.
+    \end{tcolorbox}
+    \caption{Variable selection and stability.}
+  \end{subfigure}\hfill
+  \begin{subfigure}{0.48\textwidth}
+    \begin{tcolorbox}[left=4pt, right=4pt, top=4pt, bottom=4pt]
+\ttfamily\footnotesize
+\textbf{Algorithm 2: Skill exceedance + GLM-averaging tests}\newline
+Input: validation set $\mathcal{D}_{val}$, predictions $\hat{y}^{(m)}$ for each method $m$.\newline
+1.\ Compute observed RMSE for each method $m$.\newline
+2.\ For each method $m$, permutation test (skill exceedance):\newline
+\ \ \ a.\ Permute validation outcomes $y_{val}$ to $y_{val}^{\pi}$.\newline
+\ \ \ b.\ Compute $\mathrm{RMSE}(\hat{y}^{(m)}, y_{val}^{\pi})$.\newline
+\ \ \ c.\ Empirical $p$-value = fraction with RMSE $\le$ observed.\newline
+3.\ For each method $m$, test GLM-averaged ensemble:\newline
+\ \ \ a.\ Form ensemble prediction $\hat{y}^{(ens)}=\tfrac{1}{2}(\hat{y}^{(GLM)}+\hat{y}^{(m)})$.\newline
+\ \ \ b.\ Paired bootstrap over validation activities:\newline
+\ \ \ \ \ \ resample activities; compute $\Delta=\mathrm{RMSE}(ens)-\mathrm{RMSE}(GLM)$.\newline
+\ \ \ c.\ Summarize $\Delta$ (intervals; fraction with $\Delta<0$).\newline
+Output: per-method skill exceedance evidence and ensemble improvement evidence.
+    \end{tcolorbox}
+    \caption{Skill and ensemble evaluation.}
+  \end{subfigure}
+  \caption{Overview of the feature-based model selection pipeline and the statistical evaluation used to assess forecasting skill for each method and for GLM-averaged ensembles.}
+  \label{fig:glm-elasticnet-bootstrap-algs}
+\end{figure}
+
+
+% @article{zouHastie2005elasticnet,
+%   title   = {Regularization and Variable Selection via the Elastic Net},
+%   author  = {Zou, Hui and Hastie, Trevor},
+%   journal = {Journal of the Royal Statistical Society: Series B (Statistical Methodology)},
+%   volume  = {67},
+%   number  = {2},
+%   pages   = {301--320},
+%   year    = {2005},
+%   doi     = {10.1111/j.1467-9868.2005.00503.x}
+% }
+
+% @book{efronTibshirani1994bootstrap,
+%   title     = {An Introduction to the Bootstrap},
+%   author    = {Efron, Bradley and Tibshirani, Robert J.},
+%   publisher = {Chapman and Hall/CRC},
+%   year      = {1994},
+%   doi       = {10.1201/9780429246593}
+% }
+
+% @book{good2000permutation,
+%   title     = {Permutation Tests: A Practical Guide to Resampling Methods for Testing Hypotheses},
+%   author    = {Good, Phillip I.},
+%   publisher = {Springer},
+%   year      = {2000},
+%   doi       = {10.1007/978-1-4757-3235-1}
+% }
+
+
+%To be analyzed once results are available. %TODO
 % \subsection{The Risk of Trusting This Forecasting System}
 % \begin{itemize}
 %   \item Published abstracts bias towards overoptimism TODO: FIND THIS PAPER FROM
