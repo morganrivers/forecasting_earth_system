@@ -8,6 +8,7 @@
 \usepackage[margin=1in]{geometry}
 \usepackage{graphicx}
 \usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
 \usepackage{setspace}
 \usepackage{url}
 \usepackage{microtype}
@@ -216,15 +217,15 @@
 % ---------------- Results constants ----------------
 % ---------------- Results constants ----------------
 
-\newcommand{\PairwiseHuman}{65}
-\newcommand{\PairwiseModel}{77}
-\newcommand{\PairwiseCILow}{73}
-\newcommand{\PairwiseCIHigh}{81}
+\newcommand{\PairwiseHuman}{67}
+\newcommand{\PairwiseModel}{72}
+\newcommand{\PairwiseCILow}{69}
+\newcommand{\PairwiseCIHigh}{76}
 
 \newcommand{\Rsqfrac}{0.26}
 \newcommand{\Rsqpct}{26}
 \newcommand{\RsqpctCILow}{14}
-\newcommand{\RsqpctCIHigh}{37}
+\newcommand{\RsqpctCIHigh}{36}
 
 \newcommand{\BaselineRsq}{10}
 
@@ -234,7 +235,7 @@
 
 % ---------------- END CONSTANTS ----------------
 
-International aid and cooperation create a profound difference in the rate of development in growing economies, improve the lives of the world's poorest, and often safeguard the environment and materially promote sustainability. However, international aid often fails to achieve its objectives. There have been few attempts in the literature to create models to explicitly predict the success of aid activities, and none focus solely on environmental outcomes. This thesis produces a forecasting system for the overall success of international aid activities at time of evaluation from the International Aid and Transparency Initiative (IATI) database, combining classical statistical methods with modern language model techniques. I apply novel techniques to improve prediction accuracy, including using the reasoning abilities and information gathering ability of large language models (LLMs) to improve forecasts, introducing LLM summaries of various dimensions of activity documents, using recency adjustments, and defining a novel narrative similarity grade benchmark. I first assess overall success ratings on a scale from 1 to 6, then measure narrative forecast accuracy, and finally assess cost-effectiveness forecasting. The full forecasting system outperforms what could be extrapolated from the stated risks in activity documents alone for overall evaluations in tests against a validation set of 300 later-starting activities in a dataset of 1,300 environmental and sustainability improving activities restricted to 4 reporting organizations. Compared to the baseline of \PairwiseHuman\,\% Pairwise accuracy for the risks extrapolation, the full system reached to \PairwiseModel\,\% [95\% CI: \PairwiseCILow\,\%, \PairwiseCIHigh\,\%]. The forecasting system also explains \Rsqpct\,\% [95\% CI: \RsqpctCILow\,\%, \RsqpctCIHigh\,\%] of the variance in true ratings ($R^2=\Rsqfrac$) in the validation set, compared to \BaselineRsq\,\% for a ``pick the most common rating from reporting org'' baseline, and 0\% for the risks extrapolation. Finally, my forecasting system predicts which activity will have a higher cost-effectiveness among random pairs of activities in the IATI database with a success probability of \CostEffect\,\% [95\% CI: \CostCILow\,\%, \CostCIHigh\,\%]. This work lays the foundation to improve decision making for a wide range of initiatives and policies in developing countries and also in other data-rich institutional contexts.
+International aid and cooperation create a profound difference in the rate of development in growing economies, improve the lives of the world's poorest, and often safeguard the environment and materially promote sustainability. However, international aid often fails to achieve its objectives. There have been few attempts in the literature to create models to explicitly predict the success of aid activities, and none focus solely on environmental outcomes. This thesis produces a forecasting system for the overall success of international aid activities at time of evaluation from the International Aid and Transparency Initiative (IATI) database, combining classical statistical methods with modern language model techniques. I apply novel techniques to improve prediction accuracy, including using the reasoning abilities and information gathering ability of large language models (LLMs) to improve forecasts, introducing LLM summaries of various dimensions of activity documents, using recency adjustments, and defining a novel narrative similarity grade benchmark. I first assess overall success ratings on a scale from 1 to 6, then measure narrative forecast accuracy, and finally assess cost-effectiveness forecasting. The full forecasting system outperforms what could be extrapolated from the stated risks in activity documents alone for overall evaluations in tests against a validation set of 300 later-starting activities in a dataset of 1,300 environmental and sustainability improving activities restricted to 4 reporting organizations. Compared to the baseline of \PairwiseHuman\,\% Pairwise accuracy for the risks extrapolation, the full system reached \PairwiseModel\,\% [95\% CI: \PairwiseCILow\,\%, \PairwiseCIHigh\,\%]. The forecasting system also explains \Rsqpct\,\% [95\% CI: \RsqpctCILow\,\%, \RsqpctCIHigh\,\%] of the variance in true ratings ($R^2=\Rsqfrac$) in the validation set, compared to \BaselineRsq\,\% for a ``pick the most common rating from reporting org'' baseline, and 0\% for the risks extrapolation. Finally, my forecasting system predicts which activity will have a higher cost-effectiveness among random pairs of activities in the IATI database with a success probability of \CostEffect\,\% [95\% CI: \CostCILow\,\%, \CostCIHigh\,\%]. This work lays the foundation to improve decision making for a wide range of initiatives and policies in developing countries and also in other data-rich institutional contexts.
 
 
 
@@ -640,10 +641,10 @@ In summary, this adds the following 16 features to the statistical model:
 
 \textbf{NOTE: I have a comprehensive overview of past literature involving LLMs in the introduction, but I've left it out of this draft.}
 
-Multiple studies have measured zero-shot LLM forecasting capability, and found that better general ability base models tend to perform better on forecasting tasks \citep{halawiApproachingHumanLevelForecasting2024} \citep{kargerForecastBenchDynamicBenchmark2024}: In one study with dozens of base models and a dynamically updating benchmark on prediction market forecasting questions, an inverse linear relationship was found between the human preference of a model's answer (in terms of an ELO score) and the Brier score, and similarly a log-linear inverse relationship between the compute used to train the model and the Brier score \citep{kargerForecastBenchDynamicBenchmark2024}.
+% Multiple studies have measured zero-shot LLM forecasting capability (zero-shot means without any complex prompt architectures or examples specific to the forecasting task), and found that better general ability base models tend to perform better on forecasting tasks \citep{halawiApproachingHumanLevelForecasting2024} \citep{kargerForecastBenchDynamicBenchmark2024}: In one study with dozens of base models and a dynamically updating benchmark on prediction market forecasting questions, an inverse linear relationship was found between the human preference of a model's answer (in terms of an ELO score) and the Brier score, and similarly a log-linear inverse relationship between the compute used to train the model and the Brier score \citep{kargerForecastBenchDynamicBenchmark2024}.
 
 In order to guard against leakage of information from the training, I selected \emph{deepseek-V3.2} %Llama 70B \citep{touvronLlama2Open2023}%
-as my forecasting model, due to its strong performance and low cost. I also chose \emph{gemini-3-pro} due to its strong performance. Lastly \emph{gemini-2.5-flash
+as my forecasting model, due to its performance on benchmarks and low cost. I also chose \emph{gemini-3-pro} due to its performance. Lastly \emph{gemini-2.5-flash
 } was selected only to assess the possibility of fine-tuning, as other more powerful models were unavailable for fine-tuning.
  
 The LLM forecasting method was decided upon by iteratively inspecting both the quality of the response, and the overall accuracy of the forecasts made by the LLM. To generate the LLM forecasting methods, \emph{gemini-2.5-flash} was prompted with a series of ``mock forecasts'', generated by \emph{gemini-2.5-pro}. The ``mock forecast'' used relevant pages retrieved by ranking the categorized topics by forecast informativeness and retrieving 10 pages of the most relevant activity data and 10 pages of the most relevant evaluation data, prioritizing pages marked as ``deviations from plans'', ``delays or early completion'', or ``over or under spending'' with a minimum forecasting relevance score of 3/10, and otherwise returning the pages with the highest forecasting relevance score.
@@ -663,7 +664,7 @@ Finally, the distribution of rating outcomes was inserted into the prompt, in or
 
 \subsubsubsection{LLM Prompting Strategies}
 
-The full prompt template for the LLM Forecast is shown in Figure~\ref{fig:forecast-prompt-multistage}.
+The full prompt template for the LLM Forecast is shown in Figure~\ref{fig:forecast-prompt-multistage}. LLMs in all prompts were instructed to ``think like a superforecaster'' (superforecasters usually beat domain experts in their own fields by maintaining a broad sense of good judgement and cultivating a trained skill at accurately estimating prediction probabilities, rather than overly relying on a single strategy (such as econometric analysis, or specific statistical methods) \citep{tetlockSuperforecastingArtScience2015}.). This replicates prior methods which found this to be the highest performing in geopolitical domain \cite{halawiApproachingHumanLevelForecasting2024}.
 
 \textbf{Few-Shot Block}
 In both methods, I use a $k$-nearest-neighbors (KNN) few-shot block of semantically similar activities in the training data (see Section \ref{ssub:nearest_neighbor_vector_similarity_} for how semantic similarity was determined). I selected a range of nearest neighbors. I asked the language model to extrapolate lessons about rating scales for the most similar ``Highly Unsatisfactory'', ``Unsatisfactory'' or ``Moderately Unsatisfactory'', the most similar ``Moderately Satisfactory'', and the most similar ``Satisfactory'' or ``Highly Satisfactory'' rated examples in the training data. A selection of $k=3$ summarized mock forecasts was found to perform better than $k=1$, $5$, or $7$.
@@ -745,16 +746,27 @@ Finally, I appended a short description of the empirical distribution of rating 
 %   \caption{Prompt templates for LLM forecasting Methods \#1 and \#2. The methods share the same scaffold (few-shot examples, metadata, risks, and response-format constraints) and differ only in how activity context is injected (summary vs.\ raw document text).}
 %   \label{fig:forecast-prompts}
 % \end{figure}
+\newtcolorbox[auto counter, number within=section]{boxedprompt}[2][]{
+  enhanced,
+  breakable,
+  colback=white,
+  colframe=black,
+  fonttitle=\bfseries,
+  title=Box~\thetcbcounter: #2,
+  #1
+}
+\begin{boxedprompt}
+[label={box:multistage}]{Single-method multi-stage forecasting prompt}{
 
+Stages s1 and s2 are run as separate calls, and their outputs are inserted into the final (s3) prompt via \texttt{insert\_stage\_s1\_answer\_here} and \texttt{insert\_stage\_s2\_answer\_here}. Below are the system and user prompts.
 
-
-% =========================
-% FIGURE 1: Multi-stage final forecast prompt (single method)
-% =========================
-\begin{figure}[htbp]
-  \centering
-  \begin{tcolorbox}[left=4pt, right=4pt, top=4pt, bottom=4pt, width=0.96\textwidth]
-\ttfamily\footnotesize
+\vspace{1em}
+% Single-method multi-stage forecasting prompt
+% Stages s1 and s2 are run as separate calls, and their outputs are inserted into the final (s3) prompt via \{\texttt{insert\_stage\_s1\_answer\_here}\} and \{\texttt{insert\_stage\_s2\_answer\_here}\}.
+}
+\ttfamily
+\fontsize{10}{10}\selectfont
+\setlength{\baselineskip}{0.9\baselineskip}
 SYSTEM:\newline
 You are an experienced international aid decision maker with a quantitative mindset.
 Respond with a comprehensive, thorough forecast of what the overall evaluation rating of the activity will be,
@@ -811,11 +823,10 @@ On the very last line of your response, write `FORECAST: ' followed by exactly o
 \{options\_text\}\newline
 
 Respond only in English.
-  \end{tcolorbox}
-  \caption{Single-method multi-stage forecasting prompt. Stages s1 and s2 are run as separate calls, and their outputs are inserted into the final (s3) prompt via \{\texttt{insert\_stage\_s1\_answer\_here}\} and \{\texttt{insert\_stage\_s2\_answer\_here}\}.}
-  \label{fig:forecast-prompt-multistage}
-\end{figure}
-
+  
+\end{boxedprompt}
+\label{fig:forecast-prompt-multistage}
+\vspace{1em}
 
 \textbf{Ensembling}
 Ensembling averages many individual forecasts of the same model, prompted in slightly different ways. I found ensembling was a relatively weak but robust method while validating, so due to its high API cost, I reserve the ensembling method for the final held-out set, which I will present once this thesis has reached completion. 
@@ -1199,18 +1210,18 @@ The language model derived features modestly aided forecast accuracy, in aggrega
 \toprule
 Method & $R^2$ $\uparrow$ & RMSE $\downarrow$ & MAE $\downarrow$ & Side Acc. $\uparrow$ & Acc. $\uparrow$ & Pairwise $\uparrow$ \\
 \midrule
-RF + LLM Forecast + recency & \textbf{0.258} & \textbf{0.815} & 0.590 & \textbf{0.760} & \textbf{0.547} & \textbf{0.767} \\[3pt]
-RF + recency & 0.254 & 0.817 & 0.593 & 0.750 & \textbf{0.547} & 0.767 \\[3pt]
-XGBoost only & 0.233 & 0.829 & 0.618 & 0.713 & 0.487 & 0.759 \\[3pt]
-RF (default params) & 0.214 & 0.839 & 0.622 & 0.703 & 0.507 & 0.757 \\[3pt]
-RF + LLM Forecast + recency (rounded) & 0.203 & 0.845 & \textbf{0.535} & \textbf{0.760} & \textbf{0.547} & 0.537 \\[3pt]
-RF only & 0.203 & 0.845 & 0.641 & 0.710 & 0.520 & 0.767 \\[3pt]
-Ridge GLM + RF (mean) & 0.198 & 0.848 & 0.644 & 0.697 & 0.523 & 0.756 \\[3pt]
-XGBoost, no LLM features & 0.189 & 0.852 & 0.661 & 0.700 & 0.493 & 0.729 \\[3pt]
-RF, no LLM features & 0.186 & 0.854 & 0.658 & 0.710 & 0.517 & 0.749 \\[3pt]
-Ridge GLM & 0.156 & 0.869 & 0.668 & 0.683 & 0.507 & 0.722 \\[3pt]
-Mode of reporting-org score baseline & 0.102 & 0.897 & 0.579 & 0.700 & 0.530 & 0.426 \\[3pt]
-Ridge Baseline (risks + org only) & 0.017 & 0.938 & 0.709 & 0.570 & 0.433 & 0.651 \\[3pt]
+RF + LLM Forecast + recency & \textbf{0.257} & \textbf{0.816} & 0.595 & \textbf{0.750} & \textbf{0.563} & 0.720 \\[3pt]
+RF + recency & 0.247 & 0.821 & 0.602 & 0.743 & 0.553 & 0.720 \\[3pt]
+Random Forest only & 0.204 & 0.844 & 0.643 & 0.710 & 0.520 & 0.720 \\[3pt]
+Ridge GLM + Random Forest (mean) & 0.201 & 0.846 & 0.641 & 0.693 & 0.530 & 0.709 \\[3pt]
+Random Forest (default params) & 0.200 & 0.846 & 0.625 & 0.710 & 0.517 & 0.708 \\[3pt]
+XGBoost, no LLM features & 0.189 & 0.852 & 0.661 & 0.700 & 0.493 & 0.692 \\[3pt]
+Random Forest, no LLM features & 0.186 & 0.854 & 0.658 & 0.710 & 0.517 & 0.708 \\[3pt]
+XGBoost only & 0.181 & 0.856 & 0.648 & 0.703 & 0.493 & 0.697 \\[3pt]
+RF + LLM Forecast + recency (rounded) & 0.175 & 0.859 & \textbf{0.534} & \textbf{0.750} & \textbf{0.563} & \textbf{0.741} \\[3pt]
+Ridge GLM & 0.156 & 0.870 & 0.666 & 0.670 & 0.507 & 0.682 \\[3pt]
+Mode of reporting-org score baseline & 0.102 & 0.897 & 0.579 & 0.700 & 0.530 & 0.712 \\[3pt]
+Ridge Baseline (risks + org only) & 0.017 & 0.938 & 0.709 & 0.570 & 0.433 & 0.669 \\[3pt]
 \bottomrule
 \end{tabular}
 
@@ -1241,7 +1252,7 @@ An analysis of the split decisions using the SHAP model reveals that increased p
 
 \begin{table}[t]
 \centering
-\caption{Random-forest drop-one feature importance, sorted by absolue change in the prediction from the feature being increased by 1 standard deviation ($\Delta$ \texttt{pred\_1sd}). Each row reports the decrease in validation $R^2$ when the feature is removed ($\Delta R^2$\tnote{*}), along with the share of training rows that were median-imputed for that feature (\texttt{Miss} \%\}). The largest impacts come from planned budget and planned duration.%; \texttt{rep\_org\_*} are one-hot reporting-organization indicators.
+\caption{Random-forest drop-one feature importance, sorted by absolute change in the prediction from the feature being increased by 1 standard deviation ($\Delta$ \texttt{pred\_1sd}). Each row reports the decrease in validation $R^2$ and Pairwise Probability when the feature is removed ($\Delta R^2$\tnote{*}), along with the share of training rows that were median-imputed for that feature (\texttt{Miss} \%\}). The largest impacts come from planned budget and planned duration.%; \texttt{rep\_org\_*} are one-hot reporting-organization indicators.
 }
 \begin{tabular}{p{6cm}rrrr}
 \toprule
