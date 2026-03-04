@@ -313,25 +313,34 @@ This thesis implements an LLM-based forecasting method for ratings, a statistica
 
 \subsection{Data Sources} \label{sec:methods_for_LLM_forecasting}
 
-All activities for the thesis come from the IATI database \citep{IATIDashboardIATI}. Country-level data were enriched with the World Bank governance indicators \citep{kaufmannWorldwideGovernanceIndicators2024}, the World Bank country policy institutional assessment scores \citep{worldbankCPIACriteria2024}, and GDP per capita \citep{worldbankGDPPerCapita}.
+A suitable data source for this thesis required: a sufficient volume of completed environmental and sustainability activities; paired pre- and post-activity documents to enable forecasting without future information leakage (see Section~\ref{sub:temporalleakage}); machine-readable text extractable from database records; reliable temporal metadata; and the prospect of ongoing additions to allow future replication.
 
-Several other sources were also evaluated as alternatives but ultimately not used:
+Several sources were evaluated against these criteria but ultimately not used:
 \begin{itemize}
-\item The OpenAlex publication repository of peer-reviewed evaluation documents and abstracts \citep{priemOpenAlexFullyopenIndex2022}
-\item The AidData database of international aid activities \citep{tierneyMoreDollarsSense2011}
-\item The 3ie development database of ex-post evaluations \citep{3ieDevelopmentEvidence}
-\item The IDEAL database of ex-post evaluations \citep{kfwdevelopmentbankIDEaL}
+\item \textbf{The OpenAlex publication repository of peer-reviewed evaluation documents and abstracts} \citep{priemOpenAlexFullyopenIndex2022}
+\begin{itemize}
+\item Although many millions of evaluations are available on OpenAlex, it proved difficult to reliably identify and de-duplicate published evaluations of environmental interventions. Furthermore, OpenAlex provides only ex-post documents with no paired pre-activity description, making leakage prevention substantially harder.
+\end{itemize}
+\item \textbf{The AidData database of international aid activities} \citep{tierneyMoreDollarsSense2011}
+\begin{itemize}
+\item The AidData database has double-coded data entry. While double-coded data entry introduces less error than the LLM and regex data extraction techniques, the delay in hand-coding the ratings and results leads to relatively few recent environmental activities, and the lack of document links in AidData meant each activity record had far less extractable information. The overlap between AidData and the filtered IATI training set was less than 30\% of IATI training set records. As AidData contained insufficient data for reliable forecasting on its own, and there was low overlap, merging IATI with AidData or enriching IATI with AidData was not attempted.
+\end{itemize}
+\item \textbf{The 3ie development database of ex-post evaluations} \citep{3ieDevelopmentEvidence}
+\begin{itemize}
+\item 3ie had fewer than 300 records for environmental topics, far lower than IATI, and provides only ex-post documents with no paired pre-activity description.
+\end{itemize}
+\item \textbf{The IDEAL database of ex-post evaluations} \citep{kfwdevelopmentbankIDEaL}
+\begin{itemize}
+\item The IDEAL database had fewer than 300 records for environmental topics, far lower than IATI.
+\end{itemize}
 \end{itemize}
 
-The IDEAL database and 3ie each had fewer than 300 records for environmental topics each, far lower than IATI. Furthermore, although many millions of evaluations are available on OpenAlex, it proved difficult to reliably identify and de-duplicate published evaluations of environmental interventions. 
-
-The IATI database was used due to its substantial quantity of information available in textual format and extractable from the database records, its large quantity of activities, and the fact that new records are continuously added, making rerunning experimental methods in the future possible with little modification.
-
-The IATI database has several additional advantages. Records contain reliable ``actual start'' and ``actual end'' dates, and commonly also report planned start and end dates. Most records contain an overall evaluation rating on a six-point scale within the linked evaluation PDFs. Activity records also reliably mark the reporting organization. The records used for this thesis have several activity information documents uploaded near the beginning of the activity, and several years later, at least one ex-post evaluation of the activity is uploaded as well, or results of key quantitative outcomes are sometimes directly recorded in the IATI database. The status of the activity is also always reported in the database, including if it is in the planning or completion/finalization stages, which is helpful information for forecasting.
+All activities for the thesis therefore come from the IATI database \citep{IATIDashboardIATI}. IATI met all selection criteria: it contains a large number of activities with substantial textual information extractable from database records, and new records are continuously added, making future replication straightforward. Crucially, IATI explicitly separates pre- and post-activity documents by design, which makes preventing temporal information leakage tractable (see Section~\ref{sub:temporalleakage}). Records contain reliable ``actual start'' and ``actual end'' dates, and commonly also report planned start and end dates. Most records contain an overall evaluation rating on a six-point scale within the linked evaluation PDFs. Activity records also reliably mark the reporting organization. The records used for this thesis have several activity information documents uploaded near the beginning of the activity, and several years later, at least one ex-post evaluation of the activity is uploaded as well, or results of key quantitative outcomes are sometimes directly recorded in the IATI database. The status of the activity is also always reported in the database, including if it is in the planning or completion/finalization stages, which is helpful information for forecasting.
 
 A disadvantage of the IATI database is that it is sometimes inconsistent between reporting organizations as to how the data are filled in, and the format of documents was not always PDF, requiring conversion scripts from other formats to PDF. Many download links were also not functioning. Others required custom web-scraping scripts to extract project documents in PDF format from the original hosting websites. Planned start or end dates were often missing, leading to frequent exclusion of otherwise informative projects. Furthermore, approximately 30\% of IATI activities do not have an activity category code, leading to a further exclusion of environmental or sustainability related activities that otherwise could have been included.
 
-In addition to IATI, the AidData database was also analyzed \citep{tierneyMoreDollarsSense2011}, which has double-coded data entry. While double-coded data entry introduces less error than the LLM and regex data extraction techniques, the delay in hand-coding the ratings and results leads to relatively few recent environmental activities, and the lack of document links in AidData meant each activity record had far less extractable information. The overlap between AidData and the filtered IATI training set was less than 30\% of IATI training set records. As AidData contained insufficient data for reliable forecasting on its own, and there was low overlap, merging IATI with AidData or enriching IATI with AidData was not attempted.
+Country-level covariates were added from three standard sources: the World Bank governance indicators \citep{kaufmannWorldwideGovernanceIndicators2024}, the World Bank country policy and institutional assessment scores \citep{worldbankCPIACriteria2024}, and GDP per capita \citep{worldbankGDPPerCapita}. These were included as supplementary features for the statistical forecasting models and were sometimes injected in the LLM forecasting prompts.
+
 
 % \subsection{Data Filtering}
 
@@ -461,7 +470,7 @@ In addition to IATI, the AidData database was also analyzed \citep{tierneyMoreDo
 
 % To prevent any information leakage, which could be due to incorrect dates as well as incorrect marking of the start date of the activity in IATI, or significant progress being made within the first quarter of the activity where documents are allowed, approximately 40 random ChatGPT-generated activity summaries (see the next section) were inspected, with none indicating advanced progress, indicating less than 2.5\% of activities should be of concern. A selective search for phrases revealed some activities had made clear progress on targeted outcomes. Consequently, a Python script with 6,800 separate search terms was used to further search for inappropriate documents. Exact string search terms were made, with variants of phrases including, ``on track'', ``ongoing project has been performing'', ``ongoing project is performing'', ``already made considerable progress'', ``key milestones already achieved'', ``significant progress had been made'', ``the programme has already made considerable progress'', etc. This led to the review of approximately 150 additional activities, and the discovery of 21 activities with clear progress on key project milestones. Progress such as the formation of planning committees or initial disbursements of funds to the implementing organization were not considered grounds for exclusion, given that these milestones are unlikely to be substantially informative. However, extension activities or Phase II / Phase III activities were not excluded, unless significant progress had already been made on the extension or phase being evaluated.
 
-\subsection{Temporal Information Leakage}
+\subsection{Temporal Information Leakage} \label{sub:temporalleakage}
 A forecasting system designed to predict the future must not gain any information that could not be known at the start of the international aid activity. Cases where information that could not be known is used for the prediction is deemed ``leakage''. Preventing leakage was an important factor in the methodology. Leakage has been a significant concern in other published works where forecasting with language models has been implemented, and in multiple cases has caused invalidation of forecasting results \citep{palekaPitfallsEvaluatingLanguage2025}. While ex-post evaluations may provide sufficient information to describe the activity, relying on language models to completely remove information about the eventual outcome could introduce information leakage from past the start date, and was a motivation behind using IATI, which explicitly separates documents into pre- and post-activity, as opposed to OpenAlex and 3ie ex-post activity documents.
 
 \subsection{Data Filtering}
@@ -477,7 +486,10 @@ In order to accurately extract overall success ratings for each activity and use
 All document pages had their rotation detected, and were rotated to vertical before processing via the Gemini API. Documents with ``.odt'', ``.doc'', or ``.docx'' extensions were converted to PDFs with a custom script. The pages when converted to PDFs were counted and zero-page documents were excluded.
 
 \textbf{1. Ranking documents}
-Documents were ranked from most to least useful for forecasting the outcome, or evaluating the results, respectively. \emph{gemini-2.5-flash} structured output with direct PDF input was used to make the rankings. Only documents with C- or better grades on a grading scale from A+ to F were considered for the next stage. Letter grades were selected in accordance with standard grading examples from Google Gemini documentation. Documents were sorted by their pdf metadata date as pre-activity and post-activity. Pre-activity documents were created at the latest $\frac{1}{4}$ of the way through the activity and post-activity documents were created at earliest $\frac{3}{4}$ of the way through. Also, the documents were ranked from most to least informative for forecasting among the pre-activity documents, and most to least valuable for ex-post evaluation among the post-activity documents. Pre-activity documents that were closest to the activity start, and the latest post-activity documents were prioritized. Documents with sufficient detail but not excessive lengths, such as executive summaries, were prioritized. Documents that were duplicates in a non-English language were excluded if the equivalent was available in English. For outcomes, if there were multiple progress reports, all the earlier ones were excluded and only the latest were kept in the rankings. After ranking, 2,312 documents had sufficiently informative activity information and activity evaluation documents.
+Documents were first sorted by their pdf metadata date as pre-activity and post-activity. Pre-activity documents were created at the latest $\frac{1}{4}$ of the way through the activity and post-activity documents were created at earliest $\frac{3}{4}$ of the way through, although if a date was missing, standard titles just as `Project Information Document' or `Ex-Post Evaluation' were used to sort the documents into pre- and post-activity. Also, the documents were given a preliminary ranking (without an LLM query). Pre-activity documents that were closest to the activity start, and the latest post-activity documents were prioritized. Documents in a 3-20 page length were also prioritized above very short or very long documents.
+
+Documents were then given a final ranking with \emph{gemini-2.5-flash}, ranking from most to least useful for either forecasting the outcome for pre-activity documents or evaluating the results for post-activity documents. Each activity was processed in two separate API calls, one \emph{gemini-2.5-flash} query for pre-activity documents and a similar \emph{gemini-2.5-flash} query for post-activity documents. In each call, the first three pages of every candidate document were uploaded alongside a single prompt containing the activity title, description, official date range, and per-document metadata (title, language, IATI document category codes, page count, and PDF metadata date). A rubric specifying the information an ideal document would contain was included to anchor the grading scale. The model was instructed to return a single structured JSON response ranking all candidate documents from most to least relevant, assigning each a letter grade (A+ to F) and an include/exclude flag. Letter grades were selected in accordance with standard grading examples from Google Gemini documentation. Structured output was enforced via a JSON schema so that every document received exactly one rank and grade in a single response. Documents that were duplicates in a non-English language were excluded if the equivalent was available in English. For outcomes, if there were multiple progress reports, all the earlier ones were excluded and only the latest were kept in the rankings. After ranking, 2,312 documents had sufficiently informative activity information and activity evaluation documents.
+
 
 \textbf{2. Categorizing pages within documents}
 The highest ranking documents then had each of their pages categorized with what information was present on them. Manual inspection determined this was more effective than semantic embedding search for long documents. To process the pages, PDFs were split into 3-page chunks. Each 3-page chunk was sent in PDF form to \emph{gemini-2.5-flash}. The pages were categorized differently based on whether the document was a pre-activity or post-activity document. Categories for outcomes allowed retrieval based on whether final evaluation in quantitative or qualitative form were present on the page, deviations from plans or other types of outcomes were detailed, or if the pages were simply overviews of the activity. Specifically, the allowed categorizations were ``condensed summary'', ``sub activities outlined'', ``detailed implementation plans'', ``broad objectives'', ``possible outcomes'', ``quantitative targets'', ``qualitative targets'', ``risks as word or numeric'', ``risks or dangers generally'', ``plans to address key risks'', ``positive indicators'', ``progress reports'', ``similar cases outcomes'', ``implementation context country'', ``contextual challenges'', ``financing details'', ``budget and legal'', ``who implements'', ``whether part of larger program'', ``partner identity or skill'', ``whether skin in the game'', ``other stakeholder engagement'', or ``activity monitoring details'' for pre-activity document pages, and  ``expected outcomes'', ``deviation from plans'', ``preliminary results'', ``final outcomes'', ``delays or early completion'', ``over or under spending'', ``overview as was planned'', or ``unrelated to evaluation'' for post-activity document pages. The two most relevant category choices among these were assigned for each page in the documents.
@@ -526,22 +538,27 @@ Although pollution load removed, forest indicators, trees planted, air quality (
 
 Multiple extracted values per category were aggregated by compiling all extracted outcomes in each outcome category for each activity and including them in an aggregation prompt for \emph{gemini-2.5-flash} for aggregation into a final baseline, target, and outcome value. Where multiple extracted values conflicted, overlapped, or reflected different levels of aggregation (e.g., component-level versus project-level figures), the model was instructed to adjudicate between them and select or combine values to reflect a single coherent project-level outcome. The model was instructed to distinguish duplicates from additive components, prioritize project-level totals over subcomponent figures, aggregate only non-overlapping quantities, and return a null response when no coherent representative value could be determined.
 
-Finally, the total disbursement for the activity reported by IATI was used to determine an approximate estimate of the cost in US Dollars per unit outcome (see ``Splitting Disbursements'' below), with the exception of benefit-cost ratios, rates of return, and agricultural yield outcomes. Empirical inspection found that most outcomes were approximately log-normally distributed. The $log_{10}$ of all categories except Benefit-Cost ratios and rates of return was then applied.
+\subsubsection{Outcome Aggregation and Cost-effectiveness Computation}
 
+Once outcomes were extracted and aggregated to project level, cost-per-unit estimates were constructed. The total disbursement for each activity reported by IATI served as the cost denominator (in USD), with the exception of benefit-cost ratios, rates of return, and agricultural yield outcomes, which are inherently unit-free or already normalised.
 
 \textbf{Splitting disbursements}
 
-Unfortunately, outcome-level funding splits from the IATI database were not available. In order to represent the fact that dollar-per-unit spending can be allocated across several outcomes, a custom algorithm was written to separately allocate total activity expenditures to non-overlapping funded sub-activities. The procedure assigns each activity's total expenditure across the outcome components it reports, so later cost-per-unit calculations do not implicitly treat multi-outcome activities as having multiple full budgets. Benefit/cost ratios and economic and financial rate of return are excluded from monetary allocation, and other outcomes are eligible for splitting. To avoid double-counting when two indicators are simply alternative measurements of the same underlying result, closely related indicators are first grouped into shared conceptual buckets, such as pairing protected area with area under management, pairing different yield-increase measures, and pairing tree planting with reforested area.
+Outcome-level funding splits are not published in the IATI database. To avoid implicitly treating multi-outcome activities as having multiple full budgets, a custom algorithm allocates total activity expenditure across the non-overlapping funded sub-activities and activity reports. Benefit/cost ratios and economic and financial rates of return are excluded from monetary allocation; all other outcome categories are eligible. To avoid double-counting when two indicators are alternative measurements of the same underlying result, closely related indicators are first grouped into shared conceptual buckets (e.g., protected area paired with area under management; different yield-increase measures; tree planting paired with reforested area).
 
-Once the components are bucketed, the algorithm gives each bucket an equal share of the activity’s allocatable funding. Every component inside a bucket inherits that same share, meaning components that are ``alternative measures of the same thing'' share one portion of the allocations rather than each taking a slice.
+Once the components are bucketed, each bucket receives an equal share of the activity’s allocatable funding. Every component inside a bucket inherits that same share, so ``alternative measures of the same thing'' draw on one portion of the allocation rather than each taking a separate slice.
 
-Carbon dioxide reductions are handled as a special case because they can act as a summary metric that overlaps with other mitigation outputs. If CO$_2$ reductions are reported without any closely linked mitigation outputs (such as improved stoves, added generation capacity, or trees planted), then CO$_2$ reductions receive an equal share like any other bucket. If CO$_2$ reductions are reported alongside any of those linked outputs, it inherits the combined allocation assigned to the CO$_2$ mitigating expenditures already present for that activity. This prevents CO$_2$ from inflating allocated spending when it is a co-reported consequence of other outcomes.
+Carbon dioxide reductions are handled as a special case because they can act as a summary metric that overlaps with other mitigation outputs. If CO$_2$ reductions are reported without any closely linked mitigation outputs (such as improved stoves, added generation capacity, or trees planted), CO$_2$ reductions receive an equal share like any other bucket. If CO$_2$ reductions are reported alongside any of those linked outputs, they inherit the combined allocation already assigned to the CO$_2$-mitigating expenditures for that activity, preventing CO$_2$ from inflating allocated spending when it is a co-reported consequence of other outcomes.
 
-\textbf{Outcome model training and evaluation}
+\textbf{Log transformation}
 
-For each outcome distribution in Table~\ref{tab:outcome_model_performance}, a random-forest regression model was trained containing similar features and hyperparameters to the model used for forecasting ratings, but with the rating target replaced by the relevant activity-level outcome. A one-hot encoded dummy variable for which cost-effectiveness outcomes were being averaged was also included. Models were trained using activity IDs in the training split with non-missing outcomes and evaluated on the validation activities. The counts reported in Table~\ref{tab:outcome_model_performance} correspond to the number of activities available in the validation split for each outcome. Outcome distributions with fewer than 10 activities in either the training or validation split were excluded.
+Empirical inspection found that most cost-per-unit outcomes are approximately log-normally distributed. The $\log_{10}$ transform was therefore applied to all outcome categories except benefit-cost ratios and rates of return before modelling.
 
-In addition, a single aggregate Z-score was calculated, which subtracts the mean value of each outcome and divides by the standard deviation in the training set. For each activity, the mean value of the Z-scores was taken for all dependent variables. 
+\subsubsection{Outcome Model Training and Evaluation}
+
+For each outcome distribution in Table~\ref{tab:outcome_model_performance}, a random-forest regression model was trained using features and hyperparameters analogous to those used for rating forecasting, with the rating target replaced by the relevant activity-level outcome. A one-hot encoded dummy variable for the outcome category being predicted was also included. Models were trained on activities in the training split with non-missing outcomes and evaluated on the validation split. The counts in Table~\ref{tab:outcome_model_performance} correspond to the number of validation activities available for each outcome. Outcome categories with fewer than 10 activities in either split were excluded.
+
+In addition, a single aggregate Z-score was computed by subtracting the training-set mean and dividing by the training-set standard deviation for each outcome. For each activity, the mean Z-score across all available outcome categories was used as the aggregate cost-effectiveness signal.
 
 
 \subsection{Baseline Methods}
@@ -595,7 +612,7 @@ The activity start date was not used as a feature, as there was no linear patter
 
 \subsubsection{Statistical Forecasting Methods}
 
-\textbf{Nearest Neighbor (Vector Similarity)} \label{ssub:nearest_neighbor_vector_similarity_}
+\textbf{Nearest Neighbor (Vector Similarity)} \label{ssub:nearest_neighbor_vector_similarity}
 
 A similarity test was first constructed using features including countries of the activity, GDP per capita as described previously, the scope of the activity, and the implementing and funding organization ID.
 This similarity test was found, however, to significantly underperform compared to the semantic similarity of the \emph{gemini-2.5-flash}-generated summary of the activity documents, so this similarity method was used instead.
@@ -685,8 +702,7 @@ The LLM forecasting method was decided upon by iteratively inspecting both the q
 To generate each mock forecast, a retrieval-augmented input was constructed consisting of up to 10 baseline pages and up to 10 outcome/evaluation pages per activity. Baseline pages were selected from high-scoring passages in predefined ``forecast-informative'' categories (e.g., objectives, implementation plans, risks, financing details, contextual challenges, and stakeholder/implementer information), using a high relevance threshold (minimum categorization score of 9) and including nearby pages when insufficient high-scoring pages were available. Pages were selected from post-activity documents which emphasized deviations from plans (including deviations, delays/early completion, and over/under-spending), using a lower relevance threshold (minimum score of 3) and likewise included surrounding pages to reach the target count when needed. These retrieved excerpts were then merged with activity metadata (title, scope, planned start/end dates, planned financing totals when present) and brief model-generated baseline summaries (activity description and risk summary) before prompting Gemini to write a forecast from the ex-ante perspective. Importantly, the prompt required the model to end by outputting the \emph{known} final evaluation rating for that activity (derived from the merged ratings file and converted into scale-specific text via \texttt{get\_ratings\_text}), while also instructing it to ground the narrative in the retrieved evaluation pages and to return ``NO RESPONSE'' if the evaluation excerpts did not contain sufficient justification for the assigned rating.
 
 
-The most semantically relevant activities which ended approximately at or before the start of the activity being forecasted were then retrieved (see Section \ref{ssub:nearest_neighbor_vector_similarity_}. In addition, the activity ``risks'' were inserted before each mock forecast, to provide context for the example. Each mock forecast was structured in a way similar to the highest performing scratchpad method from \citep{halawiApproachingHumanLevelForecasting2024}.
-
+The most semantically relevant activities which ended approximately at or before the start of the activity being forecasted were then retrieved (see Section \ref{ssub:nearest_neighbor_vector_similarity}. In addition, the activity ``risks'' were inserted before each mock forecast, to provide context for the example. Each mock forecast was structured in a way similar to the highest performing scratchpad method from \citep{halawiApproachingHumanLevelForecasting2024}.
 A series of features including the activity title, start date, and activity location were injected into the prompt to provide context for the activity, as well as a \emph{gemini-2.5-flash}-generated summary.
 
 % For Method \#2, the most relevant pages of the activity documents were directly converted to text and inserted into the prompt.
@@ -695,7 +711,19 @@ Finally, the distribution of rating outcomes was inserted into the prompt, in or
 % LaTeX has no \subsubsubsection by default
 \newcommand{\subsubsubsection}[1]{\paragraph{#1}\mbox{}\\}
 
-\subsubsubsection{LLM Prompting Strategies}
+\subsubsubsection{Prompt Template and Multi-stage Prompting}
+
+The full prompt is composed of the following blocks, assembled in the order listed:
+
+\begin{enumerate}[noitemsep,topsep=2pt]
+  \item \textbf{Activity metadata} --- title, planned start/end dates, scope, planned disbursement (USD), location(s), GDP per capita, participating and implementing organisations.
+  \item \textbf{Baseline description \& targets} --- a \emph{gemini-2.5-flash}-generated activity description, targets summary, contextual challenge description, complexity details, integratedness description, financing summary, and implementer-performance context.
+  \item \textbf{Risk summary} --- a \emph{gemini-2.5-flash}-generated structured summary of key project risks.
+  \item \textbf{Retrieved baseline excerpts (RAG)} --- additional activity-specific information retrieved by the model from the available documents and synthesised into a short passage (\texttt{\{rag\_synthesis\_additional\_info\}}).
+  \item \textbf{KNN few-shot block} --- summarised mock forecasts of the three most semantically similar training activities, one from each broad rating tier (see Section~\ref{ssub:nearest_neighbor_vector_similarity_}).
+  \item \textbf{Multi-stage reasoning (S1/S2)} --- outputs of two prior LLM calls: reasons the activity may have been rated ``Moderately Satisfactory'' or worse (S1) and reasons it may have been rated ``Moderately Satisfactory'' or better (S2).
+  \item \textbf{Rating distribution prior} --- a short description of the empirical distribution of rating outcomes in the training data, appended to reduce mode-collapse.
+\end{enumerate}
 
 The full prompt template for the LLM Forecast is shown in Figure~\ref{fig:forecast-prompt-multistage}. LLMs in all prompts were instructed to ``think like a superforecaster'' \citep{tetlockSuperforecastingArtScience2015}. Superforecasters typically outperform domain experts by maintaining broad judgement and cultivating calibrated probability estimates, rather than relying on a single strategy such as econometric analysis. This replicates prior methods which found this instruction to be the highest performing in the geopolitical domain \cite{halawiApproachingHumanLevelForecasting2024}.
 
@@ -861,7 +889,7 @@ Respond only in English.
 \label{fig:forecast-prompt-multistage}
 \vspace{1em}
 
-\textbf{Ensembling}
+\subsubsubsection{Inference-time Enhancements (Ensembling)}
 Ensembling averages many individual forecasts of the same model, prompted in slightly different ways. Ensembling was found to be a relatively weak but robust method during validation, so due to its high API cost, the ensembling method is reserved for the final held-out set, to be presented once this thesis has reached completion. 
 %All methods which demonstrated above-chance skill in forecasting were averaged using the mean value of the forecast. This was found to robustly outperform any individual forecasting method, although with only a modest overall improvement due to high autocorrelation between individual forecasts. Ensembles of LLM-generated forecasts using differing random seeds and differently selected K-Nearest-Neighbors. %(with a different weight on most recent vs most semantically similar). A summary of the 10 pages was also included (method \#3).
 % More details will come, once I am sure exactly how I plan to implement the methods. %TODO
@@ -873,7 +901,7 @@ Ensembling averages many individual forecasts of the same model, prompted in sli
 % NOTE: MORE DETAILS ON FINE-TUNING TO COME, ONCE ESTABLISH THAT I REALLY HAVE TIME TO DO THIS %TODO
 
 % \textbf{}
-\textbf{Fine Tuning}
+\subsubsubsection{Model Adaptation (Fine-tuning / DPO)}
 In past work in a similar domain, fine-tuning significantly improved forecasting performance \citep{wenPredictingEmpiricalAI2025}. An attempt was made to fine-tune \emph{gemini-2.5-flash} using Vertex AI. To do so, Direct Preference Optimization (DPO) was used, which requires one example of a good prompt, and one example of a bad prompt. Out of a random sample of 100 activity IDs in the training data, the final forecast stage was forecasted 5 separate times using \emph{deepseek-V3.2}. 50 pairs were used where the model forecasted one rating increment closer than another rating, as the pairs of forecasts.
 
 It was often the case that there were multiple options for the best or worse forecast due to the limited 6-point scale. In order to choose among forecasts that were equally good or equally bad, the embeddings of the forecasts were also taken and cosine similarity was computed to the embeddings of the mock forecast, and to embeddings of the post-activity document, and these similarity scores were averaged. The most similar among equally good ratings were chosen as the good example for the DPO training pair, and the least similar among equally bad ratings as the bad example.  
@@ -888,7 +916,7 @@ The goal was to correct the RF model for temporal distribution shift (e.g., chan
 
 \textbf{Residual-correction formulation}
 
-Let $\hat{y}^{\text{RF}}_i$ be the RF+ET prediction for activity $i$, and let $\hat{y}^{\text{LF}}_i$ denote the LLM Forecast. Note that the RF+ET prediction was also averaged with the ET model, but it is still referred to as ``RF'' in the equations. The random-forest residual on the i'th activity is defined as:
+Let $\hat{y}^{\text{RF}}_i$ be the RF+ET prediction for activity $i$, and let $\hat{y}^{\text{LF}}_i$ denote the LLM Forecast. Note that the RF prediction was also averaged with the ET model, but it is still referred to as ``RF'' in the equations. The RF+ET residual on the i'th activity is defined as:
 \[
 r_i := y_i - \hat{y}^{\text{RF}}_i .
 \]
@@ -944,7 +972,6 @@ Pairwise probability is evaluated as the proportion of pairs of individual predi
 
 % \begin{table}[htbp]
 % \centering
-% \caption{Caution when ranking forecasting systems using single metrics: each evaluation metric has its own issues \citep{palekaPitfallsEvaluatingLanguage2025}.}
 % \label{tab:forecasting-metrics-pitfalls}
 % \renewcommand{\arraystretch}{1.2}
 % \setlength{\tabcolsep}{5pt}
@@ -985,7 +1012,6 @@ Pairwise probability is evaluated as the proportion of pairs of individual predi
 % % NOTE: CHAT_GPT BASED LOG-LOSS - NEED TO DOUBLE-CHECK %TODO
 % \begin{table}[htbp]
 % \centering
-% \caption{Caution when ranking forecasting systems using single metrics: each evaluation metric has its own issues \citep{palekaPitfallsEvaluatingLanguage2025}.}
 % \label{tab:forecasting-metrics-pitfalls}
 % \renewcommand{\arraystretch}{1.2}
 % \setlength{\tabcolsep}{5pt}
@@ -1118,9 +1144,9 @@ In accordance with the typical US grading scheme definitions, an ``F'' grade is 
 \clearpage
 \FloatBarrier
 \section{Results}
-The sections below discuss the activity overall rating and similarity grade forecasts, and aggregate Z-score forecast results. First, key findings with regards to the best method for evaluating international aid forecasting methods are discussed.
+The sections below present results for three outcome measures: overall evaluation ratings, narrative forecast similarity grades, and aggregate cost-effectiveness Z-scores. Figure \ref{fig:scatterLLMcorrected} provides the central empirical comparison across LLM forecasting methods and constitutes the primary evidence for the findings discussed in Section \ref{sec:llm_results}.
 
-Three key methods for measuring activity outcomes are highlighted: evaluating forecast accuracy of overall evaluation ratings, evaluating forecast accuracy of overall aggregate cost-effectiveness Z-score, and scoring the narrative similarity between LLM forecast and the final outcome. Experimentation revealed several reasons to be wary of activity ratings: they are often gamed as they are influential in future funding \citep{goldembergMindingGapAid2025}, they were found not to correlate strongly with activity outcomes (Pearson score of only 0.07), and models with high forecasting accuracy were found to sometimes have low similarity to the final forecast (see Figure \ref{fig:scatterLLMcorrected}). The cost-effectiveness aggregate Z-score suffers from inconsistency in its component parts between activities, its difficulty of interpretation, and the relatively low numbers of activity cost-effectiveness outcomes. The method of grading narrative similarity was found to be often a superior metric than the other two. It is concluded that evaluating whether narrative forecasts are similar to the post-activity outcome document summary using \emph{gemini-2.5-flash-lite} is the best overall evaluation method. It is low-cost, costing only a few cents for 300 grades, and only takes around 2 minutes for those 300 grades. Furthermore, prior literature has found that the semantic embedding of activity results are correlated with quantitative country-level outcomes \citep{goldembergMindingGapAid2025}, indicating that these are less likely to be ``gamed''.
+Three methods for measuring activity outcomes were compared. Activity ratings show only weak correlation with activity outcomes (Pearson $r = 0.07$), are frequently gamed because they influence future funding \citep{goldembergMindingGapAid2025} and because models with the highest rating accuracy can simultaneously produce the least accurate narratives as shown in Figure~\ref{fig:scatterLLMcorrected}. The cost-effectiveness aggregate Z-score is limited by inconsistency in its component indicators across activities, difficulty of interpretation, and low sample counts. Narrative similarity grades, assessed by \emph{gemini-2.5-flash-lite} against post-activity evaluation summaries, avoid these pitfalls: grading 300 activities costs only a few cents and takes approximately two minutes, and the underlying semantic embeddings are known to correlate with quantitative country-level outcomes \citep{goldembergMindingGapAid2025}, making them harder to game. On this basis, narrative similarity grades are the preferred evaluation metric.
 
 An additional aim was to assess specifically how statistical models and LLM forecasting techniques compare. Both strategies were found to have both strengths and weaknesses:
 \begin{figure}[!htbp]
@@ -1177,7 +1203,9 @@ An additional aim was to assess specifically how statistical models and LLM fore
 
 The results from each method are described in detail in the remaining sections.
 
-\subsection{Forecasting Ratings and Narrative Forecasts with LLMs}
+\subsection{Forecasting Ratings and Narrative Forecasts with LLMs} \label{sec:llm_results}
+
+Figure~\ref{fig:scatterLLMcorrected} summarises performance across all LLM forecasting configurations on two validation sets (Set~A, $n=300$; Set~B, $n=171$). The best narrative similarity grade is 88.5 (a ``B+'', corresponding to forecasts that are on average between ``mostly accurate'' and ``highly accurate''), achieved by the RF-forced method with full context (RAG+KNN+S1+S2). The minimal-prompt baseline achieves the highest $R^2$ for rating prediction but the worst narrative similarity, while RF-forced methods dominate on both narrative grade and pairwise ordering probability. These patterns are consistent across both validation sets.
 
 One research question of this thesis is how do differing methods of LLM forecasting apply in the context of forecasting international aid success ratings. More generally capable models were found to be better forecasters. The LLM's ability to predict the rating was also found not to clearly correlate with the quality of its forecast narrative. In fact, the best rating accuracy from an LLM was associated with the least accurate stated reasons. The strategy of incorporating additional information relevant to the forecasting question as well as references to similar activities does not clearly improve forecasting skill. No evidence of information leakage contaminating the ratings was found, with similar patterns of temporal correlation between statistical model average rating skill and LLM average rating skill as a function of start date. Little evidence was found that fine-tuning can improve forecasting accuracy in this domain, although a thorough assessment of the potential for fine-tuning \emph{gemini-2.5-flash} was cost prohibitive. Language models on their own were also found to consistently underperform statistical models in forecasting skill. However, using statistical models as the drivers of LLM forecasts, statistical models were found to significantly improve the quality of LLM narrative forecasts.
 
