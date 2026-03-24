@@ -297,6 +297,8 @@ The modelling system developed in this work predicts how successful intervention
   \item  How does forecasting aggregate cost-effectiveness compare to forecasting ratings?
 \end{enumerate}
 
+To answer these questions, activity outcomes are assessed using three complementary approaches. First, the overall evaluation rating, a numerical score assigned by the funding body at the time of evaluation, serves as the primary quantitative outcome. Second, narrative forecast similarity grades evaluate how closely an LLM-generated qualitative prediction matches the post-activity evaluation summary, providing a measure of forecast quality that is harder to game than ratings alone. Third, aggregate cost-effectiveness Z-scores, derived from quantitative results extracted from evaluation documents, offer a proxy for the relative efficiency of resource use across activities. These three outcome measures structure the empirical comparisons presented in the Results section.
+
 This method differs in two key ways from prior literature, which has analyzed international aid evaluations. The first difference is that while many works in the literature have attempted to assess correlations between quantitative features and aid evaluation ratings, they have not focused on what knowledge would be available at approval for the activity, and do not assess out-of-time generalization of these correlations. Out-of-time generalization refers to model performance on activities that started after those used for training, as opposed to out-of-distribution generalization, which refers to performance on activities from different domains or data sources. This work assesses the out-of-time generalization ability of models. This is critical, because in order to improve aid decision making, one must assess the ability of models to forecast the outcomes of future interventions, not simply statically analyze a corpus of past activities. The second difference is that judgemental AI forecasting is implemented, as a supplement to standard statistical models.
 
 \subsection{Prior Work}
@@ -492,7 +494,7 @@ Documents were then given a final ranking with \emph{gemini-2.5-flash}, ranking 
 
 
 \textbf{2. Categorizing pages within documents}
-The highest ranking documents then had each of their pages categorized with what information was present on them. Manual inspection determined this was more effective than semantic embedding search for long documents. To process the pages, PDFs were split into 3-page chunks. Each 3-page chunk was sent in PDF form to \emph{gemini-2.5-flash}. The pages were categorized differently based on whether the document was a pre-activity or post-activity document. Categories for outcomes allowed retrieval based on whether final evaluation in quantitative or qualitative form were present on the page, deviations from plans or other types of outcomes were detailed, or if the pages were simply overviews of the activity. Specifically, the allowed categorizations were ``condensed summary'', ``sub activities outlined'', ``detailed implementation plans'', ``broad objectives'', ``possible outcomes'', ``quantitative targets'', ``qualitative targets'', ``risks as word or numeric'', ``risks or dangers generally'', ``plans to address key risks'', ``positive indicators'', ``progress reports'', ``similar cases outcomes'', ``implementation context country'', ``contextual challenges'', ``financing details'', ``budget and legal'', ``who implements'', ``whether part of larger program'', ``partner identity or skill'', ``whether skin in the game'', ``other stakeholder engagement'', or ``activity monitoring details'' for pre-activity document pages, and  ``expected outcomes'', ``deviation from plans'', ``preliminary results'', ``final outcomes'', ``delays or early completion'', ``over or under spending'', ``overview as was planned'', or ``unrelated to evaluation'' for post-activity document pages. The two most relevant category choices among these were assigned for each page in the documents.
+The highest ranking documents then had each of their pages categorized with what information was present on them. Manual inspection determined this was more effective than semantic embedding search for long documents. To process the pages, PDFs were split into 3-page chunks. Each 3-page chunk was sent in PDF form to \emph{gemini-2.5-flash}. Several random documents were read and categorized by-hand to understand common sections, and the resulting categories, which informed the automated categorization selection. The pages were categorized differently based on whether the document was a pre-activity or post-activity document. Categories for outcomes allowed retrieval based on whether final evaluation in quantitative or qualitative form were present on the page, deviations from plans or other types of outcomes were detailed, or if the pages were simply overviews of the activity. Specifically, the allowed categorizations were ``condensed summary'', ``sub activities outlined'', ``detailed implementation plans'', ``broad objectives'', ``possible outcomes'', ``quantitative targets'', ``qualitative targets'', ``risks as word or numeric'', ``risks or dangers generally'', ``plans to address key risks'', ``positive indicators'', ``progress reports'', ``similar cases outcomes'', ``implementation context country'', ``contextual challenges'', ``financing details'', ``budget and legal'', ``who implements'', ``whether part of larger program'', ``partner identity or skill'', ``whether skin in the game'', ``other stakeholder engagement'', or ``activity monitoring details'' for pre-activity document pages, and  ``expected outcomes'', ``deviation from plans'', ``preliminary results'', ``final outcomes'', ``delays or early completion'', ``over or under spending'', ``overview as was planned'', or ``unrelated to evaluation'' for post-activity document pages. The two most relevant category choices among these were assigned for each page in the documents.
 
 In order to exclude irrelevant pages, the pages were also given a second category, for post-activity document pages as ``glossary'', ``blank page'', ``table of contents'', ``outcome evaluation'', ``activity description'', ``references'', or ``other'', and for pre-activity document pages the same categories were options, in addition to ``core activities'', ``theory of change'', ``targets'', ``broader context'', and ``preliminary results''. Only one category choice among these was possible per page.
 
@@ -720,7 +722,7 @@ The full prompt is composed of the following blocks, assembled in the order list
   \item \textbf{Baseline description \& targets} --- a \emph{gemini-2.5-flash}-generated activity description, targets summary, contextual challenge description, complexity details, integratedness description, financing summary, and implementer-performance context.
   \item \textbf{Risk summary} --- a \emph{gemini-2.5-flash}-generated structured summary of key project risks.
   \item \textbf{Retrieved baseline excerpts (RAG)} --- additional activity-specific information retrieved by the model from the available documents and synthesised into a short passage (\texttt{\{rag\_synthesis\_additional\_info\}}).
-  \item \textbf{KNN few-shot block} --- summarised mock forecasts of the three most semantically similar training activities, one from each broad rating tier (see Section~\ref{ssub:nearest_neighbor_vector_similarity_}).
+  \item \textbf{KNN few-shot block} --- summarised mock forecasts of the three most semantically similar training activities, one from each broad rating tier (see Section~\ref{ssub:nearest_neighbor_vector_similarity}).
   \item \textbf{Multi-stage reasoning (S1/S2)} --- outputs of two prior LLM calls: reasons the activity may have been rated ``Moderately Satisfactory'' or worse (S1) and reasons it may have been rated ``Moderately Satisfactory'' or better (S2).
   \item \textbf{Rating distribution prior} --- a short description of the empirical distribution of rating outcomes in the training data, appended to reduce mode-collapse.
 \end{enumerate}
@@ -728,7 +730,7 @@ The full prompt is composed of the following blocks, assembled in the order list
 The full prompt template for the LLM Forecast is shown in Figure~\ref{fig:forecast-prompt-multistage}. LLMs in all prompts were instructed to ``think like a superforecaster'' \citep{tetlockSuperforecastingArtScience2015}. Superforecasters typically outperform domain experts by maintaining broad judgement and cultivating calibrated probability estimates, rather than relying on a single strategy such as econometric analysis. This replicates prior methods which found this instruction to be the highest performing in the geopolitical domain \cite{halawiApproachingHumanLevelForecasting2024}.
 
 \textbf{Few-Shot Block}
-In both methods, a $k$-nearest-neighbors (KNN) few-shot block of semantically similar activities in the training data is used (see Section \ref{ssub:nearest_neighbor_vector_similarity_} for how semantic similarity was determined). A range of nearest neighbors was evaluated. The language model was prompted to extrapolate lessons about rating scales for the most similar ``Highly Unsatisfactory'', ``Unsatisfactory'' or ``Moderately Unsatisfactory'', the most similar ``Moderately Satisfactory'', and the most similar ``Satisfactory'' or ``Highly Satisfactory'' rated examples in the training data. A selection of $k=3$ summarized mock forecasts was found to perform better than $k=1$, $5$, or $7$.
+In both methods, a $k$-nearest-neighbors (KNN) few-shot block of semantically similar activities in the training data is used (see Section \ref{ssub:nearest_neighbor_vector_similarity} for how semantic similarity was determined). A range of nearest neighbors was evaluated. The language model was prompted to extrapolate lessons about rating scales for the most similar ``Highly Unsatisfactory'', ``Unsatisfactory'' or ``Moderately Unsatisfactory'', the most similar ``Moderately Satisfactory'', and the most similar ``Satisfactory'' or ``Highly Satisfactory'' rated examples in the training data. A selection of $k=3$ summarized mock forecasts was found to perform better than $k=1$, $5$, or $7$.
 
 Each example activity in the few-shot block included (i) key metadata (title and, where available, location and a brief summary), (ii) a short ``risks'' summary, (iii) the retrospective mock forecast analysis, and (iv) the final evaluation outcome label.
 
@@ -1141,6 +1143,16 @@ In accordance with the typical US grading scheme definitions, an ``F'' grade is 
 
 
 
+
+\subsection*{Methodological Summary}
+%TODO: should we keep outcomes? if so, need to mention them
+The methodological components described above use a large quantity of unstructured data from IATI to reliably forecast international aid activity outcomes better than simplistic baseline methods. Starting from raw metadata and unstructured PDF documents, a pipeline was first developed to extract, filter, and process information available at the activity approval stage. Four forecasting approaches were evaluated: two simple approaches, and two combinations. In both cases, the combinations had superior performance to the isolated approaches.
+\begin{enumerate}
+\item A purely statistical model including Random Forest (RF) and Extra Trees (ET) were trained on structured tabular features derived from activity metadata, country-level indicators, LLM-extracted document scores, and low dimensional language model embeddings.
+\item LLM-based judgemental forecasting was implemented using multi-stage prompting, semantically retrieved few-shot training examples to generate both numerical rating forecasts and narrative qualitative predictions.
+\item Third, a hybrid approach was developed in which a ridge regression is fitted to predict the residuals of the RF and ET ensemble, using the RF and ET prediction and the LLM forecast as inputs, so that systematic recency drift and LLM-derived signal can both be incorporated into a corrected final prediction.
+\item Fourth, a separate hybrid approach was developed in which the more accurate statistical model overall evaluation forecast is put into the prompt for the LLM to drive narrative outcomes, which are significantly better conforming to the true narrative outcomes than the language model prediction alone.
+\end{enumerate}
 \clearpage
 \FloatBarrier
 \section{Results}
@@ -1278,15 +1290,15 @@ Adding the language model derived features including LLM grades (finance, integr
 \toprule
 Method & $R^2$ $\uparrow$ & RMSE $\downarrow$ & MAE $\downarrow$ & Side Acc. $\uparrow$ & Acc. $\uparrow$ & Pairwise $\uparrow$ \\
 \midrule
-RF + LLM Forecast + recency & \textbf{0.255} & \textbf{0.817} & 0.593 & \textbf{0.757} & \textbf{0.547} & 0.724 \\[3pt]
-RF + recency & 0.240 & 0.825 & 0.603 & 0.743 & 0.537 & 0.724 \\[3pt]
-RF + LLM Forecast + recency (rounded) & 0.219 & 0.836 & \textbf{0.525} & \textbf{0.757} & \textbf{0.547} & \textbf{0.758} \\[3pt]
-Random Forest (default params) & 0.215 & 0.839 & 0.628 & 0.723 & 0.530 & 0.715 \\[3pt]
+RF+ET + LLM Forecast + recency & \textbf{0.255} & \textbf{0.817} & 0.593 & \textbf{0.757} & \textbf{0.547} & 0.724 \\[3pt]
+RF+ET + recency & 0.240 & 0.825 & 0.603 & 0.743 & 0.537 & 0.724 \\[3pt]
+RF+ET + LLM Forecast + recency (rounded) & 0.219 & 0.836 & \textbf{0.525} & \textbf{0.757} & \textbf{0.547} & \textbf{0.758} \\[3pt]
+RF+ET (default params) & 0.215 & 0.839 & 0.628 & 0.723 & 0.530 & 0.715 \\[3pt]
 XGBoost, no LLM features & 0.196 & 0.848 & 0.645 & 0.693 & 0.513 & 0.701 \\[3pt]
-Random Forest only & 0.192 & 0.851 & 0.645 & 0.693 & 0.507 & 0.724 \\[3pt]
+RF+ET only & 0.192 & 0.851 & 0.645 & 0.693 & 0.507 & 0.724 \\[3pt]
 Ridge GLM + Random Forest (mean) & 0.185 & 0.854 & 0.649 & 0.690 & 0.523 & 0.707 \\[3pt]
 XGBoost only & 0.184 & 0.855 & 0.638 & 0.693 & 0.523 & 0.702 \\[3pt]
-Random Forest, no LLM features & 0.171 & 0.862 & 0.657 & 0.713 & 0.520 & 0.709 \\[3pt]
+RF+ET, no LLM features & 0.171 & 0.862 & 0.657 & 0.713 & 0.520 & 0.709 \\[3pt]
 Ridge GLM & 0.142 & 0.877 & 0.671 & 0.650 & 0.480 & 0.678 \\[3pt]
 Mode of reporting-org score baseline & 0.102 & 0.897 & 0.579 & 0.700 & 0.530 & 0.712 \\[3pt]
 Ridge Baseline (risks + org only) & 0.017 & 0.938 & 0.709 & 0.570 & 0.433 & 0.669 \\[3pt]
