@@ -1393,13 +1393,13 @@ No consistent difference was found between \emph{gemini-2.5-flash} and \emph{dee
   \centering
    % \includegraphics[width=0.9\textwidth]{assets/4pane_mean_grade_vs_r2_and_pairwise.png}
    \hspace*{-0.08\textwidth}
-   \includegraphics[width=1.1\textwidth]{assets/4pane.png}
+   \includegraphics[width=1.1\textwidth]{assets/2pane_mean_grade_vs_r2_and_pairwise.png}
 
-  \caption{A comparison of LLM forecasting methods across two different validation sets (left: Set~A; right: Set~B). The x-axis shows the mean narrative forecast grade on a scale from 55 to 97 (higher is better; graded by \emph{gemini-2.5-flash-lite} against the
+  \caption{A comparison of LLM forecasting methods for the validation set. The x-axis shows the mean narrative forecast grade on a scale from 55 to 97 (higher is better; graded by \emph{gemini-2.5-flash-lite} against the
   post-activity document summary).
   The y-axis in the top row shows $R^2$ between predicted and true ratings (higher is better; negative values indicate worse-than-mean predictions).
   The y-axis in the bottom row shows pairwise ordering probability (higher is better; 0.5 = chance). No confidence intervals are shown for individual LLM configurations. The main finding is that RF-forced methods (green) dominate on narrative grade and pairwise ordering, while the minimal-prompt baseline achieves the highest $R^2$ illustrating a
-  tension between rating accuracy and narrative quality. Validation set A contains 300 activities starting after the cutoff date of February 6th, 2013 and starting before the test set cutoff of June 6th, 2016. Validation set B contains an earlier set of 171 activities that included some in the test set and some in the training set from Validation set A, and excludes BMZ activities. ``KNN'' refers to the retrieval of 3 similar examples into the prompt, ``RAG'' refers to the model additionally retrieving information it decided it was missing from the available documents and adding to the prompt, ``S1'' refers to additional reasoning injected into the context considering why the activity outcome may be overall unsatisfactory, ``S2'' refers to additional reasoning in the context considering why the activity outcome may be overall satisfactory. Because LLM forecasts are integers on a 0-5 point scale, Pairwise ordering is artificially suppressed and should be interpreted directionally.}
+  tension between rating accuracy and narrative quality. The validation set contains 268 activities which all models were compared between. ``KNN'' refers to the retrieval of 3 similar examples into the prompt, ``RAG'' refers to the model additionally retrieving information it decided it was missing from the available documents and adding to the prompt, ``S1'' refers to additional reasoning injected into the context considering why the activity outcome may be overall unsatisfactory, ``S2'' refers to additional reasoning in the context considering why the activity outcome may be overall satisfactory.}
   \label{fig:scatterLLMcorrected}
 \end{figure}
 \FloatBarrier
