@@ -367,32 +367,21 @@ Limited work has also been done using LLMs such as GPT-4 to serve as data source
 
 
 \section{Methods}
-The methods section introduces several methods to improve forecasting performance.  Methods were split into simple ``baseline'' methods, and compared to more sophisticated ``experimental'' methods to ensure that the experimental methods adopted improve forecasting performance above their respective baseline methods on the held-out test set.
+The methods section introduces several methods to improve forecasting performance. Methods were split into simple ``baseline'' methods, and compared to more sophisticated ``experimental'' methods to ensure that the experimental methods adopted improve forecasting performance above their respective baseline methods on the held-out test set. A summary of the methods can be found at the end of this chapter in section \ref{sub:methodssummary}.
 
-\subsection{Summary}
-This thesis implements: 
+\subsection{Temporal Splits and Information Leakage} \label{sub:temporalleakage}
+Train activities started on or before February 6, 2013; Validation activities started between February 7, 2013 through June 6, 2016; Test activities were the remaining activities with the latest start date in 2019. See Figure \ref{fig:splits} for the number of activities per year in each and Figure \ref{fig:splitdurations} for the average duration of activities within each split.
+
+A forecasting system designed to predict the future must not gain any information that could not be known at the start of the international aid activity. The methodology was designed such that that no information from the test set was used for model selection and validation, in order to provide a realistic assessment of the forecasting skill of the model for activities starting on or after 2026. Cases where information that could not be known is used for the prediction is deemed ``leakage''. Preventing leakage was an important factor in the methodology. Leakage has been a significant concern in other published works where forecasting with language models has been implemented, and in multiple cases has caused invalidation of forecasting results \citep{palekaPitfallsEvaluatingLanguage2025}. While ex-post evaluations may provide sufficient information to describe the activity, relying on language models to completely remove information about the eventual outcome could introduce information leakage from past the start date, and was a motivation behind using IATI, which explicitly separates documents into pre- and post-activity, as opposed to OpenAlex and 3ie ex-post activity documents.
+
+\textbf{Data Extraction LLM Model Selection}
+Several different language models are used for data extraction pipeline, selected according to the following criteria:
 \begin{itemize}
-\item A statistical model to forecast overall activity success ratings using LLM-generated features
-\item A statistical model to forecast activity cost-effectiveness using LLM-generated features
-\item A statistical model to forecast 14 binary outcomes using LLM-generated features
-\item A purely LLM-based model used to forecast overall activity success ratings
-\item An LLM-based model to provide a narrative forecast of overall activity success ratings, incorporating the statistical model and other state-of-the-art prompting techniques
+  \item \emph{gpt-3.5-turbo} is used when the task benefits from an earlier model training cutoff date, eliminating the possibility of temporal information leakage for events occurring after September 2021, in this case for used grading information documents. However, this legacy model is more expensive, despite the model having a weaker reasoning ability.
+  \item \emph{gemini-2.5-flash} was primarily used for its low cost, high speed, and ability to process pdf documents accurately
+  \item \emph{gemini-2.5-flash-lite} was used for high volume requests which are otherwise unaffordable, where the task complexity is also low
+  \item \emph{gemini-2.5-pro} is a more expensive model, used when many pages of PDF context and reasoning is required, with relatively few API calls
 \end{itemize}
-The system is built to forecast what the evaluation results will be for thousands of IATI records containing both a pre-intervention description of the activity, and an ex-post evaluation of the results. To do so, thousands of PDFs were downloaded, ranked from most to least relevant for forecasting future outcomes or evaluating the end result of the activities, had their pages ranked and graded for relevance to the task, and had quantitative and qualitative descriptions and results transcribed into a unified structured JSON format.
-
-The methodological components described above use a large quantity of unstructured data from IATI to reliably forecast international aid activity outcomes better than simplistic baseline methods. Starting from raw metadata and unstructured PDF documents, a pipeline was first developed to extract, filter, and process information available at the activity approval stage. See Figure~\ref{fig:finaldiagram} for a representation of the entire process.
-
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[width=\linewidth]{assets/finaldiagramthesis.drawio.png}
-    \caption{Overview of the forecasting pipeline.}
-    \label{fig:finaldiagram}
-\end{figure}
-
-
-\subsection{Temporal Information Leakage} \label{sub:temporalleakage}
-A forecasting system designed to predict the future must not gain any information that could not be known at the start of the international aid activity. Cases where information that could not be known is used for the prediction is deemed ``leakage''. Preventing leakage was an important factor in the methodology. Leakage has been a significant concern in other published works where forecasting with language models has been implemented, and in multiple cases has caused invalidation of forecasting results \citep{palekaPitfallsEvaluatingLanguage2025}. While ex-post evaluations may provide sufficient information to describe the activity, relying on language models to completely remove information about the eventual outcome could introduce information leakage from past the start date, and was a motivation behind using IATI, which explicitly separates documents into pre- and post-activity, as opposed to OpenAlex and 3ie ex-post activity documents.
-
 
 \subsection{Data Sources} \label{sec:methods_for_LLM_forecasting}
 
@@ -423,6 +412,76 @@ All activities for the thesis therefore come from the IATI database \citep{IATID
 A disadvantage of the IATI database is that it is sometimes inconsistent between reporting organizations as to how the data are filled in, and the format of documents was not always PDF, requiring conversion scripts from other formats to PDF. Many download links were also not functioning. Others required custom web-scraping scripts to extract project documents in PDF format from the original hosting websites. Planned start or end dates were often missing, leading to frequent exclusion of otherwise informative projects. Furthermore, approximately 30\% of IATI activities do not have an activity category code, leading to a further exclusion of environmental or sustainability related activities that otherwise could have been included.
 
 Country-level covariates were added from three standard sources: the World Bank governance indicators \citep{kaufmannWorldwideGovernanceIndicators2024}, the World Bank country policy and institutional assessment scores \citep{worldbankCPIACriteria2024}, and GDP per capita \citep{worldbankGDPPerCapita}. These were included as supplementary features for the statistical forecasting models and were sometimes injected in the LLM forecasting prompts.
+
+
+
+% Figure: workflow 
+\begin{figure}[!htbp]
+  \centering
+  \includegraphics[width=1\textwidth]{assets/pie_plot_env_categories.png}
+  \caption{The split of topics analyzed from the dataset.}
+  \label{fig:topicsplit}
+\end{figure}
+
+
+
+\begin{figure}[!htbp]
+  \centering
+  \includegraphics[width=0.9\textwidth]{assets/splits_by_start_year.png}
+  \caption{The activities included for forecasting ratings, with the splits by count year. Incomplete activities, shown in red, were not used for prediction. Activity ids used for outcome prediction were given the same temporal boundaries.}
+  \label{fig:splits}
+
+\end{figure}
+
+
+
+% % Figure: predicted vs observed absolute error (scatter)
+% \begin{figure}[!htbp]
+%   \centering
+%   \includegraphics[width=0.9\textwidth]{assets/disbursement_by_year.png}
+%   \caption{Total disbursements for IATI activities used for ratings, by year. There is no clear trend over time for activity size in the database. }
+%   \label{fig:disbursementsbyyear}
+% \end{figure}
+
+% % \end{figure}
+% % Figure: predicted vs observed absolute error (scatter)
+
+% \begin{figure}[!htbp]
+%   \centering
+%   \includegraphics[width=0.9\textwidth]{assets/reporting_org_splits.png}
+%   \caption{The breakdown of reporting orgs in the dataset which were used for training, validation and testing. The validation and test set are in this way significantly out-of-distribution.}`'
+%   \label{fig:shapratings}
+% \end{figure}
+
+
+
+
+
+% \textbf{Document-related Filtering}
+
+% The IATI database contains a collection of thousands of links to PDFs, word documents, html documents, and other document formats. These were first automatically converted to PDF format via a custom Python script, and subsequently needed to pass several criteria before being used as documents for forecasting.
+
+% I first wrote a script that directly downloaded these and converted them to PDF format. %Specifically for UNDP, I made a custom-query to convert their interactive HTML results pages into a PDF format, all others had the links for the documents downloaded directly with no additional processing. #well, didn't end up using any UNDP
+% Next, I looked at the PDF metadata date, and determined the creation date of the PDF files. I find this is more often closer to the date of the specific activity description document or activity evaluation document (as determined by reading the document) than metadata at the url indicating upload date, or the date entered in IATI for the document.  UNDP results had the URL specifically included in the JSON payload populating their website, so the latest year indicated in that evaluation payload was used instead for the UNDP results.
+
+% All documents are tagged in IATI with one or more of the following tags per document:
+% ``Pre- and post-project impact appraisal'', ``Objectives / Purpose of activity'', ``Intended ultimate beneficiaries'', ``Conditions'', ``Budget'', ``Summary information about contract'', ``Review of project performance and evaluation'', ``Results, outcomes and outputs'', ``Memorandum of understanding (If agreed by all parties)'', ``Tender'', or ``Contract''. 
+
+% I mark documents with ``Objectives / Purpose of activity'' or ``Summary information about contract'', tags as preliminary ``baseline'' documents - those representing information about the activity before it begins. Documents with ``Review of project performance and evaluation'' or ``Pre- and post-project impact appraisal'' tags are marked as preliminary evaluation documents. In order to provide sufficient information to forecast with and sufficient information to evaluate that forecast, I require at least one ``baseline'' document and at least one ``outcome'' document per activity, with the baseline document at least one year prior to the evaluation document (based on the uploaded document metadata date). I also require that the activity status code is not ``Pipeline/identification''. Instead, activities are allowed to be in implementation, finalization, closed, cancelled, or suspended, such that either a final or preliminary evaluation document is possible.
+
+% I filtered further to ensure that all activity document labels which were ``Conditions'', ``Budget'', ``Tender'', ``Contract'' with no other tags were excluded, as these were typically purely legal context, often containing very little evaluation or useful additional activity information.
+
+% The date for the documents were determined using (in descending preference where available) the PDF's ``created on'' or ``last modified'' in its metadata, or the date indicated in the IATI record for the document. This ordering preference was determined as the PDF metadata dates were found to more reliably match the stated date of authorship of the documents better than the ``IATI date'' recorded within the activity record. These dates were usually available in the metadata of the original PDF, ODT, DOC, or DOCX file. Experimenting with different date options revealed that out of 400 randomly selected PDFs, the closest available date to the true date of authoring the document was the ``created by'' date, then the ``last modified'' date, then the ``IATI date''. The median difference for the date when selecting this ordering was 22 days different than the date indicated in the document itself as determined by feeding the first 3 pages of each of those 400 PDF documents to \emph{gemini-2.5-flash}.
+
+% To ensure PDF metadata dates were appropriate, an analysis was conducted to ensure the procedure for selecting the date of activity documents was valid. If the date of the activity is too early, it could lead to documents authored well after the project start leaking future information. To test this, 400 random PDF documents downloaded were uploaded to gemini and the PDF metadata dates were inspected. PDF metadata dates were discovered to have a median difference of 22 days from the date indicated on the document as extracted by gemini. It was discovered that while approximately 10\% of the dates were more than a year after the actual date indicated on the document (such that an activity was actually authored earlier than the start date of the activity), a concerning 0.5\% of documents had a creation PDF metadata date later than the date extracted directly from the document. 
+
+% In order to ensure the forecasts were all based on project information available only roughly at the beginning of the activity, a search was conducted through the information available to the model when forecasting to ensure the forecasting was based only on what could have been known at the beginning of the activity. Approximately 10 activities with PDF metadata dates more than a year earlier than the true authoring of activity documents would be expected, based on the 0.5\% rate of ``>1 year too early'' errors from the date analysis.
+
+% To prevent any information leakage, which could be due to incorrect dates as well as incorrect marking of the start date of the activity in IATI, or significant progress being made within the first quarter of the activity where documents are allowed, approximately 40 random ChatGPT-generated activity summaries (see the next section) were inspected, with none indicating advanced progress, indicating less than 2.5\% of activities should be of concern. A selective search for phrases revealed some activities had made clear progress on targeted outcomes. Consequently, a Python script with 6,800 separate search terms was used to further search for inappropriate documents. Exact string search terms were made, with variants of phrases including, ``on track'', ``ongoing project has been performing'', ``ongoing project is performing'', ``already made considerable progress'', ``key milestones already achieved'', ``significant progress had been made'', ``the programme has already made considerable progress'', etc. This led to the review of approximately 150 additional activities, and the discovery of 21 activities with clear progress on key project milestones. Progress such as the formation of planning committees or initial disbursements of funds to the implementing organization were not considered grounds for exclusion, given that these milestones are unlikely to be substantially informative. However, extension activities or Phase II / Phase III activities were not excluded, unless significant progress had already been made on the extension or phase being evaluated.
+
+\subsection{Data Filtering}
+
+The IATI dataset was progressively filtered from approximately 800,000 activities to 3,225 completed environment- and sustainability-related projects with both baseline and evaluation documents suitable for forecasting outcomes without future information leakage. Activities were first selected by sector codes (See Figure \ref{fig:topicsplit}) and manual topic review, then constrained to those with downloadable documents, valid temporal ordering (baseline pdf uploaded at latest the end of first quarter of implementation period, evaluation at earliest last quarter), and sufficient metadata reliability. Additional restrictions ensured comparable rating scales and adequate sample sizes across four reporting organizations (World Bank, BMZ/KfW/GIZ, ADB, and UK FCDO, see Figure \ref{fig:reporgs}). Documents were converted to PDF and dated primarily using PDF metadata, which was validated against document content, yielding a median 22-day discrepancy. To prevent leakage from early progress reporting or misdated files, documents were screened by manual inspection, LLM-assisted checks, and automated keyword searches, resulting in the exclusion of activities showing substantive outcome progress. Further filtering removed purely legal or contractual documents from baseline and evaluation documents removed activities that were not marked as completed in IATI, and removed activities with no overall success evaluation ratings identified in the evaluation documents, ultimately producing a set of 1,181 activities which were used for the remaining analysis. 
 
 
 % \subsection{Data Filtering}
@@ -481,81 +540,21 @@ Country-level covariates were added from three standard sources: the World Bank 
 % % \end{itemize}
 
 
-% % Figure: workflow 
-% \begin{figure}[!htbp]
-%   \centering
-%   \includegraphics[width=1\textwidth]{assets/pie_plot_env_categories.png}
-%   \caption{The split of topics analyzed from the dataset.}
-%   \label{fig:workflow}
-% \end{figure}
+\begin{figure}[!htbp]
+  \centering
+  \includegraphics[width=0.9\textwidth]{assets/reporting_org_splits.png}
+  \caption{The breakdown of reporting orgs in the dataset which were used for training, validation and testing. The validation and test set contain differing ratios of reporting organizations between activities, making held-out set prediction more challenging.}
+  \label{fig:reporgs}
+\end{figure}
+
+\begin{figure}[!htbp]
+  \centering
+  \includegraphics[width=0.9\textwidth]{assets/duration_by_split.png}
+  \caption{The durations of activities per split. More recently starting activities tend to be shorter, as they have not yet had time to complete and be evaluated. The out-of-distribution nature of validation and test sets increase the challenge of the model performing well on the held-out set.}
+  \label{fig:splitdurations}
+\end{figure}
 
 
-
-% \begin{figure}[!htbp]
-%   \centering
-%   \includegraphics[width=0.9\textwidth]{assets/splits_by_start_year.png}
-%   \caption{The activities included for forecasting ratings, with the splits by count year. Incomplete activities, shown in red, were not used for prediction. Activity ids used for outcome prediction were given the same temporal boundaries.}
-%   \label{fig:splits}
-
-% \end{figure}
-
-
-
-% % Figure: predicted vs observed absolute error (scatter)
-% \begin{figure}[!htbp]
-%   \centering
-%   \includegraphics[width=0.9\textwidth]{assets/disbursement_by_year.png}
-%   \caption{Total disbursements for IATI activities used for ratings, by year. There is no clear trend over time for activity size in the database. }
-%   \label{fig:disbursementsbyyear}
-% \end{figure}
-
-% % \end{figure}
-% % Figure: predicted vs observed absolute error (scatter)
-% \begin{figure}[!htbp]
-%   \centering
-%   \includegraphics[width=0.9\textwidth]{assets/duration_by_split.png}
-%   \caption{The durations of activities per split. More recently starting activities tend to be shorter, as they have not yet had time to complete and be evaluated. The out-of-distribution nature of validation and test sets increase the challenge of generalizing patterns from the training data. }
-%   \label{fig:splitdurations}
-% \end{figure}
-
-
-
-% \begin{figure}[!htbp]
-%   \centering
-%   \includegraphics[width=0.9\textwidth]{assets/reporting_org_splits.png}
-%   \caption{The breakdown of reporting orgs in the dataset which were used for training, validation and testing. The validation and test set are in this way significantly out-of-distribution.}`'
-%   \label{fig:shapratings}
-% \end{figure}
-
-
-
-
-
-% \textbf{Document-related Filtering}
-
-% The IATI database contains a collection of thousands of links to PDFs, word documents, html documents, and other document formats. These were first automatically converted to PDF format via a custom Python script, and subsequently needed to pass several criteria before being used as documents for forecasting.
-
-% I first wrote a script that directly downloaded these and converted them to PDF format. %Specifically for UNDP, I made a custom-query to convert their interactive HTML results pages into a PDF format, all others had the links for the documents downloaded directly with no additional processing. #well, didn't end up using any UNDP
-% Next, I looked at the PDF metadata date, and determined the creation date of the PDF files. I find this is more often closer to the date of the specific activity description document or activity evaluation document (as determined by reading the document) than metadata at the url indicating upload date, or the date entered in IATI for the document.  UNDP results had the URL specifically included in the JSON payload populating their website, so the latest year indicated in that evaluation payload was used instead for the UNDP results.
-
-% All documents are tagged in IATI with one or more of the following tags per document:
-% ``Pre- and post-project impact appraisal'', ``Objectives / Purpose of activity'', ``Intended ultimate beneficiaries'', ``Conditions'', ``Budget'', ``Summary information about contract'', ``Review of project performance and evaluation'', ``Results, outcomes and outputs'', ``Memorandum of understanding (If agreed by all parties)'', ``Tender'', or ``Contract''. 
-
-% I mark documents with ``Objectives / Purpose of activity'' or ``Summary information about contract'', tags as preliminary ``baseline'' documents - those representing information about the activity before it begins. Documents with ``Review of project performance and evaluation'' or ``Pre- and post-project impact appraisal'' tags are marked as preliminary evaluation documents. In order to provide sufficient information to forecast with and sufficient information to evaluate that forecast, I require at least one ``baseline'' document and at least one ``outcome'' document per activity, with the baseline document at least one year prior to the evaluation document (based on the uploaded document metadata date). I also require that the activity status code is not ``Pipeline/identification''. Instead, activities are allowed to be in implementation, finalization, closed, cancelled, or suspended, such that either a final or preliminary evaluation document is possible.
-
-% I filtered further to ensure that all activity document labels which were ``Conditions'', ``Budget'', ``Tender'', ``Contract'' with no other tags were excluded, as these were typically purely legal context, often containing very little evaluation or useful additional activity information.
-
-% The date for the documents were determined using (in descending preference where available) the PDF's ``created on'' or ``last modified'' in its metadata, or the date indicated in the IATI record for the document. This ordering preference was determined as the PDF metadata dates were found to more reliably match the stated date of authorship of the documents better than the ``IATI date'' recorded within the activity record. These dates were usually available in the metadata of the original PDF, ODT, DOC, or DOCX file. Experimenting with different date options revealed that out of 400 randomly selected PDFs, the closest available date to the true date of authoring the document was the ``created by'' date, then the ``last modified'' date, then the ``IATI date''. The median difference for the date when selecting this ordering was 22 days different than the date indicated in the document itself as determined by feeding the first 3 pages of each of those 400 PDF documents to \emph{gemini-2.5-flash}.
-
-% To ensure PDF metadata dates were appropriate, an analysis was conducted to ensure the procedure for selecting the date of activity documents was valid. If the date of the activity is too early, it could lead to documents authored well after the project start leaking future information. To test this, 400 random PDF documents downloaded were uploaded to gemini and the PDF metadata dates were inspected. PDF metadata dates were discovered to have a median difference of 22 days from the date indicated on the document as extracted by gemini. It was discovered that while approximately 10\% of the dates were more than a year after the actual date indicated on the document (such that an activity was actually authored earlier than the start date of the activity), a concerning 0.5\% of documents had a creation PDF metadata date later than the date extracted directly from the document. 
-
-% In order to ensure the forecasts were all based on project information available only roughly at the beginning of the activity, a search was conducted through the information available to the model when forecasting to ensure the forecasting was based only on what could have been known at the beginning of the activity. Approximately 10 activities with PDF metadata dates more than a year earlier than the true authoring of activity documents would be expected, based on the 0.5\% rate of ``>1 year too early'' errors from the date analysis.
-
-% To prevent any information leakage, which could be due to incorrect dates as well as incorrect marking of the start date of the activity in IATI, or significant progress being made within the first quarter of the activity where documents are allowed, approximately 40 random ChatGPT-generated activity summaries (see the next section) were inspected, with none indicating advanced progress, indicating less than 2.5\% of activities should be of concern. A selective search for phrases revealed some activities had made clear progress on targeted outcomes. Consequently, a Python script with 6,800 separate search terms was used to further search for inappropriate documents. Exact string search terms were made, with variants of phrases including, ``on track'', ``ongoing project has been performing'', ``ongoing project is performing'', ``already made considerable progress'', ``key milestones already achieved'', ``significant progress had been made'', ``the programme has already made considerable progress'', etc. This led to the review of approximately 150 additional activities, and the discovery of 21 activities with clear progress on key project milestones. Progress such as the formation of planning committees or initial disbursements of funds to the implementing organization were not considered grounds for exclusion, given that these milestones are unlikely to be substantially informative. However, extension activities or Phase II / Phase III activities were not excluded, unless significant progress had already been made on the extension or phase being evaluated.
-
-\subsection{Data Filtering}
-
-The IATI dataset was progressively filtered from approximately 800,000 activities to 3,225 completed environment- and sustainability-related projects with both baseline and evaluation documents suitable for forecasting outcomes without future information leakage. Activities were first selected by sector codes and manual topic review, then constrained to those with downloadable documents, valid temporal ordering (baseline pdf uploaded at latest the end of first quarter of implementation period, evaluation at earliest last quarter), and sufficient metadata reliability. Additional restrictions ensured comparable rating scales and adequate sample sizes across four reporting organizations (World Bank, BMZ/KfW/GIZ, ADB, and UK FCDO). Documents were converted to PDF and dated primarily using PDF metadata, which was validated against document content, yielding a median 22-day discrepancy. To prevent leakage from early progress reporting or misdated files, documents were screened by manual inspection, LLM-assisted checks, and automated keyword searches, resulting in the exclusion of activities showing substantive outcome progress. Further filtering removed purely legal or contractual documents, ultimately producing a curated dataset designed to reflect information realistically available near project start while preserving sufficient coverage for model training, validation, and testing.
 
 In order to accurately extract overall success ratings for each activity and useful textual information about the project for forecasting, each PDF document was processed using the following data processing pipeline:
 
@@ -576,16 +575,20 @@ The highest ranking documents then had each of their pages categorized with what
 
 Upon manual inspection, it was revealed that pages often pertained to more than one category such as a page which documents final outcomes while also documenting project delays. The two most relevant category choices among these were therefore assigned for each page in the documents. Two categories were assigned in order to prevent less relevant categories from polluting the page tags.
 
-In order to exclude irrelevant pages, the pages were also given a second category, for post-activity document pages as ``glossary'', ``blank page'', ``table of contents'', ``outcome evaluation'', ``activity description'', ``references'', or ``other'', and for pre-activity document pages the same categories were options, in addition to ``core activities'', ``theory of change'', ``targets'', ``broader context'', and ``preliminary results''. Only one category choice among these was possible per page.
+In order to exclude irrelevant pages, the pages were also given a second categorization type, for post-activity document pages as ``glossary'', ``blank page'', ``table of contents'', ``outcome evaluation'', ``activity description'', ``references'', or ``other'', and for pre-activity document pages the same categories were options, in addition to ``core activities'', ``theory of change'', ``targets'', ``broader context'', and ``preliminary results''. Only one category choice among these was possible per page as these categories were found to typically be mutually exclusive.
 
 
 \subsubsection{Structured Information Extraction}
 \subsubsubsection{Extracting Ratings}
-Two separate methods were used to extract ratings. Inspection of randomly selected pages revealed that ratings often appeared on pages with a high rating for relevance to evaluation. Therefore, the first method sends each individual post-activity document page rated above 7/10 for relevance to evaluation, or with a ``quantitative targets'' categorization, to \emph{gemini-2.5-flash} to extract any overall ratings, and a second script summarized the overall ratings into a single value for the document. However, this was often insufficient to capture the overall ratings. Another ``fallback'' script involved a custom generated word search with approximately 500 different rephrasings of ``overall rating'', ``final result'', ``synthesized score'', etc, in English, and searched the PDFs directly for an exact match on those terms, prioritizing pages with one or more exact text matches of such terms. Otherwise, if such words could not be found, the earliest pages in the document which were not categorized as ``blank page'', ``appendix'', ``glossary'', ``table of contents'', ``references'', or ``activity description'' were included and \emph{gemini-2.5-flash} was queried to extract the overall rating from the documents.
+Two separate methods were used to extract ratings. Inspection of randomly selected pages revealed that ratings often appeared on pages with a high rating for relevance to evaluation, where a threshold of approximately 7/10 separated matches from bad fits. Therefore, the first method sends each individual post-activity document page rated above 7/10 for relevance to evaluation, or with a ``quantitative targets'' categorization, to \emph{gemini-2.5-flash} to extract any overall ratings, and a second script summarized the overall ratings into a single value for the document. However, this was often insufficient to capture the overall ratings. Another ``fallback'' script involved a custom generated word search with approximately 500 different rephrasings of ``overall rating'', ``final result'', ``synthesized score'', etc, in English, and searched the PDFs directly for an exact match on those terms, prioritizing pages with one or more exact text matches of such terms. Otherwise, if such words could not be found, the earliest pages in the document which were not categorized as ``blank page'', ``appendix'', ``glossary'', ``table of contents'', ``references'', or ``activity description'' were included and \emph{gemini-2.5-flash} was queried to extract the overall rating from the documents.
 
 %A slightly different process was done for UNDP activities. The fallback script was used again, but documents were judged by \emph{gemini-2.5-flash} for whether the outcomes represented an ``overall successful'' or ``overall unsuccessful'' activity, and this was entered as the result, as UNDP rarely delivers directly an overall rating for the activity. # we don't use these anymore
 
-For BMZ/KfW/GIZ documents, pre-activity documents were extremely rare. For this reason, the evaluation document was treated as a pre-activity document for the purposes of forecasting activity success. Categorization for these evaluations also was via the pre-activity document method described above. When grading or summarizing the features of the evaluation document, \emph{gemini-2.5-flash} was instructed to only describe what could have been known at the beginning of the activity, and to under no circumstances reveal the final outcome of the activity. Cursory manual inspection did not reveal any leakage, and BMZ/KfW/GIZ overall ratings were less predictable than World Bank ratings, despite this information leakage possibility.
+For BMZ/KfW/GIZ documents, pre-activity documents were extremely rare. For this reason, the evaluation document was treated as a pre-activity document for the purposes of forecasting activity success. Categorization for these evaluations also was via the pre-activity document method described above. When grading or summarizing the features of the evaluation document, \emph{gemini-2.5-flash} was instructed to only describe what could have been known at the beginning of the activity, and to under no circumstances reveal the final outcome of the activity. Manual inspection of extracted information from these documents did not reveal any resulting temporal leakage.  BMZ/KfW/GIZ overall ratings were similarly predictable to World Bank ratings on the held-out set, despite this information leakage possibility.
+
+
+
+
 
 \subsubsubsection{Interpreting Ratings}
 Ratings were reported both with the rating itself, and a maximum and minimum possible rating. The World Bank rating scale from 1 (``Highly Unsatisfactory'') to 6 (``Highly Satisfactory'') was used as the template rating, and other ratings were rescaled to match the 1 to 6 rating scale. Notably, BMZ/KfW/GIZ ratings were inverted to reach this scale. A ``Satisfactory'' score was considered equivalent to scores such as ``successful'', ``On Track'', or ``met expectations''. Scores listed as percentages or fractions were re-scaled to the 1 to 6 scale as well. In order to ensure ratings were fairly compared, only the top four most common organizations with ratings were included for training and validation of the forecasting system. 
@@ -603,7 +606,7 @@ Once these PDF pages were extracted, a combination of manual examination of the 
 
 \textbf{Comparable Outcome Categories}
 
-Using manual inspection and frequency statistics of common bigrams, a set of outcome categories was defined that recur across evaluations and are interpretable across projects. Only those outcomes are reported that remained after ensuring they contained values for at least 10 activities after filtering to the dates of the evaluation set (2013-02-06 until 2016-06-06). The final set included:
+Using manual inspection and frequency statistics of common bigrams, a set of outcome categories was defined that recur across evaluations and are interpretable across projects. One challenge encountered was ensuring sufficient quantities of comparable outcomes between activities. In order to ensure statistically significant quantities of activities were required for training, only outcomes categories were used that remained after ensuring each contained at least 10 activities in the evaluation set, which corresponded to approximately 30 total activities in the combined training and validation set. Tuning the number provided a stable mean value and standard deviation The final set included:
 \begin{itemize}[noitemsep,topsep=0pt]
   \item \textbf{Benefit/cost ratios (B/C):} benefit-cost ratio outcomes.
   \item \textbf{Rates of return:} economic rate of return (ERR/EIRR) and financial rate of return (FRR/FIRR), in percent.
@@ -819,7 +822,7 @@ This adds the following 16 features to the statistical model:
 \subsubsection{Outcome Tag Forecasting}
 \label{subsubsub:outcome_tag_forecasting}
 
-For each outcome tag, an RF+ET ensemble classifier was trained using the same initial feature set and time-ordered split as the overall rating model (train: start date on or before February 6, 2013; validation: February 7, 2013 through June 6, 2016; test held out). 
+For each outcome tag, an RF+ET ensemble classifier was trained using the same initial feature set and time-ordered split as the overall rating model (train: start date on or before February 6, 2013; validation: February 7, 2013 through June 6, 2016; test held out, see figure ). 
 
 The model for the outcome tag was judged as ineligible for test-set prediction unless the Brier skill score and accuracy skill were strictly positive. Otherwise the chosen model was reverted to the constant baseline, indicating low confidence that the RF+ET ensemble would perform better than the validation set.
 
@@ -1187,10 +1190,19 @@ The Brier skill score (BSS) measures improvement over a reference forecast:
 where $\mathrm{BS}_{\mathrm{ref}}$ is the Brier score of the constant (no-skill) baseline that always predicts the training-set base rate. A BSS of 0 indicates no improvement over this baseline; positive values indicate skill. Brier skill score is only used for outcome tags.
 
 
+\subsubsection{Choosing Methods and Metrics for the Held-out Test Set}
+\textbf{Rating and Cost Effectiveness Evaluation} After consideration of several metrics, the within-group pairwise ranking and $R^2$ were determined to be the most appropriate for assessing model skill in the domain of ratings and activity quantitative outcomes, while other metrics still provide useful insight. $R^2$ is sensitive to bias and outliers, which are important for assessing absolute predictive accuracy. However, a common use-case in aid funding decision making is comparing a pair of activities, or even a suite of many activities. In such a use-case, the within-group pairwise ranking is more representative of what is needed. Furthermore, a weakness in $R^2$ is that global shifts in the ratings and outcomes due to external factors can be unpredictable, and a model may by-chance capture these shifts without any real improvement in forecasting skill. Both are clearly interpretable: always forecasting the mean value of the held-out set is equivalent to an $R^2$ of 0, also meaning that 0\% of variance explained for $R^2$, while 50\% is equivalent to the within-group pairwise ranking forecast of random chance.
 
-\subsubsection{Choosing Rating and Cost Effectiveness Evaluation Metrics}
+\textbf{Methods chosen for the Held-out Test Set} Even after rigorously evaluating the methods which worked well on the validation set, I wanted to evaluate whether some methods offered performance improvements on the test set. The selected methods to evaluate were as follows:
 
-After consideration of several metrics, the within-group pairwise ranking and $R^2$ were determined to be the most appropriate for assessing model skill in the domain of ratings and activity quantitative outcomes, while other metrics still provide useful insight. $R^2$ is sensitive to bias and outliers, which are important for assessing absolute predictive accuracy. However, a common use-case in aid funding decision making is comparing a pair of activities, or even a suite of many activities. In such a use-case, the within-group pairwise ranking is more representative of what is needed. Furthermore, a weakness in $R^2$ is that global shifts in the ratings and outcomes due to external factors can be unpredictable, and a model may by-chance capture these shifts without any real improvement in forecasting skill. Both are clearly interpretable: always forecasting the mean value is 0, equivalent to 0\% of variance explained for $R^2$, while 50\% is equivalent to the within-group pairwise ranking forecast of random chance.
+\begin{itemize}
+  \item \textbf{ Statistical Models for Overall Ratings:} As baseline methods I chose to assess the performance of always predicting the most common rating within the reporting org (\emph{Mode of reporting-org score baseline}), a simple ridge regression model with only the overall risk LLM grade and the reporting org (\emph{Ridge Baseline (risks + org only)}) as a means of approximating what human evaluators may have assigned the likely overall rating, and a simple linear model with all features (\emph{Plain OLS GLM}) to assess the importance of nonlinearity for the statistical model performance on the test set. My primary method was (\emph{RF+ET all features}) which was the average of the RF and ET model after adjusting year correlation, and I assessed the following alterations to see if they improved performance: the RF+ET ensemble averaged with the LLM forecast (\emph{RF+ET + LLM Forecast (simple avg)}), the more sophisticated calibrated ridge regression to combine the statistical model with the LLM forecast \emph{RF+ET + LLM Forecast (ridge)}, removing the linear year correlation adjustment (\emph{RF+ET all features - year corr}), removing LLM input features from the model (\emph{RF+ET, no LLM features}), resetting the RF+ET tuned parameters to their default values (\emph{RF+ET (default params)}), and replacing the RF+ET with the XGBoost nonlinear model (\emph{XGBoost all features}).
+
+  \item \textbf{Outcome Tags} I assessed only two methods on the test set for outcome tags: including the per-tag features and parameters (all subsets of the 45 ``non-noisy'' features, where each per-tag parameter set was a less complex model), and compared this with using only the same 45 ``non-noisy'' features which did well on the validation set.
+
+  \item \textbf{Outcome Tags} I assessed only two methods on the test set for outcome tags: including the per-tag features and parameters (all subsets of the 45 ``non-noisy'' features, where each per-tag parameter set was a less complex model), and compared this with using only the same 45 ``non-noisy'' features which did well on the validation set.
+
+\end{itemize}
 
 \subsubsection{Grading Free Form Forecasts}
 In addition to extracting the LLM forecasted rating, \emph{gemini-2.5-flash-lite} is also used to grade narrative textual format forecasts. In order to do so, \emph{gemini-2.5-flash} was first used to summarize pages categorized as highly relevant to post-activity evaluations, obtaining 10 pages with a score of at least 3/10 marked as ``deviation\_from\_plans'', ``delays\_or\_early\_completion'', or ``over\_or\_under\_spending'', or failing that, that were graded as highly relevant to activity evaluation. If no such pages were categorized, the first 10 pages of the highest ranked activity post-activity evaluation were used. Next, for all ensembles of LLM forecasts, a grade was given for how similar the forecast was to the activity outcome using \emph{gemini-2.5-flash-lite}. Grading was performed based on two key criteria: accurately identification of likely drivers of activity success or failure, and identification of likely outcomes being forecasted. 
@@ -1207,7 +1219,25 @@ In accordance with the typical US grading scheme definitions, an ``F'' grade is 
 \item F: Failed forecast, completely wrong or unsupported.
 \end{itemize}
 
+\subsection{Summary} \label{sub:methodssummary}
 
+This thesis implements four forecasting strategies, all trained and evaluated on a dataset of 1,181 completed international aid activities from the IATI database:
+
+\begin{itemize}
+\item A statistical model to forecast overall activity success ratings using LLM-generated features
+\item A statistical model to forecast activity cost-effectiveness using LLM-generated features
+\item A statistical model to forecast 14 binary outcomes using LLM-generated features
+\item An LLM prompting scheme used to forecast overall activity success ratings, assessed on accuracy, within-group ranking skill, and qualitative similarity to the evaluation summaries.
+\end{itemize}
+
+The system is built to forecast what the evaluation results will be for thousands of IATI records containing both a pre-intervention description of the activity, and an ex-post evaluation of the results in order to ensure temporal leakage does not occur. To do so, thousands of PDFs were downloaded, ranked from most to least relevant for forecasting future outcomes or evaluating the end result of the activities, had their paged graded for relevance to the task, and had quantitative and qualitative descriptions and results extracted from the pdfs. Three time-ordered splits were used: train, validation, and test sets. Statistical models and fine-tuning experiments were done on the training set, with several methods assessed using the validation set. This informed model selection and parameter tuning, so that the generalization ability of these methods were finally assessed against the held-out test set. See Figure~\ref{fig:finaldiagram} for a representation of the entire process.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\linewidth]{assets/finaldiagramthesis.drawio.png}
+    \caption{Overview of the forecasting pipeline. Features are produced using IATI activity data and external by-country datasources (GDP per capita, CPIA scores, and World Bank governance indicators). More features come from ex-ante activity PDFs processed by \emph{gemini-2.5-flash} into structured data. Lastly, \emph{ChatGPT-3.5} generated more features by grading them directly, and \emph{gemini-embedding-001} was used to create more features using semantic embeddings. Next, \emph{deepseek-V3.2} was used to produce a preliminary forecast for overall ratings and outcome tags. A statistical model also trains on and forecasts overall ratings, 14 outcome tags, and cost-effectiveness, optionally using the \emph{deepseek-V3.2} forecasts as input features. \emph{gemini-2.5-flash} processes ex-post evaluation PDFs to extract the overall outcome rating and 14 tags, which serve as training targets for the statistical models. Lastly, language model forecasting is qualitatively evaluated: \emph{deepseek-V3.2} receives the outputs of both the statistical model and the ex-post extraction to produce a free-text narrative forecast of major activity outcomes, which is later graded by \emph{gemini-2.5-flash-lite}.}
+    \label{fig:finaldiagram}
+\end{figure}
 \clearpage
 \FloatBarrier
 \section{Results}
@@ -1230,6 +1260,11 @@ However, not all experimental methods succeeded in improving the model. Inspecti
 Across 14 binary outcome tags, including activity rescoping, finance and budget, and target achievement, the RF+ET average with no per-tag feature selection  achieved an average within-group pairwise ranking of \OutcomeTagPairwiseAvg\% (range: \OutcomeTagPairwiseMin\% to \OutcomeTagPairwiseMax\%) for the \DifferingOutcomePairsFrac\% of pairs with differing outcomes, outperforming the alternative model which used feature selection. By comparison, the per-tag feature selection model achieved an average of \OutcomeTagPairwiseAvgFeatSel\% (range: \OutcomeTagPairwiseMinFeatSel\% to \OutcomeTagPairwiseMaxFeatSel\%).
 
 The results from each method are described in detail in the remaining sections.
+
+\subsection{Temporal Information Leakage}
+
+The test set had a high rate of apparent leakage - direct inspection revealed several clear cases. It is hypothesized this is due to the high influence of COVID and conflict, and general upheaval in 2019 which especially affected activities starting between 2016 and 2020. Therefore, while the test set results from language models perform well, this should be considered untrustworthy and understood to have a clear unfair advantage compared to a real forecast or the validation set. The validation set did not show significant leakage concern. Manual inspection did not reveal any leakage. A script was written to search for common keywords such as COVID or "Ukraine war" discovered that 4/298 val activities have COVID leakage (all started 2015–2016, before Jan 2020), and no Ukraine war matches.
+
 
 \subsection{Forecasting Ratings with Statistical Models}
 Overall, the forecasting system developed is capable of forecasting evaluation ratings significantly above chance on out-of-time activities at 95\% confidence, with the RF+ET achieving a pairwise ranking skill of \PairwiseModel\,\% [95\% CI: \PairwiseCILow\,\%, \PairwiseCIHigh\,\%]. This can be contrasted with the $R^2$ on the test set of \Rsqheldoutratingsllmfeatures, although it is still well above the baseline $R^2$ of \Rsqheldoutridgebaseline from the ridge regression.
@@ -1306,7 +1341,7 @@ SHAP analysis reveals that increased planned expenditure and decreased duration 
 
 \begin{table}[t]
 \centering
-\caption{Random-forest drop-one feature importance, sorted by absolute change in the prediction from the feature being increased by 1 standard deviation ($\Delta$ \texttt{pred\_1sd}). Each row reports the decrease in validation $R^2$ and pairwise ranking when the feature is removed ($\Delta R^2$\tnote{*}), along with the share of training rows that were median-imputed for that feature (\texttt{Miss} \%\}). The largest impacts come from planned budget and planned duration.%; \texttt{rep\_org\_*} are one-hot reporting-organization indicators.
+\caption{Random-forest drop-one feature importance, sorted by absolute change in the prediction from the feature being increased by 1 standard deviation ($\Delta$ \texttt{pred\_1sd}). Each row reports the decrease in validation $R^2$ and pairwise ranking when the feature is removed ($\Delta R^2$\tnote{*}), along with the share of training rows that were median-imputed for that feature (\texttt{Miss} \%). The largest impacts come from planned budget and planned duration.%; \texttt{rep\_org\_*} are one-hot reporting-organization indicators.
 }
 \begin{tabular}{p{6cm}rrrr}
 \toprule
@@ -1362,7 +1397,7 @@ Figure~\ref{fig:scatterLLMcorrected} summarises performance across all LLM forec
 
 One research question of this thesis is how do differing methods of LLM forecasting apply in the context of forecasting international aid success ratings. More generally capable models were found to be better forecasters. The LLM's ability to predict the rating was also found not to clearly correlate with the quality of its forecast narrative. In fact, the best rating accuracy from an LLM was associated with the least accurate stated reasons. The strategy of incorporating additional information relevant to the forecasting question as well as references to similar activities does not clearly improve forecasting skill.
 
-Inspection did not reveal significant information leakage on the validation set, but considerations of the impacts of COVID and other events were prevalent in the test set. Indeed, a test of \emph{gpt-3.5-turbo} and \emph{gpt-4} with the same prompt as \emph{deepseek-V3.2} revealed that the absolute error increased significantly on average after the model cutoff date relative to the RF+ET model. While GPT3pro and \emph{deepseek-V3.2} with thinking enabled performed better than the RF+ET ensemble on within-group pairwise ranking, this is likely at least in part due to information leakage. Future work should test these more powerful models against larger ensembles of results after their cutoff dates, to provide a fair test against statistical models which were rigorously vetted to not contain information leakage. 
+Inspection did not reveal significant information leakage on the validation set, but considerations of the impacts of COVID and other events were prevalent in the test set. Indeed, a test of \emph{gpt-3.5-turbo} and \emph{gpt-4} with the same prompt as \emph{deepseek-V3.2} revealed that the absolute error increased significantly on average after the model cutoff date relative to the RF+ET model. While \emph{gemini-3-pro} and \emph{deepseek-V3.2} with thinking enabled performed better than the RF+ET ensemble on within-group pairwise ranking, this is likely at least in part due to information leakage. Future work should test these more powerful models against larger ensembles of results after their cutoff dates, to provide a fair test against statistical models which were rigorously vetted to not contain information leakage. 
 
 Little evidence was found that fine-tuning can improve forecasting accuracy in this domain, although a thorough assessment of the potential for fine-tuning \emph{gemini-2.5-flash} was cost prohibitive. Language models on their own were also found to consistently underperform statistical models in forecasting skill, with the exception of within-group pairwise ranking ability from \emph{deepseek-V3.2} with reasoning enabled. However, GPT-3.5, GPT-4, and \emph{deepseek-V3.2} with reasoning turned off all performed worse than the RF model on the test set items, and even \emph{deepseek-V3.2} performed worse on absolute accuracy than the RF+ET model in the test set, indicating that the superior performance was likely due to chance. Currently, language models have a high forecasting variability between models and prompts. Using statistical model prediction as the target for the LLM to forecast (e.g. ``Conclude with a forecast of \emph{moderately satisfactory}'' as derived from a statistical model prediction) was found to significantly improve the quality of LLM narrative forecasts.
 
@@ -1376,7 +1411,7 @@ The training loss for \emph{gemini-2.5-flash} was found to have steadily reduced
 \textbf{RAG and KNN}
 Small differences in forecasting skill were found for the addition of RAG and KNN on forecasting ratings. However, the narrative similarity scores consistently improve on the validation set when RAG and KNN context is included. This indicates that while the LLM is able to identify more important information when reasoning about the final forecast, it is insufficiently calibrated to use the additional information it has gathered to improve the forecast itself.
 
-\textbf{LLM Model Selection}
+\textbf{Forecasting LLM Model Selection}
 No consistent difference was found between \emph{gemini-2.5-flash} and \emph{deepseek-V3.2} in forecasting skill. However, \emph{gemini-3-pro} appears to be significantly better at forecasting than both, in both sets of activities achieving higher similarity grades, higher $R^2$, and higher within-group pairwise ranking than other models, in both the validation and the test set. Two exceptions apply. Models instructed to match the statistical model's forecast outperform \emph{gemini-3-pro} on similarity grades. Additionally, \emph{deepseek-V3.2} using only the minimal prompt achieves a modestly better $R^2$ and within-group pairwise ranking for ratings on the validation set, while scoring a much worse forecast similarity score. When compared directly on the test set using the same prompt \emph{gemini-3-pro} performs better than deepseek.
 
 
@@ -1390,7 +1425,7 @@ No consistent difference was found between \emph{gemini-2.5-flash} and \emph{dee
   post-activity document summary).
   The y-axis in the top row shows $R^2$ between predicted and true ratings (higher is better; negative values indicate worse-than-mean predictions).
   The y-axis in the bottom row shows within-group pairwise ranking (higher is better; 0.5 = chance). No confidence intervals are shown for individual LLM configurations. The main finding is that RF-forced methods (green) dominate on narrative grade and pairwise ranking, while the minimal-prompt baseline achieves the highest $R^2$ illustrating a
-  tension between rating accuracy and narrative quality. The validation set contains 268 activities which all models were compared between. ``KNN'' refers to the retrieval of 3 similar examples into the prompt, ``RAG'' refers to the model additionally retrieving information it decided it was missing from the available documents and adding to the prompt, ``S1'' refers to additional reasoning injected into the context considering why the activity outcome may be overall unsatisfactory, ``S2'' refers to additional reasoning in the context considering why the activity outcome may be overall satisfactory.}
+  tension between rating accuracy and narrative quality. 288 of the 300 validation set activities with overall ratings had sufficiently detailed outcome evaluations to produce a summary. ``KNN'' refers to the retrieval of 3 similar examples into the prompt, ``RAG'' refers to the model additionally retrieving information it decided it was missing from the available documents and adding to the prompt, ``S1'' refers to additional reasoning injected into the context considering why the activity outcome may be overall unsatisfactory, ``S2'' refers to additional reasoning in the context considering why the activity outcome may be overall satisfactory.}
   \label{fig:scatterLLMcorrected}
 \end{figure}
 \FloatBarrier
