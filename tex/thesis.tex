@@ -370,7 +370,7 @@ Limited work has also been done using LLMs such as GPT-4 to serve as data source
 The methods section introduces several methods to improve forecasting performance. Methods were split into simple ``baseline'' methods, and compared to more sophisticated ``experimental'' methods to ensure that the experimental methods adopted improve forecasting performance above their respective baseline methods on the held-out test set. A summary of the methods can be found at the end of this chapter in section \ref{sub:methodssummary}.
 
 \subsection{Temporal Splits and Information Leakage} \label{sub:temporalleakage}
-Train activities started on or before February 6, 2013; Validation activities started between February 7, 2013 through June 6, 2016; Test activities were the remaining activities with the latest start date in 2019. See Figure \ref{fig:splits} for the number of activities per year in each and Figure \ref{fig:splitdurations} for the average duration of activities within each split.
+Train activities started on or before February 6, 2013; Validation activities started between February 7, 2013 and June 6, 2016; Test activities started after June 6, 2016 and before January 1, 2020. These date boundaries were chosen to yield approximately 700 training activities, 300 validation activities, and 200 test activities for overall ratings. See Figure \ref{fig:splits} for the number of activities per year in each and Figure \ref{fig:splitdurations} for the average duration of activities within each split.
 
 A forecasting system designed to predict the future must not gain any information that could not be known at the start of the international aid activity. The methodology was designed such that that no information from the test set was used for model selection and validation, in order to provide a realistic assessment of the forecasting skill of the model for activities starting on or after 2026. Cases where information that could not be known is used for the prediction is deemed ``leakage''. Preventing leakage was an important factor in the methodology. Leakage has been a significant concern in other published works where forecasting with language models has been implemented, and in multiple cases has caused invalidation of forecasting results \citep{palekaPitfallsEvaluatingLanguage2025}. While ex-post evaluations may provide sufficient information to describe the activity, relying on language models to completely remove information about the eventual outcome could introduce information leakage from past the start date, and was a motivation behind using IATI, which explicitly separates documents into pre- and post-activity, as opposed to OpenAlex and 3ie ex-post activity documents.
 
@@ -710,7 +710,6 @@ The non-LLM features used were:
  \item the $log(\text{GDP} / \text{capita})$ of the countries where the activity takes place weighted by the percentage of the activity performed in each country. \citep{goldembergMindingGapAid2025} \citep{bulmanGoodCountriesGood2017}
 \item A dummy variable for each region as defined by the World Bank (AFE, Eastern and Southern Africa; AFW, Western and Central Africa; EAP, East Asia and Pacific; ECA, Europe and Central Asia; LAC, Latin America and the Caribbean; MENA, Middle East and North Africa; SAS, South Asia) \citep{goldembergMindingGapAid2025} \citep{vivaltHowMuchCan2020}
 \item  missingness counts for important features with missingness
-\item interaction terms for influential variables: gdp per capita times duration
 \end{itemize}
 
 The activity start date was not used as a feature, as there was no linear pattern with regards to overall activity success over time in the training data, and adding it tended to increase overfitting and reduce out-of-time generalization. As opposed to some results in prior literature \citep{vivaltHowMuchCan2020} \citep{ashtonPuzzleMissingPieces2021}, whether the implementer was a government, NGO, or another category was also not found to have any improvement in model performance and was excluded.
@@ -757,10 +756,10 @@ The algorithm incorporates both L1 and L2 regularization terms to penalize model
 
 Seven additional features were extracted using \emph{gpt-3.5-turbo}-generated evaluation on a score from 0 to 100 in order to enrich the activity with information from the project document PDFs from the start of the activity. GPT-3.5-turbo was used in order to reduce leakage of information after the September 2021 model cutoff date. Inspection of grades did not reveal significant usage of knowledge that would not be available at the beginning of the activity. The majority of activities in the test set ended after the model cutoff date. These seven features were based on important aspects revealed by the literature review and consultation. One feature not introduced by others was added (the ease of targeted outcomes). Unlike technical complexity, which captures only one dimension of difficulty, or overall risk, which aggregates financial, legal, and regulatory threat sources, ease of targeted outcomes is distinct. It specifically reflects whether the activity's intended outputs are inherently measurable and achievable given typical implementation constraints---a factor theorized to independently contribute to evaluation success.
 
-The features added for this method included the seven features and two interaction terms
+The features added for this method included the seven features and one interaction term
 
 \begin{itemize}
- \item \emph{gemini-2.5-flash}-generated evaluation on a score from 0 to 100 of:
+ \item \emph{gpt-3.5-turbo}-generated evaluation on a score from 0 to 100 of:
  \begin{itemize}[noitemsep,topsep=0pt]
  \item  how well financed the activity is (consultation with BMZ officers), \citep{bulmanGoodCountriesGood2017} \citep{goldembergMindingGapAid2025} \citep{eilersVolumeRiskComplexitya}
  \item  the activity integratedness within the broader activity ecosystem (consultation with BMZ officers), \citep{vivaltHowMuchCan2020}
@@ -770,9 +769,8 @@ The features added for this method included the seven features and two interacti
  \item  the activity's overall technical complexity \citep{eilersVolumeRiskComplexitya}
  \item  the ease of targeted outcomes
 \end{itemize}
-\item Additional interaction terms added
+\item Additional interaction term added
 \begin{itemize}
-\item governance times complexity 
 \item expenditure times complexity
 \end{itemize}
 \end{itemize}
@@ -822,9 +820,9 @@ This adds the following 16 features to the statistical model:
 \subsubsection{Outcome Tag Forecasting}
 \label{subsubsub:outcome_tag_forecasting}
 
-For each outcome tag, an RF+ET ensemble classifier was trained using the same initial feature set and time-ordered split as the overall rating model (train: start date on or before February 6, 2013; validation: February 7, 2013 through June 6, 2016; test held out, see figure ). 
+For each outcome tag, an RF+ET ensemble classifier was trained using the same initial feature set and time-ordered split as the overall rating model (train: start date on or before February 6, 2013; validation: February 7, 2013 through June 6, 2016; test: after June 6, 2016 and before January 1, 2020; see figure~\ref{fig:splits}).
 
-The model for the outcome tag was judged as ineligible for test-set prediction unless the Brier skill score and accuracy skill were strictly positive. Otherwise the chosen model was reverted to the constant baseline, indicating low confidence that the RF+ET ensemble would perform better than the validation set.
+The model for the outcome tag was judged as ineligible for test-set prediction unless the Brier skill score was strictly positive and the within-group pairwise ordering probability exceeded 0.5. Otherwise the chosen model was reverted to the constant baseline, indicating low confidence that the RF+ET ensemble would perform better than the validation set.
 
 The forecasted tags were:
 \begin{itemize}
