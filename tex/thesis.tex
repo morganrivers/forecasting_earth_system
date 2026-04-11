@@ -286,7 +286,7 @@
 \pgfmathsetmacro{\Rsqdelta}{\Rsqheldoutratingsllmfeatures - \Rsqnollmfrac}
 % ---------------- END CONSTANTS ----------------
 
-International aid and cooperation improve the lives of the world's poorest in developing countries act to safeguard the environment and materially promote sustainability in these countries. However, international aid activities sometimes fail to achieve their objectives. There have been few attempts in the literature to create models to explicitly predict the success of international aid activities, and none focus solely on environmental outcomes. This thesis produces a forecasting system for various metrics measuring the success of international aid activities at time of evaluation from the International Aid and Transparency Initiative (IATI) database, combining classical statistical methods with modern language model techniques. Novel techniques are applied to improve forecasting skill, including using the reasoning abilities and information gathering ability of large language models (LLMs) to improve forecasts, introducing LLM summaries of various dimensions of activity documents, and defining a novel narrative similarity grade benchmark. Overall success ratings on a scale from 1 to 6 are first assessed, then narrative forecast accuracy is measured, and finally cost-effectiveness forecasting is assessed. While no methods had consistently high accuracy in forecasting overall success, statistical models could reliably rank above-chance which activities are more likely to succeed for activities with the same reporting organization and start year (``pairwise ranking''). The full forecasting system outperforms what could be extrapolated from the stated risks in activity documents alone for overall evaluations in tests against a held-out test set of 200 latest-starting evaluated activities in a dataset of 1,300 environmental and sustainability improving activities restricted to 4 reporting organizations. Compared to the baseline of \PairwiseHuman\,\% pairwise ranking for the risks extrapolation, the chosen statistical model with all input features reached \PairwiseModel\,\% [95\% CI: \PairwiseCILow\,\%, \PairwiseCIHigh\,\%] on the held-out set. Across 14 binary outcome tags (covering activity rescoping, finance and budget, and target achievement), statistical models achieve an average pairwise ranking of \OutcomeTagPairwiseAvg\,\% (range: \OutcomeTagPairwiseMin\,\%--\OutcomeTagPairwiseMax\,\%) for the \DifferingOutcomePairsFrac\% of pairs with differing outcomes averaging two chosen methods on the test set. This work lays the foundation to improve decision making for a wide range of initiatives and policies in developing countries and also in other data-rich institutional contexts.
+International aid and cooperation improve the lives of the world's poorest in developing countries act to safeguard the environment and materially promote sustainability in these countries. However, international aid activities sometimes fail to achieve their objectives. There have been few attempts in the literature to create models to explicitly predict the success of international aid activities, and none focus solely on environmental outcomes. This thesis produces a forecasting system for various metrics measuring the success of international aid activities at time of evaluation from the International Aid and Transparency Initiative (IATI) database, combining classical statistical methods with modern language model techniques. Novel techniques are applied to improve forecasting skill, including using the reasoning abilities and information gathering ability of large language models (LLMs) to improve forecasts, introducing LLM summaries of various dimensions of activity documents, and defining a novel narrative similarity grade benchmark. Overall success ratings on a scale from 1 to 6 are first assessed, then narrative forecast accuracy is measured, and finally cost-effectiveness forecasting is assessed. While no methods had consistently high accuracy in forecasting overall success, statistical models could reliably rank above-chance which activities are more likely to succeed for activities with the same reporting organization and start year (``pairwise ranking''). The full forecasting system outperforms what could be extrapolated from the stated risks in activity documents alone for overall evaluations in tests against a held-out test set of 200 latest-starting evaluated activities in a dataset of 1,181 environmental and sustainability improving activities restricted to 4 reporting organizations. Compared to the baseline of \PairwiseHuman\,\% pairwise ranking for the risks extrapolation, the chosen statistical model with all input features reached \PairwiseModel\,\% [95\% CI: \PairwiseCILow\,\%, \PairwiseCIHigh\,\%] on the held-out set. Across 14 binary outcome tags (covering activity rescoping, finance and budget, and target achievement), statistical models achieve an average pairwise ranking of \OutcomeTagPairwiseAvg\,\% (range: \OutcomeTagPairwiseMin\,\%--\OutcomeTagPairwiseMax\,\%) for the \DifferingOutcomePairsFrac\% of pairs with differing outcomes averaging two chosen methods on the test set. This work lays the foundation to improve decision making for a wide range of initiatives and policies in developing countries and also in other data-rich institutional contexts.
 
 
 
@@ -370,7 +370,7 @@ Limited work has also been done using LLMs such as GPT-4 to serve as data source
 The methods section introduces several methods to improve forecasting performance. Methods were split into simple ``baseline'' methods, and compared to more sophisticated ``experimental'' methods to ensure that the experimental methods adopted improve forecasting performance above their respective baseline methods on the held-out test set. A summary of the methods can be found at the end of this chapter in section \ref{sub:methodssummary}.
 
 \subsection{Temporal Splits and Information Leakage} \label{sub:temporalleakage}
-Train activities started on or before February 6, 2013; Validation activities started between February 7, 2013 through June 6, 2016; Test activities were the remaining activities with the latest start date in 2019. See Figure \ref{fig:splits} for the number of activities per year in each and Figure \ref{fig:splitdurations} for the average duration of activities within each split.
+Train activities started on or before February 6, 2013; Validation activities started between February 7, 2013 and June 6, 2016; Test activities started after June 6, 2016 and before January 1, 2020. These date boundaries are chosen to yield approximately 700 training activities, 300 validation activities, and 200 test activities for overall ratings. See Figure \ref{fig:splits} for the number of activities per year in each and Figure \ref{fig:splitdurations} for the average duration of activities within each split.
 
 A forecasting system designed to predict the future must not gain any information that could not be known at the start of the international aid activity. The methodology was designed such that that no information from the test set was used for model selection and validation, in order to provide a realistic assessment of the forecasting skill of the model for activities starting on or after 2026. Cases where information that could not be known is used for the prediction is deemed ``leakage''. Preventing leakage was an important factor in the methodology. Leakage has been a significant concern in other published works where forecasting with language models has been implemented, and in multiple cases has caused invalidation of forecasting results \citep{palekaPitfallsEvaluatingLanguage2025}. While ex-post evaluations may provide sufficient information to describe the activity, relying on language models to completely remove information about the eventual outcome could introduce information leakage from past the start date, and was a motivation behind using IATI, which explicitly separates documents into pre- and post-activity, as opposed to OpenAlex and 3ie ex-post activity documents.
 
@@ -606,19 +606,25 @@ Once these PDF pages were extracted, a combination of manual examination of the 
 
 \textbf{Comparable Outcome Categories}
 
-Using manual inspection and frequency statistics of common bigrams, a set of outcome categories was defined that recur across evaluations and are interpretable across projects. One challenge encountered was ensuring sufficient quantities of comparable outcomes between activities. In order to ensure statistically significant quantities of activities were required for training, only outcomes categories were used that remained after ensuring each contained at least 10 activities in the evaluation set, which corresponded to approximately 30 total activities in the combined training and validation set. Tuning the number provided a stable mean value and standard deviation The final set included:
+Using manual inspection and frequency statistics of common bigrams, a set of outcome categories was defined that recur across evaluations and are interpretable across projects. One challenge encountered was ensuring sufficient quantities of comparable outcomes between activities. In order to ensure statistically significant quantities of activities were required for training, only outcomes categories were used that remained after ensuring each contained at least 50 activities in the training set. This threshold was selected to ensure reliable performance on the validation set, as below 50 points the model became unstable, while a higher restriction left too few points to evaluate the final prediction. The final set included:
 \begin{itemize}[noitemsep,topsep=0pt]
-  \item \textbf{Benefit/cost ratios (B/C):} benefit-cost ratio outcomes.
-  \item \textbf{Rates of return:} economic rate of return (ERR/EIRR) and financial rate of return (FRR/FIRR), in percent.
-  \item \textbf{Emissions reductions:} CO\textsubscript{2} or CO\textsubscript{2}e reductions (total or per-year) in tonnes.
-  \item \textbf{Water and sanitation connections:} counts of service connections, either new or repaired.
-  % \item \textbf{Pollution load removed:} wastewater pollutant load reductions (e.g., BOD/COD/nutrients), in tonnes and categorized by time basis (total, per-year, per-day).
-  % \item \textbf{Forest indicators:} trees/seedlings planted (counts) and area-based forest outcomes (reforested, under management, protected) in hectares.
-  % \item \textbf{Irrigation outcomes:} increases in irrigated area (hectares), computed as a positive increase relative to baseline where available.
-  \item \textbf{Energy outcomes:} installed generation capacity, in MW (or occasionally GWh where the source reported capacity in energy units).
-  % \item \textbf{Air quality (PM2.5):} PM2.5 reductions reported as concentration, emissions, or percent, kept as separate distributions.
-  % \item \textbf{Clean cooking stoves:} counts of stoves distributed/installed.
-  % \item \textbf{Agricultural yields:} yield increases expressed either as level changes (normalized to tonnes per hectare when possible) or as percent increases.
+  % \item \textbf{Benefit/cost ratios (B/C):} benefit-cost ratio outcomes.
+  % \item \textbf{Rates of return:} economic rate of return (ERR/EIRR) and financial rate of return (FRR/FIRR), in percent.
+  % \item \textbf{Emissions reductions:} CO\textsubscript{2} or CO\textsubscript{2}e reductions (total or per-year) in tonnes.
+  % \item \textbf{Water and sanitation connections:} counts of service connections, either new or repaired.
+  % % \item \textbf{Pollution load removed:} wastewater pollutant load reductions (e.g., BOD/COD/nutrients), in tonnes and categorized by time basis (total, per-year, per-day).
+  % % \item \textbf{Forest indicators:} trees/seedlings planted (counts) and area-based forest outcomes (reforested, under management, protected) in hectares.
+  % % \item \textbf{Irrigation outcomes:} increases in irrigated area (hectares), computed as a positive increase relative to baseline where available.
+  % \item \textbf{Energy outcomes:} installed generation capacity, in MW (or occasionally GWh where the source reported capacity in energy units).
+  % % \item \textbf{Air quality (PM2.5):} PM2.5 reductions reported as concentration, emissions, or percent, kept as separate distributions.
+  % % \item \textbf{Clean cooking stoves:} counts of stoves distributed/installed.
+  % % \item \textbf{Agricultural yields:} yield increases expressed either as level changes (normalized to tonnes per hectare when possible) or as percent increases.
+\item \textbf{Benefit/cost ratios (B/C):} benefit-cost ratio outcomes. (train: 62, val: 18, test: 15, total: 77)
+\item \textbf{Rates of return:} economic rate of return (ERR/EIRR) and financial rate of return (FRR/FIRR), in percent. (ERR — train: 396, val: 103, test: 43, total: 440; FRR — train: 190,  val: 43, test: 15, total: 205)
+\item \textbf{Emissions reductions:} CO\textsubscript{2} or CO\textsubscript{2}e reductions in tonnes. (train: 61, val: 23, test: 10, total: 72)
+\item \textbf{Water and sanitation connections:} counts of service connections, either new or repaired. (train: 96, val: 25, test: 9, total: 105)
+\item \textbf{Energy outcomes:} installed generation capacity, in MW (or occasionally GWh where the source reported capacity in energy units). (train: 64, val: 20, test: 12, total: 79)
+
 \end{itemize}
 Although pollution load removed, forest indicators, trees planted, air quality (PM2.5), clean cooking stove distribution, and agricultural yield improvement were parsed, none of these contributed sufficient counts to be useful for further outcome forecasting.
 
@@ -636,7 +642,7 @@ Carbon dioxide reductions are handled as a special case because they can act as 
 
 Empirical inspection found that most cost-per-unit outcomes are approximately log-normally distributed. The $\log_{10}$ transform was therefore applied to all outcome categories except benefit-cost ratios and rates of return before modelling.
 
-
+The cost-effectiveness aggregate Z-score is standardised using training-set mean and standard deviation (population stddev, ddof=0) applied to all splits. The Random Forest used for cost-effectiveness forecasting is trained with 3$\times$ sample weight on the most recent 20\% of training observations, as this improved performance on the validation set (and later on the test set). A ridge regression on the residuals with $\alpha=50$, as used for outcome tags and overall rating prediction, was also applied due to its performance improvement on the validation set.
 
 \subsubsubsection{Extracting Outcome Tags}
 \label{sec:outcome_tags_methods}
@@ -710,7 +716,6 @@ The non-LLM features used were:
  \item the $log(\text{GDP} / \text{capita})$ of the countries where the activity takes place weighted by the percentage of the activity performed in each country. \citep{goldembergMindingGapAid2025} \citep{bulmanGoodCountriesGood2017}
 \item A dummy variable for each region as defined by the World Bank (AFE, Eastern and Southern Africa; AFW, Western and Central Africa; EAP, East Asia and Pacific; ECA, Europe and Central Asia; LAC, Latin America and the Caribbean; MENA, Middle East and North Africa; SAS, South Asia) \citep{goldembergMindingGapAid2025} \citep{vivaltHowMuchCan2020}
 \item  missingness counts for important features with missingness
-\item interaction terms for influential variables: gdp per capita times duration
 \end{itemize}
 
 The activity start date was not used as a feature, as there was no linear pattern with regards to overall activity success over time in the training data, and adding it tended to increase overfitting and reduce out-of-time generalization. As opposed to some results in prior literature \citep{vivaltHowMuchCan2020} \citep{ashtonPuzzleMissingPieces2021}, whether the implementer was a government, NGO, or another category was also not found to have any improvement in model performance and was excluded.
@@ -744,6 +749,8 @@ This decomposition removes the dominant between-organization rating shift before
 
 The Random Forest (RF) method is a statistical algorithm which constructs an ensemble of decision trees which would produce the correct output on the training data, and averages those decision trees. The averaging nature of the RF algorithm reduces overfitting on the training data. The algorithm is inherently ``regularized'', penalizing an overly complex decision tree. The decision trees split based on value ranges of the features. By reducing the depth of the trees (the number of decision points where the decision tree splits), we can reduce the memorization of the training data from the trees, and improve generalization of the model. Each decision also only considers a random fraction of the features, allowing each tree to be more independent of each other and improving generalization further. The bootstrap method is also used to train trees, encouraging tree independence.
 
+Optimal parameters for the overall rating RF+ET were discovered via a combination of sweeps over parameter space and LLM-generated suggestions iterating on the identified best parameters. Relative to the default \texttt{RandomForestRegressor} configuration (e.g., \texttt{n\_estimators}=100, \texttt{max\_depth}=\texttt{None}, \texttt{min\_samples\_split}=2, \texttt{min\_samples\_leaf}=1, \texttt{max\_features}=1.0, \texttt{bootstrap}=\texttt{True}, \texttt{ccp\_alpha}=0.0), the best-identified specification deliberately constrains model capacity in ways that typically reduce overfitting. Trees are explicitly depth-limited (\texttt{max\_depth}=14 rather than unbounded) and splits are only permitted when nodes contain substantially more data (\texttt{min\_samples\_split}=20 and \texttt{min\_samples\_leaf}=20), which smooths forecasts by limiting fine-grained partitioning of the feature space. In addition, using a smaller feature subset at each split (\texttt{max\_features}=0.488) increases tree diversity and reduces variance relative to the default that considers all features. The model also uses row subsampling (\texttt{max\_samples}=0.86), further reducing variance by injecting additional randomness into each tree's training set. Compared to defaults, these choices accept slightly less precise fits on the training data in exchange for predictions that are more stable across unseen examples.
+
 \textbf{Extra Trees}
 The Extra Trees (ET) method, short for Extremely Randomized Trees, is a variant of the Random Forest algorithm that constructs an ensemble of decision trees with an additional layer of randomization. While Random Forest selects the optimal split point for each randomly chosen feature subset, Extra Trees goes further by also randomizing the split thresholds, drawing cut points uniformly at random from each feature's value range and selecting the best among those random candidates. This additional randomization further decorrelates the individual trees in the ensemble, reducing overfitting at the cost of a slightly less precise fit to the data. Unlike Random Forest, Extra Trees trains each tree on the full training dataset rather than a bootstrap sample, which when ensembled with Random Forest is beneficial as it ensures the two models derive their diversity from different sources: one from varying the data each tree sees (bootstrap), and the other from randomizing split logic (ET). This makes their errors more complementary and the ensemble average more effective. As with Random Forest, predictions are made by averaging the outputs of all trees in the ensemble.
 
@@ -757,10 +764,10 @@ The algorithm incorporates both L1 and L2 regularization terms to penalize model
 
 Seven additional features were extracted using \emph{gpt-3.5-turbo}-generated evaluation on a score from 0 to 100 in order to enrich the activity with information from the project document PDFs from the start of the activity. GPT-3.5-turbo was used in order to reduce leakage of information after the September 2021 model cutoff date. Inspection of grades did not reveal significant usage of knowledge that would not be available at the beginning of the activity. The majority of activities in the test set ended after the model cutoff date. These seven features were based on important aspects revealed by the literature review and consultation. One feature not introduced by others was added (the ease of targeted outcomes). Unlike technical complexity, which captures only one dimension of difficulty, or overall risk, which aggregates financial, legal, and regulatory threat sources, ease of targeted outcomes is distinct. It specifically reflects whether the activity's intended outputs are inherently measurable and achievable given typical implementation constraints---a factor theorized to independently contribute to evaluation success.
 
-The features added for this method included the seven features and two interaction terms
+The features added for this method included the seven features and one interaction term
 
 \begin{itemize}
- \item \emph{gemini-2.5-flash}-generated evaluation on a score from 0 to 100 of:
+ \item \emph{gpt-3.5-turbo}-generated evaluation on a score from 0 to 100 of:
  \begin{itemize}[noitemsep,topsep=0pt]
  \item  how well financed the activity is (consultation with BMZ officers), \citep{bulmanGoodCountriesGood2017} \citep{goldembergMindingGapAid2025} \citep{eilersVolumeRiskComplexitya}
  \item  the activity integratedness within the broader activity ecosystem (consultation with BMZ officers), \citep{vivaltHowMuchCan2020}
@@ -770,9 +777,8 @@ The features added for this method included the seven features and two interacti
  \item  the activity's overall technical complexity \citep{eilersVolumeRiskComplexitya}
  \item  the ease of targeted outcomes
 \end{itemize}
-\item Additional interaction terms added
+\item Additional interaction term added
 \begin{itemize}
-\item governance times complexity 
 \item expenditure times complexity
 \end{itemize}
 \end{itemize}
@@ -822,9 +828,9 @@ This adds the following 16 features to the statistical model:
 \subsubsection{Outcome Tag Forecasting}
 \label{subsubsub:outcome_tag_forecasting}
 
-For each outcome tag, an RF+ET ensemble classifier was trained using the same initial feature set and time-ordered split as the overall rating model (train: start date on or before February 6, 2013; validation: February 7, 2013 through June 6, 2016; test held out, see figure ). 
+For each outcome tag, an RF+ET ensemble classifier was trained using the same initial feature set and time-ordered split as the overall rating model (train (start date on or before February 6, 2013; validation: February 7, 2013 through June 6, 2016; test: after June 6, 2016 and after January 1, 2020, see Figure \ref{fig:splits}). 
 
-The model for the outcome tag was judged as ineligible for test-set prediction unless the Brier skill score and accuracy skill were strictly positive. Otherwise the chosen model was reverted to the constant baseline, indicating low confidence that the RF+ET ensemble would perform better than the validation set.
+The model for the outcome tag was judged as ineligible for test-set prediction unless the Brier skill score was strictly positive and the within-group pairwise ranking probability exeeded 50\%. Otherwise the chosen model was reverted to the constant baseline, indicating low confidence that the RF+ET ensemble would perform better than the validation set.
 
 The forecasted tags were:
 \begin{itemize}
@@ -863,13 +869,17 @@ Because this selection was made on the same validation set used to evaluate fina
 
 Ultimately, it was unclear whether per-tag aggressive feature reduction or a more permissive set of features would generalize better to the held-out set. Therefore, both the limited per-tag feature set and the full-feature set were used for the forecast on the held-out test set.
 
+A group-level ablation additionally revealed that governance indicators (World Governance Indicators, CPIA score, and a governance $\times$ complexity interaction term) and missingness-flag features were introducing more noise than signal. These 18 features (7 governance, 11 missingness) were dropped from all tags, leaving 45 features available for per-tag selection. The drop was confirmed to improve scores on the k-fold temporal cross-validation on the training set. For each tag assigned a reduced feature subset, k-fold performance was at least as good as the full-feature alternative, indicating that the reduction reflects a genuine generalisation benefit.
+
 \textbf{RF+ExtraTrees ensemble}
 
 RF and ET both used classifier models rather than regressors as in the ratings training, as the method is intended for binary probabilistic prediction rather than a regression prediction. XGBoost, and LightGBM were both tested against the RF+ET model, but early experiments showed they performed significantly worse and use of other models was not continued.
 
 In the case of binary tags, three options were evaluated: The \texttt{class\_weight} parameter was set to always \texttt{none}, always \texttt{balanced}, and a tag-dependent scheme. The tag-dependent scheme selected a threshold where above 65\% of training examples were positive, \texttt{class\_weight=None} was used allowing the model to predict near the natural base rate, and below 65\% \texttt{class\_weight=``balanced''} was used to prevent the ensemble from collapsing to the majority class.
 
-Optimal parameters for the RF+ET classifier ensemble were identified by exploring 20 LLM-generated parameter sets, with the second set of 10 varied near the maximal score of the first set. These included variations in tree depth, leaf size, feature sampling width, row subsampling, and pruning strength, as well as between-RF and ET variations. More details can be found in the results section. 
+Optimal parameters for the RF+ET classifier ensemble were identified by exploring 20 LLM-generated parameter sets, with the second set of 10 varied near the maximal score of the first set. These included variations in tree depth, leaf size, feature sampling width, row subsampling, and pruning strength, as well as between-RF and ET variations.
+
+The tag-dependent class weight scheme was found to perform best across most tags on the validation set and was used for the final model. The best-performing configuration was: \texttt{min\_samples\_leaf}=5, \texttt{max\_features}=\texttt{"sqrt"}, \texttt{n\_estimators}=500, \texttt{max\_depth}=\texttt{None}, \texttt{min\_samples\_split}=2, \texttt{ccp\_alpha}=0, with bootstrap \texttt{True} for the RF and \texttt{False} for the ET. XGBoost and LightGBM were both tested and performed worse on every tag assessed.
 
 The RF+ET ensemble was otherwise trained identically to how ratings were trained. 
 
@@ -886,7 +896,7 @@ and the corrected probability was:
 \hat{p}^{\text{corr}}_i := \operatorname{clip}_{[0,1]}\!\left(\hat{p}_i + \hat{r}_i\right).
 \]
 The strong ridge penalty shrinks the slope toward zero to avoid overcorrecting on noisy year--residual relationships. This correction was adopted wherever it improved validation set performance.
-The correction multiplier was validated by sweeping values in $\{0, 0.1, 0.2, 0.5, 1.0, 1.5, 2.0\}$ and evaluating mean within-group pairwise ranking, Brier skill, and accuracy skill on the validation set across all corrected tags. 
+The correction multiplier was validated by sweeping values in $\{0, 0.1, 0.2, 0.5, 1.0, 1.5, 2.0\}$ and evaluating mean within-group pairwise ranking, Brier skill, and accuracy skill on the validation set across all corrected tags. A multiplier of 1.0 (full correction) achieved the best mean pairwise ranking, Brier skill, and accuracy, and was therefore retained. The correction was applied to the RF model alone before averaging with ET, as this was found to outperform correcting the ensemble average on the validation set. The correction was applied to all tags except \texttt{tag\_monitoring\_and\_evaluation\_challenges}, where the year trend was found to hurt validation performance.
 
 
 \textbf{Tag group averaging}
@@ -898,17 +908,23 @@ Analysis of outcome tags in the training data revealed that certain groups of ta
           beneficiary satisfaction, private sector engagement, capacity building, policy reforms,
           and financial performance).
     \item Financing Group: disbursement tag, funds-cancelled tag (inverted).
+    \item Rescoping Group: Project Restructured, Targets Revised, Closing Date Extended, Funds Reallocated. This group's RF+ET regressor is trained and its predicted score is used as an OLS predictor input when reconstructing per-tag probabilities for blended tags, but rescoping-group tags are not directly blended (the group influences other tags via OLS rather than being a direct mixture target). 
 \end{itemize}
 
 For each group, an RF+ET regressor on the 45 features was trained to predict the group score from features. The per-tag probabilities were then reconstructed from predicted group scores via a OLS linear regression fitted on training data.
 
 It was observed that the group average probability was typically more informative for low-data tags. For this the minority class count in training was used, which is the minimum between the number of true or false tags in the training data. 50 different blend selection options were sweeped across with various thresholds for the number of training points in the minority class to set as thresholds and various mix ratios of the group and tag average after the threshold.
 
+The best performing blend on the validation set was a linear increase from 100 to 400 minority-class training points:
+\[
+\hat{p}^{\text{final}}_i = w \cdot \hat{p}^{\text{model}}_i + (1 - w) \cdot \hat{p}^{\text{group}}_i ,
+\]
+where $w = \operatorname{clip}\!\left(\tfrac{m - 100}{400 - 100},\, 0,\, 1\right)$ and $m$ is the minority class count. Below 100 training points the group average is used exclusively; above 400 the per-tag model prediction is used exclusively.
 
 
 \textbf{LLM correction}
 
-An LLM-based correction step was tested for tag forecasting, analogous to the approach described for the overall rating model. For each of the 14 tags whose statistical model beat the constant baseline, \emph{deepseek-V3.2} was prompted with the activity title, an LLM-generated summary of the pre-activity documents, the tag label and definition, and the training-set base rate. The model was instructed to reason like a superforecaster: enumerating reasons the outcome was likely true, then likely false, then anchoring on the base rate before producing a final probability. Forecasts were produced for 150 recent training activities and all validation activities. The LLM probabilities were then blended with the statistical model predictions (80\% statistical, 20\% LLM). A sweep of blend weights from 0\% to 70\% LLM was conducted, measuring mean within-group ranking skill, accuracy, and Brier skill score across the 14 non-baseline tags on the validation set.
+An LLM-based correction step was tested for tag forecasting, analogous to the approach described for the overall rating model. For each of the 14 tags whose statistical model beat the constant baseline, \emph{deepseek-V3.2} was prompted with the activity title, an LLM-generated summary of the pre-activity documents, the tag label and definition, and the training-set base rate. The model was instructed to reason like a superforecaster: enumerating reasons the outcome was likely true, then likely false, then anchoring on the base rate before producing a final probability. Forecasts were produced for 150 recent training activities and all validation activities. The LLM probabilities were then blended with the statistical model predictions (80\% statistical, 20\% LLM). A sweep of blend weights from 0\% to 70\% LLM was conducted, measuring mean within-group ranking skill, accuracy, and Brier skill score across the 14 non-baseline tags on the validation set. Mean accuracy declined monotonically with LLM weight; within-group ranking skill and Brier skill showed only marginal gains at 5--10\% LLM before deteriorating; at 70\% LLM the mean Brier skill score turned negative. The LLM correction was therefore discarded and the statistical model predictions are used as the final tag forecasts.
 
 
 \subsubsection{LLM Forecasting Methods}
@@ -940,7 +956,7 @@ Finally, the distribution of rating outcomes was inserted into the prompt, in or
 The full prompt is composed of the following blocks, assembled in the order listed:
 
 \begin{enumerate}[noitemsep,topsep=2pt]
-  \item \textbf{Activity metadata} --- title, planned start/end dates, scope, planned disbursement (USD), location(s), GDP per capita, participating and implementing organisations.
+  \item \textbf{Activity metadata} --- title, planned start/end dates, scope, planned disbursement (USD), location(s), GDP per capita, reporting organisation.
   \item \textbf{Baseline description \& targets} --- a \emph{gemini-2.5-flash}-generated activity description, targets summary, contextual challenge description, complexity details, integratedness description, financing summary, and implementer-performance context.
   \item \textbf{Risk summary} --- a \emph{gemini-2.5-flash}-generated structured summary of key project risks.
   \item \textbf{Retrieved baseline excerpts (RAG)} --- additional activity-specific information retrieved by the model from the available documents and synthesised into a short passage (\texttt{\{rag\_synthesis\_additional\_info\}}).
@@ -1148,9 +1164,9 @@ with an $\ell_2$ penalty on $(\beta_1,\beta_2)$ controlled by $\alpha = 5$, the 
 \[
 \hat{y}^{\text{corr}}_i := \operatorname{clip}_{[0,5]}\!\left(\hat{y}^{\text{RF}}_i + \lambda \hat{r}_i\right),
 \]
-where $\lambda$ is a scaling factor (set to 1.0 in the experiments) and clipping enforces the valid rating range between 0 and 5.
+where $\lambda$ is a scaling factor (set to 1.0 in the experiments) and clipping enforces the valid rating range between 1 and 6.
 
-The ridge model takes both the RF+ET prediction and the LLM Forecast as inputs for activities where $\hat{y}^{\text{LF}}_i$ is available (the training activities for which LLM forecasts were generated, $n = 300$, spanning the full validation set. This allows the correction to learn a mapping from $(\hat{y}^{\text{RF}}_i, \hat{y}^{\text{LF}}_i)$ to the residual $r_i$. The ridge model under this setting effectively learns how much LLM forecasts should shift the prediction from the mean, how much the RF+ET model should shift the prediction from the mean, as well as a fixed learned offset. The only learned parameters are $\beta_0$, $\beta_1$ and $\beta_2$.
+The ridge model takes both the RF+ET prediction and the LLM Forecast as inputs for activities where $\hat{y}^{\text{LF}}_i$ is available (the training activities for which LLM forecasts were generated, spanning the full validation set. This allows the correction to learn a mapping from $(\hat{y}^{\text{RF}}_i, \hat{y}^{\text{LF}}_i)$ to the residual $r_i$. The ridge model under this setting effectively learns how much LLM forecasts should shift the prediction from the mean, how much the RF+ET model should shift the prediction from the mean, as well as a fixed learned offset. The only learned parameters are $\beta_0$, $\beta_1$ and $\beta_2$.
 
 \subsection{Scoring Metrics} \label{sub:scoringmetrics}
 
@@ -1158,10 +1174,10 @@ The ridge model takes both the RF+ET prediction and the LLM Forecast as inputs f
 The percent of the time the correct rating is forecasted. Non-integers are rounded to integers for overall ratings. While accuracy has the advantage of intuitive simplicity, is not strictly proper \citep{gneitingStrictlyProperScoring2007}, meaning that maximizing the model accuracy may not maximize a model's reported true belief about the probability of an outcome. This can be problematic when being used to select between models.
 
 \textbf{RMSE (Root Mean Square Error)}
-Take the square of the difference between every prediction and the true value, take the mean of all such squared values, then take the square root. Measure of “average” distance. Lower is better. On a scale from 0 to 5, therefore worst possible value is 5, best possible value is zero. This method heavily penalizes predictions that are significantly incorrect. RMSE is only used in this work for overall ratings.
+Take the square of the difference between every prediction and the true value, take the mean of all such squared values, then take the square root. Measure of “average” distance. Lower is better. As ratings range from 1 to 6, the difference is on a scale from 0 to 5, where the worst possible value is 5, best possible value is zero. This method heavily penalizes predictions that are significantly incorrect. RMSE is only used in this work for overall ratings.
 
 \textbf{MAE (Mean Absolute Error)}
-Measure of “average” distance, by taking the mean of the absolute value of the residuals. Lower is better. On a scale from 0 to 5, therefore worst possible value is 5, best possible value is zero. This method does not heavily penalize predictions that are significantly incorrect. MAE is only used in this work for overall ratings.
+Measure of “average” distance, by taking the mean of the absolute value of the residuals. Lower is better. As ratings range from 1 to 6, a scale from 0 to 5 is best, therefore worst possible value is 5, best possible value is zero. In the case of overall success ratings, this metric tends to reward integer rounded rating scores as they are often exactly correct, rather than the output of the statistical models which are not exact integers. This method does not heavily penalize predictions that are significantly incorrect. MAE is only used in this work for overall success ratings.
 
 \textbf{Coefficient of Determination ($R^2$)}
 $R^2$: Coefficient of determination. Theoretically equals zero, if we always choose the mean (however using the training set mean results in a lower score on the test set in the baseline measure below). If more than 1 regressors are included, $R^2$ is the square of the coefficient of multiple correlation and can be negative. Measures proportion of the variation in the dependent variable that is predictable from the independent variable. Higher is better. This method generally does not penalize outliers significantly. $R^2$ is only used in this work for overall ratings and cost-effectiveness.
@@ -1200,12 +1216,10 @@ where $\mathrm{BS}_{\mathrm{ref}}$ is the Brier score of the constant (no-skill)
 
   \item \textbf{Outcome Tags} I assessed only two methods on the test set for outcome tags: including the per-tag features and parameters (all subsets of the 45 ``non-noisy'' features, where each per-tag parameter set was a less complex model), and compared this with using only the same 45 ``non-noisy'' features which did well on the validation set.
 
-  \item \textbf{Outcome Tags} I assessed only two methods on the test set for outcome tags: including the per-tag features and parameters (all subsets of the 45 ``non-noisy'' features, where each per-tag parameter set was a less complex model), and compared this with using only the same 45 ``non-noisy'' features which did well on the validation set.
-
 \end{itemize}
 
 \subsubsection{Grading Free Form Forecasts}
-In addition to extracting the LLM forecasted rating, \emph{gemini-2.5-flash-lite} is also used to grade narrative textual format forecasts. In order to do so, \emph{gemini-2.5-flash} was first used to summarize pages categorized as highly relevant to post-activity evaluations, obtaining 10 pages with a score of at least 3/10 marked as ``deviation\_from\_plans'', ``delays\_or\_early\_completion'', or ``over\_or\_under\_spending'', or failing that, that were graded as highly relevant to activity evaluation. If no such pages were categorized, the first 10 pages of the highest ranked activity post-activity evaluation were used. Next, for all ensembles of LLM forecasts, a grade was given for how similar the forecast was to the activity outcome using \emph{gemini-2.5-flash-lite}. Grading was performed based on two key criteria: accurately identification of likely drivers of activity success or failure, and identification of likely outcomes being forecasted. 
+In addition to extracting the LLM forecasted rating, \emph{gemini-2.5-flash-lite} is also used to grade narrative textual format forecasts. In order to do so, \emph{gemini-2.5-flash} was first used to summarize pages categorized as highly relevant to post-activity evaluations, obtaining 10 pages with a score of at least 3/10 marked as ``deviation\_from\_plans'', ``delays\_or\_early\_completion'', or ``over\_or\_under\_spending'', or failing that, that were graded as highly relevant to activity evaluation. If no such pages were categorized, the first 10 pages of the highest ranked activity post-activity evaluation were used. Next, for all ensembles of LLM forecasts, a grade was given for how similar the forecast was to the activity outcome using \emph{gemini-2.5-flash-lite}. Grading was performed based on two key criteria: accurately identification of likely drivers of activity success or failure, and identification of likely outcomes being forecasted,  which together inform the single combined letter grade.
 
 In accordance with the typical US grading scheme definitions, an ``F'' grade is defined as 55 or lower and an A+ grade as approximately 97, with other grades defined in even intervals. \emph{gemini-2.5-flash-lite} was provided the following rubric:
 
@@ -1227,7 +1241,7 @@ This thesis implements four forecasting strategies, all trained and evaluated on
 \item A statistical model to forecast overall activity success ratings using LLM-generated features
 \item A statistical model to forecast activity cost-effectiveness using LLM-generated features
 \item A statistical model to forecast 14 binary outcomes using LLM-generated features
-\item An LLM prompting scheme used to forecast overall activity success ratings, assessed on accuracy, within-group ranking skill, and qualitative similarity to the evaluation summaries.
+\item An LLM prompting scheme used to forecast overall activity success ratings, assessed on accuracy, within-group ranking skill, and qualitative similarity to the evaluation summaries, optionally incorporating statistical overall rating forecasts as a target.
 \end{itemize}
 
 The system is built to forecast what the evaluation results will be for thousands of IATI records containing both a pre-intervention description of the activity, and an ex-post evaluation of the results in order to ensure temporal leakage does not occur. To do so, thousands of PDFs were downloaded, ranked from most to least relevant for forecasting future outcomes or evaluating the end result of the activities, had their paged graded for relevance to the task, and had quantitative and qualitative descriptions and results extracted from the pdfs. Three time-ordered splits were used: train, validation, and test sets. Statistical models and fine-tuning experiments were done on the training set, with several methods assessed using the validation set. This informed model selection and parameter tuning, so that the generalization ability of these methods were finally assessed against the held-out test set. See Figure~\ref{fig:finaldiagram} for a representation of the entire process.
@@ -1253,7 +1267,8 @@ However, not all experimental methods succeeded in improving the model. Inspecti
 
 \textbf{LLM prediction of overall ratings} LLM predictions on the held-out set were better than the statistical model, but were discovered to be strongly affected by future leakage. The validation set results did not demonstrate clear future leakage, and were inferior to statistical model predictions. A fusion of statistical models and LLM forecasting methods was found to generate the highest quality narrative predictions. The highest rating accuracy for LLM forecasts simultaneously produced the least accurate narratives as shown in Figure~\ref{fig:scatterLLMcorrected}. 
 
-\textbf{Cost-effectiveness} Activity ratings on the held-out set show only weak correlation with activity aggregate cost-effectiveness (Pearson $r = \RatingCostCorr$). Cost-effectiveness prediction was not shown to be statistically significant.  The cost-effectiveness aggregate Z-score is limited by inconsistency in its component indicators across activities, difficulty of interpretation, and low sample counts, indicating a need for a larger training set or a less noisy data collection method for international aid cost-effectiveness forecasting. 
+
+\textbf{Cost-effectiveness} Activity ratings show only weak correlation with activity aggregate cost-effectiveness (Pearson $r = \RatingCostCorr$, computed across the full dataset of 1,181 activities). Cost-effectiveness prediction was not shown to be statistically better than chance with the 95\% permutation sampling for any scoring metric.
 
 \textbf{Outcome tags} Outcome tag results are shown in Table \ref{tab:tag_model_results}. Outcome tags had a similar within-group ranking skill as the overall rating model, with some notably stronger performing outcome tags. The regularization methods for outcome tags overall decreased forecasting skill compared to a minimal regularization. Results are reported for a minimal, uniform regularization rather than the hand-selected feature sets from the validation set. This is because of the two methods attempted on the held-out set, the less tuned feature selection performed better, although the performance difference was modest.
 
@@ -1274,9 +1289,7 @@ Despite its low accuracy on the test set, the model performs similarly to publis
 Several factors were found to improve model performance. As the ET model performed similarly to the RF model with a slightly different algorithm, it was found that averaging the random forest model with the extra trees model also improved forecasting performance. Further successful techniques are listed below.
 
 \subsubsection{Overfitting Corrections}
-``Adjusted $R^2$'' has been used in similar work to evaluate model performance in the development aid literature and penalizes overfitting by reducing the reported $R^2$ as a function of the number of input parameters. Mirroring similar reported methods in the literature, adjusted $R^2$ was calculated on the training points, in order to compare the model with results from prior literature. Because nonlinear models were found to be significantly superior, other methods were required to prevent overfitting and aid out-of-time generalization.
-
-Optimal parameters for the overall rating RF+ET were discovered via a combination of sweeps over parameter space and LLM-generated suggestions iterating on the identified best parameters. Adjustments to these parameters were found to be strongly influential for model performance. Relative to the default \texttt{RandomForestRegressor} configuration (e.g., \texttt{n\_estimators}=100, \texttt{max\_depth}=\texttt{None}, \texttt{min\_samples\_split}=2, \texttt{min\_samples\_leaf}=1, \texttt{max\_features}=1.0, \texttt{bootstrap}=\texttt{True}, \texttt{ccp\_alpha}=0.0), the best-identified specification deliberately constrains model capacity in ways that typically reduce overfitting. Trees are explicitly depth-limited (\texttt{max\_depth}=14 rather than unbounded) and splits are only permitted when nodes contain substantially more data (\texttt{min\_samples\_split}=20 and \texttt{min\_samples\_leaf}=20), which smooths forecasts by limiting fine-grained partitioning of the feature space. In addition, using a smaller feature subset at each split (\texttt{max\_features}=0.488) increases tree diversity and reduces variance relative to the default that considers all features. The model also uses row subsampling (\texttt{max\_samples}=0.86), further reducing variance by injecting additional randomness into each tree's training set. Compared to defaults, these choices accept slightly less precise fits on the training data in exchange for predictions that are more stable across unseen examples.
+``Adjusted $R^2$'' has been used in similar work to evaluate model performance in the development aid literature and penalizes overfitting by reducing the reported $R^2$ as a function of the number of input parameters. Mirroring similar reported methods in the literature, adjusted $R^2$ was calculated on the training points, in order to compare the model with results from prior literature. Because nonlinear models were found to be significantly superior, other methods were required to prevent overfitting and aid out-of-time generalization. Adjustments to RF+ET parameters were found to be strongly influential for model performance.
 
 
 \subsubsection{Language Model Features Used for the Statistical Model}
@@ -1393,7 +1406,7 @@ Planned expenditure & 5.5 & -0.0006 & -0.0038 & 0.0047 \\[2pt]
 
 \subsection{Forecasting Ratings and Narrative Forecasts with LLMs} \label{sec:llm_results}
 
-Figure~\ref{fig:scatterLLMcorrected} summarises performance across all LLM forecasting configurations ($n=300$). The best narrative similarity grade is \BestNarrativeGrade{} (a ``B+'', corresponding to forecasts that are on average between ``mostly accurate'' and ``highly accurate''), achieved by the RF-forced method with full context (RAG+KNN+S1+S2). The minimal-prompt baseline achieves the highest $R^2$ for rating prediction but the worst narrative similarity, while RF-forced methods dominate on both narrative grade and within-group pairwise ranking probability. 
+Figure~\ref{fig:scatterLLMcorrected} summarises performance across all LLM forecasting configurations. The best narrative similarity grade is \BestNarrativeGrade{} (a ``B+'', corresponding to forecasts that are on average between ``mostly accurate'' and ``highly accurate''), achieved by the RF-forced method with full context (RAG+KNN+S1+S2). The minimal-prompt baseline achieves the highest $R^2$ for rating prediction but the worst narrative similarity, while RF-forced methods dominate on both narrative grade and within-group pairwise ranking probability. 
 
 One research question of this thesis is how do differing methods of LLM forecasting apply in the context of forecasting international aid success ratings. More generally capable models were found to be better forecasters. The LLM's ability to predict the rating was also found not to clearly correlate with the quality of its forecast narrative. In fact, the best rating accuracy from an LLM was associated with the least accurate stated reasons. The strategy of incorporating additional information relevant to the forecasting question as well as references to similar activities does not clearly improve forecasting skill.
 
@@ -1433,7 +1446,7 @@ No consistent difference was found between \emph{gemini-2.5-flash} and \emph{dee
 
 \FloatBarrier
 \subsection{Forecasting Cost-Effectiveness}
-When dividing by each activity's disbursement for those that are marked as dollar-per-unit, and looking at the aggregate cost-effectiveness outcomes, the correlation on Z-scores is not statistically significant above the baseline.
+When dividing by each activity's actual total expenditure reported by IATI for those that are marked as dollar-per-unit, and looking at the aggregate cost-effectiveness outcomes, the correlation on Z-scores is not statistically significant above the baseline.
 
 Cost-effectiveness outcomes were found to require more work to extract sufficient data for reliable outcome prediction. Furthermore, obtaining cost-effectiveness metrics was found to be more challenging than obtaining ratings, in contrast to the claims from prior literature \citep{goldembergMindingGapAid2025}. 
 
@@ -1447,38 +1460,6 @@ Overall, little can currently be decisively concluded from the cost-effectivenes
 \label{sec:outcome_tags_results}
 
 Outcome tags provide a richer window into project execution than a scalar rating alone. This section reports results from the statistical tag predictors trained on the same feature set as the rating forecasting models.
-
-\textbf{Feature selection}
-
-An ablation experiment to drop each of the groups individually revealed that governance indicators (World Governance Indicators, CPIA score, and a governance $\times$ complexity interaction term) and missingness-flag features (indicators of which LLM-extracted fields were absent) flags were introducing more noise than performance gains. These combined 18 features (7 governance, 11 uncertainty) were thus dropped from all tags, leaving 45 features available for further feature selection. The drop was confirmed to improve scores on the K-fold temporal validation on the training set.
-
-For each tag assigned a reduced feature subset, k-fold performance was at least as good as the full-feature alternative, indicating that the reduction reflects a real generalisation benefit rather than capitalising on the specific characteristics of the validation period. However, given the aggressive information reduction available to the model, the test set was also evaluated without per-tag feature selection.
-
-\textbf{RF+ExtraTrees ensemble}
-
-XGBoost, and LightGBM were both tested against the RF+ET model and performed worse on every tag assessed.
-
-The tag-dependent scheme performed the best across most tags on validation and was thus used for the final model evaluated on the test-set.
-
-The configuration (\texttt{min\_samples\_leaf}=5, \texttt{max\_features}=\texttt{"sqrt"}, \texttt{n\_estimators}=500, \texttt{max\_depth}=None), \texttt{min\_samples\_split}=2, \texttt{ccp\_alpha}=0), where bootstrap is true for the RF and false for the ET, was found to be the best performing. Although quite similar to the default \texttt{RandomForestClassifier} and \texttt{ExtraTreesClassifier} configuration, this specification still constrains model capacity in ways that reduce overfitting on the small training sets involved: requiring at least five training examples at each leaf limits fine-grained partitioning of the feature space, and restricting the feature subset considered at each split (\texttt{max\_features}=\texttt{"sqrt"} rather than considering all features) increases tree diversity. Compared to defaults, these choices generally accept less precise fits on the training data in exchange for predictions that are more stable across unseen examples.
-
-\textbf{Start-year trend correction}
-
-The start year correction was applied to all tags except \texttt{tag\_monitoring\_and\_evaluation\_challenges} where a year trend hurt performance on the validation set.
-
-The correction multiplier of $1.0$ (full correction) achieved the best pairwise ranking, Brier skill, and accuracy, and was therefore retained. However, it was found that applying the correction to the RF model alone on the validation set and only then averaging the result with the ET performed better than correcting the average, so the temporal correction was only applied to the RF model before averaging with ET.
-
-\textbf{Tag group averaging}
-
-The best performing blend on the validation set was a linear increase from 100 to 400 training points, where 100 or below uses the group average exclusively, and 400 uses the prediction exclusively.
-
-The best discovered linear blend is represented formally as follows:
-\[
-\hat{p}^{\text{final}}_i = w \cdot \hat{p}^{\text{model}}_i + (1 - w) \cdot \hat{p}^{\text{group}}_i ,
-\]
-where $w = \operatorname{clip}\!\left(\tfrac{m - 100}{400 - 100},\, 0,\, 1\right)$ and $m$ is the minority class count.
-
-\textbf{LLM correction} Mean accuracy declined monotonically with LLM weight, within-group ranking skill and Brier skill showed marginal gains at 5--10\% LLM before deteriorating, and at 70\% LLM the mean Brier skill score turned negative; the LLM correction was therefore discarded and the statistical model predictions are used as the final tag forecasts.
 
 \textbf{Consistent Correlation of Outcome Tags with Overall Ratings} A natural validation of the outcome tags as meaningful measures of project performance is that they should correlate with overall evaluator ratings in the expected direction. This is apparently consistent with the extracted binary ratings. Tags representing good project execution correlate positively with overall ratings. Targets Met or Exceeded shows the strongest positive Pearson correlation with ratings ($r = \TagCorrTargetsMet$), followed by High Beneficiary Satisfaction or Reach ($r = \TagCorrBeneficiarySatisfaction$), Private Sector Engagement ($r = \TagCorrPrivateSectorEngagement$), Policy and Regulatory Reforms ($r = \TagCorrPolicyReforms$), Capacity Building Delivered ($r = \TagCorrCapacityBuilding$), and Improved Financial Performance ($r = \TagCorrFinancialPerformance$). Tags representing project difficulties are negatively correlated: Activities Not Completed shows the strongest negative correlation ($r = \TagCorrActivitiesNotCompleted$) and Implementation Delays shows a meaningful negative correlation ($r = \TagCorrImplementationDelays$). Project Restructured ($r = \TagCorrProjectRestructured$) and Targets Revised ($r = \TagCorrTargetsRevised$) are not meaningfully correlated with the overall rating in either direction. 
 
