@@ -20,6 +20,8 @@
 \usepackage{adjustbox}
 \usepackage{array}
 \usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{multirow}
 \usepackage{makecell}
 \usepackage{placeins}
 \usepackage{xstring}
@@ -1612,86 +1614,121 @@ We conclude with a summary of how statistical models and LLM forecasting techniq
 \FloatBarrier
 \subsection{Summary of Experimental Methods}
 
-Table~\ref{tab:methods_summary} summarises the key experimental methods tested in this thesis and whether they improved performance over the respective baseline. \textcolor{green!60!black}{$\surd$}~indicates improvement; \textcolor{red}{$\times$}~indicates no improvement or worsened performance; {\color{gray}---}~indicates the method was not applied to that outcome target. Methods marked~$\dagger$ were assessed on the validation set only, as the LLM forecasting pipeline was not re-run on the held-out test set.
+The table below summarises the key experimental methods tested in this thesis.
+\textcolor{green!60!black}{$\checkmark$}~indicates improvement on both the validation and held-out test set;
+\textcolor{red}{$\times$}~indicates the method did not generalise to the held-out test set (or failed on validation);
+{\color{gray}---}~indicates ambiguous, mixed, or no clear improvement.
+LLM forecast methods were assessed on the validation set only.
 
 \begin{table}[htbp]
 \centering
-\caption{Key experimental methods and their effect on each outcome target. \textcolor{green!60!black}{$\surd$}~improved over baseline; \textcolor{red}{$\times$}~did not improve or worsened; {\color{gray}---}~not applicable. $\dagger$~validation set only.}
+\caption{Summary of experimental methods by outcome target.
+\textcolor{green!60!black}{$\checkmark$}~improved on validation and held-out test;
+\textcolor{red}{$\times$}~did not generalise to held-out test;
+{\color{gray}---}~ambiguous or no clear improvement.
+LLM forecast rows: validation set only.}
 \label{tab:methods_summary}
 \small
 \renewcommand{\arraystretch}{1.35}
-\begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}p{5.2cm} *{5}{>{\centering\arraybackslash}X}@{}}
+\begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}p{3.3cm}
+                               >{\raggedright\arraybackslash}X
+                               >{\centering\arraybackslash}p{1.1cm}@{}}
 \toprule
-Method &
-\makecell{Activity\\Ratings\\(Stat.)} &
-\makecell{LLM\\Rating$^\dagger$} &
-\makecell{Narrative\\Quality$^\dagger$} &
-\makecell{Cost-\\Eff.} &
-\makecell{Outcome\\Tags} \\
+Outcome Target & Method & Result \\
 \midrule
-RF+ET statistical model                              & \textcolor{green!60!black}{$\surd$} & {\color{gray}---} & {\color{gray}---} & \textcolor{red}{$\times$} & \textcolor{green!60!black}{$\surd$} \\
-LLM features in statistical model                   & \textcolor{green!60!black}{$\surd$} & {\color{gray}---} & {\color{gray}---} & {\color{gray}---}          & {\color{gray}---} \\
-S1/S2 additional reasoning$^\dagger$                & {\color{gray}---}          & \textcolor{red}{$\times$} & \textcolor{green!60!black}{$\surd$} & {\color{gray}---} & {\color{gray}---} \\
-KNN retrieval$^\dagger$                             & {\color{gray}---}          & {\color{gray}---}          & \textcolor{green!60!black}{$\surd$} & {\color{gray}---} & {\color{gray}---} \\
-Statistical model prediction $\to$ LLM prompt$^\dagger$ & {\color{gray}---}      & \textcolor{green!60!black}{$\surd$} & \textcolor{green!60!black}{$\surd$} & {\color{gray}---} & {\color{gray}---} \\
-Per-tag features \& regularization                  & {\color{gray}---}          & {\color{gray}---}          & {\color{gray}---}          & {\color{gray}---}          & \textcolor{red}{$\times$} \\
+\multirow{5}{3.1cm}{\textbf{Statistical Model (Overall Rating)}}
+  & LLM-generated features                               & \textcolor{green!60!black}{$\checkmark$} \\
+  & Restricted tree complexity (RF+ET tuning)            & \textcolor{green!60!black}{$\checkmark$} \\
+  & LLM ridge adjustment of forecast                    & \textcolor{red}{$\times$} \\
+  & XGBoost                                             & \textcolor{red}{$\times$} \\
+  & Simple average with LLM forecast                    & {\color{gray}---} \\
+\midrule
+\multirow{8}{3.1cm}{\textbf{LLM Forecast (Overall Rating)}}
+  & \multicolumn{2}{l}{\textit{Narrative quality (validation set):}} \\
+  & \quad S1/S2 additional reasoning                    & \textcolor{green!60!black}{$\checkmark$} \\
+  & \quad KNN few-shot retrieval                        & \textcolor{green!60!black}{$\checkmark$} \\
+  & \quad Statistical model $\to$ LLM prompt            & \textcolor{green!60!black}{$\checkmark$} \\
+  & \multicolumn{2}{l}{\textit{Rating accuracy (validation set):}} \\
+  & \quad S1/S2 additional reasoning                    & \textcolor{red}{$\times$} \\
+  & \quad KNN few-shot retrieval                        & {\color{gray}---} \\
+  & \quad Statistical model $\to$ LLM prompt            & \textcolor{green!60!black}{$\checkmark$} \\
+\midrule
+\textbf{Cost-Effectiveness}
+  & RF+ET statistical forecast                          & \textcolor{red}{$\times$} \\
+\midrule
+\textbf{Outcome Tags}
+  & Per-tag features \& regularization                  & \textcolor{red}{$\times$} \\
 \bottomrule
 \end{tabularx}
 \end{table}
 
-% --- Detailed methods comparison (all methods tried) ---
+% --- Detailed methods comparison (all methods tried, 3-column format) ---
 %
 % \begin{table}[htbp]
 % \centering
-% \caption{Detailed comparison of all experimental methods by outcome target.
-%   \textcolor{green!60!black}{$\surd$}~improved; \textcolor{red}{$\times$}~did not improve or worsened;
-%   {\color{gray}---}~not applicable; $\sim$~marginal or mixed result.
-%   $\dagger$~validation set only. (B)~=~baseline method.}
+% \caption{Detailed summary of all experimental methods by outcome target.
+%   \textcolor{green!60!black}{$\checkmark$}~improved on validation and test;
+%   \textcolor{red}{$\times$}~did not generalise or failed;
+%   {\color{gray}---}~ambiguous or no clear improvement;
+%   $\sim$~marginal or mixed result.
+%   (B)~=~baseline (not an experimental method).
+%   LLM forecast rows: validation set only.}
 % \label{tab:methods_summary_detailed}
 % \footnotesize
-% \renewcommand{\arraystretch}{1.25}
-% \begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}p{5.5cm} *{5}{>{\centering\arraybackslash}X}@{}}
+% \renewcommand{\arraystretch}{1.3}
+% \begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}p{3.3cm}
+%                                >{\raggedright\arraybackslash}X
+%                                >{\centering\arraybackslash}p{1.1cm}@{}}
 % \toprule
-% Method &
-% \makecell{Activity\\Ratings\\(Stat.)} &
-% \makecell{LLM\\Rating$^\dagger$} &
-% \makecell{Narrative\\Quality$^\dagger$} &
-% \makecell{Cost-\\Eff.} &
-% \makecell{Outcome\\Tags} \\
+% Outcome Target & Method & Result \\
 % \midrule
-% \multicolumn{6}{@{}l}{\textit{Statistical model --- activity ratings (held-out test set)}} \\
-% Mode-of-org baseline                                & (B)                       & {\color{gray}---} & {\color{gray}---} & (B)                       & (B) \\
-% Ridge regression baseline                          & (B)                       & {\color{gray}---} & {\color{gray}---} & {\color{gray}---}          & {\color{gray}---} \\
-% Per-org mode differencing                          & \textcolor{green!60!black}{$\surd$} & {\color{gray}---} & {\color{gray}---} & {\color{gray}---} & \textcolor{green!60!black}{$\surd$} \\
-% LLM-generated grades (\emph{gpt-3.5-turbo})       & \textcolor{green!60!black}{$\surd$} & {\color{gray}---} & {\color{gray}---} & {\color{gray}---} & {\color{gray}---} \\
-% Target text embeddings (UMAP 3D)                   & \textcolor{green!60!black}{$\surd$} & {\color{gray}---} & {\color{gray}---} & {\color{gray}---} & \textcolor{green!60!black}{$\surd$} \\
-% Embedding contextualization (sector/country dist.) & \textcolor{green!60!black}{$\surd$} & {\color{gray}---} & {\color{gray}---} & {\color{gray}---} & {\color{gray}---} \\
-% Budget sector clustering (15 clusters)             & \textcolor{green!60!black}{$\surd$} & {\color{gray}---} & {\color{gray}---} & {\color{gray}---} & {\color{gray}---} \\
-% Nearest neighbour weighted avg.\ rating            & \textcolor{red}{$\times$} & {\color{gray}---} & {\color{gray}---} & {\color{gray}---}          & {\color{gray}---} \\
-% RF+ET ensemble                                     & \textcolor{green!60!black}{$\surd$} & {\color{gray}---} & {\color{gray}---} & \textcolor{red}{$\times$} & \textcolor{green!60!black}{$\surd$} \\
-% Year trend correction                              & $\sim$                    & {\color{gray}---} & {\color{gray}---} & {\color{gray}---}          & \textcolor{green!60!black}{$\surd$} \\
-% XGBoost                                            & \textcolor{red}{$\times$} & {\color{gray}---} & {\color{gray}---} & {\color{gray}---}          & \textcolor{red}{$\times$} \\
-% LLM forecast $+$ RF+ET (simple average)            & \textcolor{red}{$\times$} & {\color{gray}---} & {\color{gray}---} & {\color{gray}---}          & {\color{gray}---} \\
-% LLM forecast $+$ RF+ET (ridge calibration)        & \textcolor{red}{$\times$} & {\color{gray}---} & {\color{gray}---} & {\color{gray}---}          & {\color{gray}---} \\
+% \multirow{14}{3.1cm}{\textbf{Statistical Model (Overall Rating)}}
+%   & Mode-of-org score baseline (B)                      & \\
+%   & Ridge regression baseline (B)                       & \\
+%   & Nonlinear model (RF+ET vs.\ OLS)                    & \textcolor{green!60!black}{$\checkmark$} \\
+%   & Per-org mode differencing                           & \textcolor{green!60!black}{$\checkmark$} \\
+%   & LLM-generated grades (\emph{gpt-3.5-turbo})        & \textcolor{green!60!black}{$\checkmark$} \\
+%   & Target text embeddings (UMAP 3D)                    & \textcolor{green!60!black}{$\checkmark$} \\
+%   & Embedding contextualization (sector/country dist.)  & \textcolor{green!60!black}{$\checkmark$} \\
+%   & Budget sector clustering (15 clusters)              & \textcolor{green!60!black}{$\checkmark$} \\
+%   & Nearest neighbour weighted avg.\ rating             & \textcolor{red}{$\times$} \\
+%   & Restricted tree complexity (RF+ET tuning)           & \textcolor{green!60!black}{$\checkmark$} \\
+%   & Year trend correction                               & $\sim$ \\
+%   & LLM ridge adjustment of forecast                    & \textcolor{red}{$\times$} \\
+%   & XGBoost                                             & \textcolor{red}{$\times$} \\
+%   & Simple average with LLM forecast                    & {\color{gray}---} \\
 % \midrule
-% \multicolumn{6}{@{}l}{\textit{LLM forecasting (validation set only)}} \\
-% Minimal baseline prompt                            & {\color{gray}---} & (B)               & (B)               & {\color{gray}---} & {\color{gray}---} \\
-% S1/S2 additional reasoning                        & {\color{gray}---} & \textcolor{red}{$\times$} & \textcolor{green!60!black}{$\surd$} & {\color{gray}---} & {\color{gray}---} \\
-% KNN few-shot retrieval                             & {\color{gray}---} & $\sim$            & \textcolor{green!60!black}{$\surd$} & {\color{gray}---} & {\color{gray}---} \\
-% RAG document retrieval                             & {\color{gray}---} & $\sim$            & \textcolor{green!60!black}{$\surd$} & {\color{gray}---} & {\color{gray}---} \\
-% Statistical model prediction $\to$ LLM prompt     & {\color{gray}---} & \textcolor{green!60!black}{$\surd$} & \textcolor{green!60!black}{$\surd$} & {\color{gray}---} & {\color{gray}---} \\
-% Fine-tuning (DPO, \emph{gemini-2.5-flash})        & {\color{gray}---} & \textcolor{red}{$\times$} & $\sim$ & {\color{gray}---} & {\color{gray}---} \\
-% Larger model (\emph{gemini-3-pro})                 & {\color{gray}---} & \textcolor{green!60!black}{$\surd$} & \textcolor{green!60!black}{$\surd$} & {\color{gray}---} & {\color{gray}---} \\
-% Ensembling LLM forecasts                           & {\color{gray}---} & \textcolor{red}{$\times$} & {\color{gray}---} & {\color{gray}---} & {\color{gray}---} \\
+% \multirow{18}{3.1cm}{\textbf{LLM Forecast (Overall Rating)}}
+%   & \multicolumn{2}{l}{\textit{Narrative quality (validation set):}} \\
+%   & \quad Baseline minimal prompt (B)                   & \\
+%   & \quad S1/S2 additional reasoning                    & \textcolor{green!60!black}{$\checkmark$} \\
+%   & \quad KNN few-shot retrieval                        & \textcolor{green!60!black}{$\checkmark$} \\
+%   & \quad RAG document retrieval                        & \textcolor{green!60!black}{$\checkmark$} \\
+%   & \quad Statistical model $\to$ LLM prompt            & \textcolor{green!60!black}{$\checkmark$} \\
+%   & \quad Fine-tuning (DPO, \emph{gemini-2.5-flash})   & $\sim$ \\
+%   & \quad Larger model (\emph{gemini-3-pro})             & \textcolor{green!60!black}{$\checkmark$} \\
+%   & \quad Ensembling LLM forecasts                      & \textcolor{red}{$\times$} \\
+%   & \multicolumn{2}{l}{\textit{Rating accuracy (validation set):}} \\
+%   & \quad Baseline minimal prompt (B)                   & \\
+%   & \quad S1/S2 additional reasoning                    & \textcolor{red}{$\times$} \\
+%   & \quad KNN few-shot retrieval                        & {\color{gray}---} \\
+%   & \quad RAG document retrieval                        & {\color{gray}---} \\
+%   & \quad Statistical model $\to$ LLM prompt            & \textcolor{green!60!black}{$\checkmark$} \\
+%   & \quad Fine-tuning (DPO, \emph{gemini-2.5-flash})   & \textcolor{red}{$\times$} \\
+%   & \quad Larger model (\emph{gemini-3-pro})             & \textcolor{green!60!black}{$\checkmark$} \\
+%   & \quad Ensembling LLM forecasts                      & \textcolor{red}{$\times$} \\
 % \midrule
-% \multicolumn{6}{@{}l}{\textit{Outcome tag forecasting (held-out test set, except where noted)}} \\
-% RF+ET with homogeneous 45 features                 & {\color{gray}---} & {\color{gray}---} & {\color{gray}---} & {\color{gray}---} & \textcolor{green!60!black}{$\surd$} \\
-% Per-tag features \& regularization                 & {\color{gray}---} & {\color{gray}---} & {\color{gray}---} & {\color{gray}---} & \textcolor{red}{$\times$} \\
-% Start-year trend correction (tags, val.)           & {\color{gray}---} & {\color{gray}---} & {\color{gray}---} & {\color{gray}---} & \textcolor{green!60!black}{$\surd$} \\
-% Tag group averaging (val.)                         & {\color{gray}---} & {\color{gray}---} & {\color{gray}---} & {\color{gray}---} & \textcolor{green!60!black}{$\surd$} \\
-% Tag-dependent class weight balancing (val.)        & {\color{gray}---} & {\color{gray}---} & {\color{gray}---} & {\color{gray}---} & \textcolor{green!60!black}{$\surd$} \\
-% LLM correction blend for tags                      & {\color{gray}---} & {\color{gray}---} & {\color{gray}---} & {\color{gray}---} & \textcolor{red}{$\times$} \\
-% XGBoost/LightGBM (tags)                            & {\color{gray}---} & {\color{gray}---} & {\color{gray}---} & {\color{gray}---} & \textcolor{red}{$\times$} \\
+% \textbf{Cost-Effectiveness}
+%   & RF+ET statistical forecast                          & \textcolor{red}{$\times$} \\
+% \midrule
+% \multirow{7}{3.1cm}{\textbf{Outcome Tags}}
+%   & RF+ET with homogeneous 45 features (baseline)       & \textcolor{green!60!black}{$\checkmark$} \\
+%   & Per-tag features \& regularization                  & \textcolor{red}{$\times$} \\
+%   & Start-year trend correction (val.)                  & \textcolor{green!60!black}{$\checkmark$} \\
+%   & Tag group averaging (val.)                          & \textcolor{green!60!black}{$\checkmark$} \\
+%   & Tag-dependent class weight balancing (val.)         & \textcolor{green!60!black}{$\checkmark$} \\
+%   & LLM correction blend for tags                       & \textcolor{red}{$\times$} \\
+%   & XGBoost / LightGBM                                  & \textcolor{red}{$\times$} \\
 % \bottomrule
 % \end{tabularx}
 % \end{table}
