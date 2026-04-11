@@ -1515,6 +1515,14 @@ Another major change in the direction of the research was in the choice of scori
 \subsection{Limitations}
 There were several limitations in the methods which could be improved. While significant attention was paid to assessing future leakage risk, LLM grades used as features for statistical forecasts may still inadvertently leak signals from post-activity information, such as rating the context as more difficult because of information that could not be known at the time of approval. Lastly, the dataset used was of limited size, limiting the statistical strength of conclusions that can be made from existing data. A separate limitation is that BMZ reported approval documents were not available, so the LLM was instructed to extract data from evaluation documents, as much as possible minimizing temporal information leakage. The held-out set demonstrated a slight performance improvement in forecasting BMZ outcomes, which may have to do with this limitation.
 
+Despite the extensive use of information from each International Aid and Transparency Initiative set of pre-activity documents, much more information could have been extracted. There was limited experimentation with embeddings and optimizing the embedding space, as well as with different parameter sizes for UMAP. Only the targets and pre-activity summary were embedded, which ended up being among the most important features for the statistical model. A straightforward extension would be to embed the full language model grading reasoning traces from \emph{gpt-3.5-turbo}, which could provide useful features capturing information that cannot be summarized from a single grade. Other simple text features---such as the average word length in the documents, which may correlate with the quality of the pre-activity document itself---could have provided additional signal about the care with which the application was prepared. Legal and contractual documents were not used but could also have been incorporated.
+
+Extending the existing database using data from AidData could substantially increase the total number of activities, as AidData incorporates pre-activity and evaluation documents which are not reported directly to the International Aid and Transparency Initiative.
+
+Another significant improvement would be to rerun the grading scheme multiple times and ensemble the results; this was not attempted due to the high API cost involved.
+
+A major limitation is the lack of BMZ pre-activity documents. Directly integrating the documents that do exist for BMZ could mitigate this limitation in future work.
+
 The impact of this work is likely to aid decision making. However, there are some risks. First, users of predictive models may ascribe undue objectivity to algorithmic outputs, leading to ``automation bias'' \citewithtitle{AlgorithmAppreciationPeople2019}. This can cause decision-makers to overweight model recommendations relative to other sources of expertise. Another risk of incorporating algorithmic decision making into decisions is that grant officers may avoid pursuing projects that appear unlikely to succeed according to the model, narrowing the range of activities explored to those similar to historically successful ones. This may hinder adaptation to adjust to changing international aid contexts.
 
 
@@ -1600,6 +1608,93 @@ We conclude with a summary of how statistical models and LLM forecasting techniq
 % \caption{Strengths and Weaknesses of Large Language Models and Statistical Models for Forecasting}
 \label{fig:forecast_strengths_weaknesses}
 \end{figure}
+
+\FloatBarrier
+\subsection{Summary of Experimental Methods}
+
+Table~\ref{tab:methods_summary} summarises the key experimental methods tested in this thesis and whether they improved performance over the respective baseline. \textcolor{green!60!black}{$\surd$}~indicates improvement; \textcolor{red}{$\times$}~indicates no improvement or worsened performance; {\color{gray}---}~indicates the method was not applied to that outcome target. Methods marked~$\dagger$ were assessed on the validation set only, as the LLM forecasting pipeline was not re-run on the held-out test set.
+
+\begin{table}[htbp]
+\centering
+\caption{Key experimental methods and their effect on each outcome target. \textcolor{green!60!black}{$\surd$}~improved over baseline; \textcolor{red}{$\times$}~did not improve or worsened; {\color{gray}---}~not applicable. $\dagger$~validation set only.}
+\label{tab:methods_summary}
+\small
+\renewcommand{\arraystretch}{1.35}
+\begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}p{5.2cm} *{5}{>{\centering\arraybackslash}X}@{}}
+\toprule
+Method &
+\makecell{Activity\\Ratings\\(Stat.)} &
+\makecell{LLM\\Rating$^\dagger$} &
+\makecell{Narrative\\Quality$^\dagger$} &
+\makecell{Cost-\\Eff.} &
+\makecell{Outcome\\Tags} \\
+\midrule
+RF+ET statistical model                              & \textcolor{green!60!black}{$\surd$} & {\color{gray}---} & {\color{gray}---} & \textcolor{red}{$\times$} & \textcolor{green!60!black}{$\surd$} \\
+LLM features in statistical model                   & \textcolor{green!60!black}{$\surd$} & {\color{gray}---} & {\color{gray}---} & {\color{gray}---}          & {\color{gray}---} \\
+S1/S2 additional reasoning$^\dagger$                & {\color{gray}---}          & \textcolor{red}{$\times$} & \textcolor{green!60!black}{$\surd$} & {\color{gray}---} & {\color{gray}---} \\
+KNN retrieval$^\dagger$                             & {\color{gray}---}          & {\color{gray}---}          & \textcolor{green!60!black}{$\surd$} & {\color{gray}---} & {\color{gray}---} \\
+Statistical model prediction $\to$ LLM prompt$^\dagger$ & {\color{gray}---}      & \textcolor{green!60!black}{$\surd$} & \textcolor{green!60!black}{$\surd$} & {\color{gray}---} & {\color{gray}---} \\
+Per-tag features \& regularization                  & {\color{gray}---}          & {\color{gray}---}          & {\color{gray}---}          & {\color{gray}---}          & \textcolor{red}{$\times$} \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+% --- Detailed methods comparison (all methods tried) ---
+%
+% \begin{table}[htbp]
+% \centering
+% \caption{Detailed comparison of all experimental methods by outcome target.
+%   \textcolor{green!60!black}{$\surd$}~improved; \textcolor{red}{$\times$}~did not improve or worsened;
+%   {\color{gray}---}~not applicable; $\sim$~marginal or mixed result.
+%   $\dagger$~validation set only. (B)~=~baseline method.}
+% \label{tab:methods_summary_detailed}
+% \footnotesize
+% \renewcommand{\arraystretch}{1.25}
+% \begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}p{5.5cm} *{5}{>{\centering\arraybackslash}X}@{}}
+% \toprule
+% Method &
+% \makecell{Activity\\Ratings\\(Stat.)} &
+% \makecell{LLM\\Rating$^\dagger$} &
+% \makecell{Narrative\\Quality$^\dagger$} &
+% \makecell{Cost-\\Eff.} &
+% \makecell{Outcome\\Tags} \\
+% \midrule
+% \multicolumn{6}{@{}l}{\textit{Statistical model --- activity ratings (held-out test set)}} \\
+% Mode-of-org baseline                                & (B)                       & {\color{gray}---} & {\color{gray}---} & (B)                       & (B) \\
+% Ridge regression baseline                          & (B)                       & {\color{gray}---} & {\color{gray}---} & {\color{gray}---}          & {\color{gray}---} \\
+% Per-org mode differencing                          & \textcolor{green!60!black}{$\surd$} & {\color{gray}---} & {\color{gray}---} & {\color{gray}---} & \textcolor{green!60!black}{$\surd$} \\
+% LLM-generated grades (\emph{gpt-3.5-turbo})       & \textcolor{green!60!black}{$\surd$} & {\color{gray}---} & {\color{gray}---} & {\color{gray}---} & {\color{gray}---} \\
+% Target text embeddings (UMAP 3D)                   & \textcolor{green!60!black}{$\surd$} & {\color{gray}---} & {\color{gray}---} & {\color{gray}---} & \textcolor{green!60!black}{$\surd$} \\
+% Embedding contextualization (sector/country dist.) & \textcolor{green!60!black}{$\surd$} & {\color{gray}---} & {\color{gray}---} & {\color{gray}---} & {\color{gray}---} \\
+% Budget sector clustering (15 clusters)             & \textcolor{green!60!black}{$\surd$} & {\color{gray}---} & {\color{gray}---} & {\color{gray}---} & {\color{gray}---} \\
+% Nearest neighbour weighted avg.\ rating            & \textcolor{red}{$\times$} & {\color{gray}---} & {\color{gray}---} & {\color{gray}---}          & {\color{gray}---} \\
+% RF+ET ensemble                                     & \textcolor{green!60!black}{$\surd$} & {\color{gray}---} & {\color{gray}---} & \textcolor{red}{$\times$} & \textcolor{green!60!black}{$\surd$} \\
+% Year trend correction                              & $\sim$                    & {\color{gray}---} & {\color{gray}---} & {\color{gray}---}          & \textcolor{green!60!black}{$\surd$} \\
+% XGBoost                                            & \textcolor{red}{$\times$} & {\color{gray}---} & {\color{gray}---} & {\color{gray}---}          & \textcolor{red}{$\times$} \\
+% LLM forecast $+$ RF+ET (simple average)            & \textcolor{red}{$\times$} & {\color{gray}---} & {\color{gray}---} & {\color{gray}---}          & {\color{gray}---} \\
+% LLM forecast $+$ RF+ET (ridge calibration)        & \textcolor{red}{$\times$} & {\color{gray}---} & {\color{gray}---} & {\color{gray}---}          & {\color{gray}---} \\
+% \midrule
+% \multicolumn{6}{@{}l}{\textit{LLM forecasting (validation set only)}} \\
+% Minimal baseline prompt                            & {\color{gray}---} & (B)               & (B)               & {\color{gray}---} & {\color{gray}---} \\
+% S1/S2 additional reasoning                        & {\color{gray}---} & \textcolor{red}{$\times$} & \textcolor{green!60!black}{$\surd$} & {\color{gray}---} & {\color{gray}---} \\
+% KNN few-shot retrieval                             & {\color{gray}---} & $\sim$            & \textcolor{green!60!black}{$\surd$} & {\color{gray}---} & {\color{gray}---} \\
+% RAG document retrieval                             & {\color{gray}---} & $\sim$            & \textcolor{green!60!black}{$\surd$} & {\color{gray}---} & {\color{gray}---} \\
+% Statistical model prediction $\to$ LLM prompt     & {\color{gray}---} & \textcolor{green!60!black}{$\surd$} & \textcolor{green!60!black}{$\surd$} & {\color{gray}---} & {\color{gray}---} \\
+% Fine-tuning (DPO, \emph{gemini-2.5-flash})        & {\color{gray}---} & \textcolor{red}{$\times$} & $\sim$ & {\color{gray}---} & {\color{gray}---} \\
+% Larger model (\emph{gemini-3-pro})                 & {\color{gray}---} & \textcolor{green!60!black}{$\surd$} & \textcolor{green!60!black}{$\surd$} & {\color{gray}---} & {\color{gray}---} \\
+% Ensembling LLM forecasts                           & {\color{gray}---} & \textcolor{red}{$\times$} & {\color{gray}---} & {\color{gray}---} & {\color{gray}---} \\
+% \midrule
+% \multicolumn{6}{@{}l}{\textit{Outcome tag forecasting (held-out test set, except where noted)}} \\
+% RF+ET with homogeneous 45 features                 & {\color{gray}---} & {\color{gray}---} & {\color{gray}---} & {\color{gray}---} & \textcolor{green!60!black}{$\surd$} \\
+% Per-tag features \& regularization                 & {\color{gray}---} & {\color{gray}---} & {\color{gray}---} & {\color{gray}---} & \textcolor{red}{$\times$} \\
+% Start-year trend correction (tags, val.)           & {\color{gray}---} & {\color{gray}---} & {\color{gray}---} & {\color{gray}---} & \textcolor{green!60!black}{$\surd$} \\
+% Tag group averaging (val.)                         & {\color{gray}---} & {\color{gray}---} & {\color{gray}---} & {\color{gray}---} & \textcolor{green!60!black}{$\surd$} \\
+% Tag-dependent class weight balancing (val.)        & {\color{gray}---} & {\color{gray}---} & {\color{gray}---} & {\color{gray}---} & \textcolor{green!60!black}{$\surd$} \\
+% LLM correction blend for tags                      & {\color{gray}---} & {\color{gray}---} & {\color{gray}---} & {\color{gray}---} & \textcolor{red}{$\times$} \\
+% XGBoost/LightGBM (tags)                            & {\color{gray}---} & {\color{gray}---} & {\color{gray}---} & {\color{gray}---} & \textcolor{red}{$\times$} \\
+% \bottomrule
+% \end{tabularx}
+% \end{table}
 
 \FloatBarrier
 \subsection{Answers to Research Questions}
