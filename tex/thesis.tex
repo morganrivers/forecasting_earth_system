@@ -1617,7 +1617,7 @@ We conclude with a summary of how statistical models and LLM forecasting techniq
 The table below summarises the key experimental methods tested in this thesis.
 \textcolor{green!60!black}{$\checkmark$}~indicates improvement on both the validation and held-out test set;
 \textcolor{red}{$\times$}~indicates the method did not generalise to the held-out test set (or failed on validation);
-{\color{gray}---}~indicates ambiguous, mixed, or no clear improvement.
+{\color{gray}?}~indicates ambiguous, mixed, or no clear improvement.
 LLM forecast methods were assessed on the validation set only.
 
 \begin{table}[htbp]
@@ -1625,8 +1625,10 @@ LLM forecast methods were assessed on the validation set only.
 \caption{Summary of experimental methods by outcome target.
 \textcolor{green!60!black}{$\checkmark$}~improved on validation and held-out test;
 \textcolor{red}{$\times$}~did not generalise to held-out test;
-{\color{gray}---}~ambiguous or no clear improvement.
-LLM forecast rows: validation set only.}
+{\color{gray}?}~ambiguous or no clear improvement.
+LLM forecast rows: validation set only.
+Statistical model forecasts of overall success ratings and 12 of 14 attempted outcome tag forecasts were better than chance at within-group pairwise ranking skill on the held-out set at 95\% confidence as determined by permutation testing.
+By contrast, cost-effectiveness forecasts on the held-out test set and non-statistical-model-driven LLM forecasting of overall ratings on the validation set were not significantly above chance.}
 \label{tab:methods_summary}
 \small
 \renewcommand{\arraystretch}{1.35}
@@ -1636,25 +1638,26 @@ LLM forecast rows: validation set only.}
 \toprule
 Outcome Target & Method & Result \\
 \midrule
-\multirow{5}{3.1cm}{\textbf{Statistical Model (Overall Rating)}}
+\multirow{6}{3.1cm}{\textbf{Statistical Model (Overall Rating)}}
   & LLM-generated features                               & \textcolor{green!60!black}{$\checkmark$} \\
   & Restricted tree complexity (RF+ET tuning)            & \textcolor{green!60!black}{$\checkmark$} \\
+  & Linear ridge regression adjustment to RF based on start year & {\color{gray}?} \\
+  & Simple average with LLM forecast                    & {\color{gray}?} \\
   & LLM ridge adjustment of forecast                    & \textcolor{red}{$\times$} \\
   & XGBoost                                             & \textcolor{red}{$\times$} \\
-  & Simple average with LLM forecast                    & {\color{gray}---} \\
 \midrule
 \multirow{8}{3.1cm}{\textbf{LLM Forecast (Overall Rating)}}
   & \multicolumn{2}{l}{\textit{Narrative quality (validation set):}} \\
-  & \quad S1/S2 additional reasoning                    & \textcolor{green!60!black}{$\checkmark$} \\
+  & \quad LLM instructed to forecast statistical model's rating & \textcolor{green!60!black}{$\checkmark$} \\
+  & \quad S1 (reasons would go badly) \& S2 (reasons would go well) extra prompts & \textcolor{green!60!black}{$\checkmark$} \\
   & \quad KNN few-shot retrieval                        & \textcolor{green!60!black}{$\checkmark$} \\
-  & \quad Statistical model $\to$ LLM prompt            & \textcolor{green!60!black}{$\checkmark$} \\
   & \multicolumn{2}{l}{\textit{Rating accuracy (validation set):}} \\
-  & \quad S1/S2 additional reasoning                    & \textcolor{red}{$\times$} \\
-  & \quad KNN few-shot retrieval                        & {\color{gray}---} \\
-  & \quad Statistical model $\to$ LLM prompt            & \textcolor{green!60!black}{$\checkmark$} \\
+  & \quad LLM instructed to forecast statistical model's rating & \textcolor{green!60!black}{$\checkmark$} \\
+  & \quad S1 (reasons would go badly) \& S2 (reasons would go well) extra prompts & \textcolor{red}{$\times$} \\
+  & \quad KNN few-shot retrieval                        & \textcolor{red}{$\times$} \\
 \midrule
 \textbf{Cost-Effectiveness}
-  & RF+ET statistical forecast                          & \textcolor{red}{$\times$} \\
+  & No methods attempted for held-out test set: validation performance not above chance & \\
 \midrule
 \textbf{Outcome Tags}
   & Per-tag features \& regularization                  & \textcolor{red}{$\times$} \\
@@ -1701,19 +1704,19 @@ Outcome Target & Method & Result \\
 % \multirow{18}{3.1cm}{\textbf{LLM Forecast (Overall Rating)}}
 %   & \multicolumn{2}{l}{\textit{Narrative quality (validation set):}} \\
 %   & \quad Baseline minimal prompt (B)                   & \\
-%   & \quad S1/S2 additional reasoning                    & \textcolor{green!60!black}{$\checkmark$} \\
+%   & \quad S1 (reasons would go badly) \& S2 (reasons would go well) extra prompts & \textcolor{green!60!black}{$\checkmark$} \\
 %   & \quad KNN few-shot retrieval                        & \textcolor{green!60!black}{$\checkmark$} \\
 %   & \quad RAG document retrieval                        & \textcolor{green!60!black}{$\checkmark$} \\
-%   & \quad Statistical model $\to$ LLM prompt            & \textcolor{green!60!black}{$\checkmark$} \\
+%   & \quad LLM instructed to forecast statistical model's rating & \textcolor{green!60!black}{$\checkmark$} \\
 %   & \quad Fine-tuning (DPO, \emph{gemini-2.5-flash})   & $\sim$ \\
 %   & \quad Larger model (\emph{gemini-3-pro})             & \textcolor{green!60!black}{$\checkmark$} \\
 %   & \quad Ensembling LLM forecasts                      & \textcolor{red}{$\times$} \\
 %   & \multicolumn{2}{l}{\textit{Rating accuracy (validation set):}} \\
 %   & \quad Baseline minimal prompt (B)                   & \\
-%   & \quad S1/S2 additional reasoning                    & \textcolor{red}{$\times$} \\
+%   & \quad S1 (reasons would go badly) \& S2 (reasons would go well) extra prompts & \textcolor{red}{$\times$} \\
 %   & \quad KNN few-shot retrieval                        & {\color{gray}---} \\
 %   & \quad RAG document retrieval                        & {\color{gray}---} \\
-%   & \quad Statistical model $\to$ LLM prompt            & \textcolor{green!60!black}{$\checkmark$} \\
+%   & \quad LLM instructed to forecast statistical model's rating & \textcolor{green!60!black}{$\checkmark$} \\
 %   & \quad Fine-tuning (DPO, \emph{gemini-2.5-flash})   & \textcolor{red}{$\times$} \\
 %   & \quad Larger model (\emph{gemini-3-pro})             & \textcolor{green!60!black}{$\checkmark$} \\
 %   & \quad Ensembling LLM forecasts                      & \textcolor{red}{$\times$} \\
