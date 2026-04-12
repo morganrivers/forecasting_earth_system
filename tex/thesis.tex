@@ -230,7 +230,7 @@
 \newcommand{\PairwiseModel}{60}
 \newcommand{\PairwiseCILow}{53}
 \newcommand{\PairwiseCIHigh}{66}
-\newcommand{\PairwiseModelExtrapolated}{60}
+\newcommand{\PairwiseModelExtrapolated}{64}
 
 \newcommand{\Rsqnollmfrac}{-0.026}
 \newcommand{\Rsq}{-0.026}
@@ -284,6 +284,9 @@
 
 % Pairs with differing outcomes (test set)
 \newcommand{\DifferingOutcomePairsFrac}{45}
+
+% Pairs with differing outcomes (test set)
+\newcommand{\NumberTagsBetterThanChance}{9}
 
 \pgfmathsetmacro{\Rsqdelta}{\Rsqheldoutratingsllmfeatures - \Rsqnollmfrac}
 % ---------------- END CONSTANTS ----------------
@@ -879,7 +882,7 @@ In the case of binary tags, three options were evaluated: The \texttt{class\_wei
 
 Optimal parameters for the RF+ET classifier ensemble were identified by exploring 20 LLM-generated parameter sets, with the second set of 10 varied near the maximal score of the first set. These included variations in tree depth, leaf size, feature sampling width, row subsampling, and pruning strength, as well as between-RF and ET variations.
 
-The base configuration (\texttt{min\_samples\_leaf}=5, \texttt{max\_features}=\texttt{"sqrt"}, \texttt{n\_estimators}=500, \texttt{max\_depth}=\texttt{None}, \texttt{min\_samples\_split}=2, \texttt{ccp\_alpha}=0), with bootstrap \texttt{True} for the RF and \texttt{False} for the ET, was found to perform best across most tags on the validation set. Ten tags use per-tag hyperparameter overrides identified during the parameter sweep: five tags (high disbursement, policy and regulatory reforms, capacity building delivered, private sector engagement, and gender-equitable outcomes) use \texttt{min\_samples\_leaf}=20; one tag (over budget) uses \texttt{min\_samples\_leaf}=40; one tag (funds reallocated) uses \texttt{min\_samples\_leaf}=10; and three tags (high beneficiary satisfaction or reach, targets met or exceeded, and monitoring and evaluation challenges) use \texttt{max\_depth}=10. Although quite similar to the default \texttt{RandomForestClassifier} and \texttt{ExtraTreesClassifier} configuration, this specification constrains model capacity in ways that reduce overfitting on the small training sets involved: requiring at least five training examples at each leaf limits fine-grained partitioning of the feature space, and restricting the feature subset considered at each split (\texttt{max\_features}=\texttt{"sqrt"} rather than considering all features) increases tree diversity. Compared to defaults, these choices accept less precise fits on the training data in exchange for predictions that are more stable across unseen examples. XGBoost and LightGBM were both tested and performed worse on every tag assessed.
+The base configuration (\texttt{min\_samples\_leaf}=5, \texttt{max\_features}=\texttt{"sqrt"}, \texttt{n\_estimators}=500, \texttt{max\_depth}=\texttt{None}, \texttt{min\_samples\_split}=2, \texttt{ccp\_alpha}=0), with bootstrap \texttt{True} for the RF and \texttt{False} for the ET, was found to perform best across most tags on the validation set. Ten tags use per-tag hyperparameter overrides identified during the parameter sweep: five tags (high disbursement, policy and regulatory reforms, capacity building delivered, private sector engagement, and gender-equitable outcomes) use \texttt{min\_samples\_leaf}=20; one tag (over budget) uses \texttt{min\_samples\_leaf}=40; one tag (funds reallocated) uses \texttt{min\_samples\_leaf}=10; and three tags (high beneficiary satisfaction or reach, targets met or exceeded, and monitoring and evaluation challenges) use \texttt{max\_depth}=10. Although quite similar to the default \texttt{RandomForestClassifier} and \texttt{ExtraTreesClassifier} configuration, this specification constrains model capacity in ways that reduce overfitting on the small training sets involved: requiring at least five training examples at each leaf limits fine-grained partitioning of the feature space, and restricting the feature subset considered at each split (\texttt{max\_features}=\texttt{"sqrt"} rather than considering all features) increases tree diversity. Compared to defaults, these choices accept less precise fits on the training data in exchange for predictions that are more stable across unseen examples. A simple OLS regression, XGBoost, and LightGBM were both tested and performed worse on every tag assessed.
 
 The RF+ET ensemble was otherwise trained identically to how ratings were trained. 
 
@@ -1240,14 +1243,19 @@ This thesis implements four forecasting strategies, all trained and evaluated on
 \item A statistical model to forecast activity cost-effectiveness using LLM-generated features
 \item A statistical model to forecast 14 binary outcomes using LLM-generated features
 \item An LLM prompting scheme used to forecast overall activity success ratings, assessed on accuracy, within-group ranking skill, and qualitative similarity to the evaluation summaries, optionally incorporating statistical overall rating forecasts as a target.
+\item A ridge regression model combining RF+ET statistical predictions with LLM forecast predictions (\emph{LLM Adjustment Ridge Regression}), assessed on accuracy, $R^2$, and within-group pairwise ranking on the held-out test set.
+\item A fine-tuned \emph{gemini-2.5-flash} model using Direct Preference Optimization (DPO) trained on 50 activity preference pairs, assessed on $R^2$ and within-group pairwise ranking ability and found not to improve over the base model.
+\item An ensembling approach averaging multiple LLM forecast runs for the same activity, assessed on a training subset and found not to improve forecasting skill due to high inter-run correlation.
+\item An LLM-based correction of outcome tag probabilities using \emph{deepseek-V3.2} blended with statistical model predictions, assessed on Brier skill score, accuracy ratio, and within-group pairwise ranking, and found not to improve skill.
+\item A nearest-neighbor rating predictor using a weighted mean of semantically similar training-activity ratings, assessed on the validation set and found to underperform the mode-of-reporting-organisation baseline.
 \end{itemize}
 
 The system is built to forecast what the evaluation results will be for thousands of IATI records containing both a pre-intervention description of the activity, and an ex-post evaluation of the results in order to ensure temporal leakage does not occur. To do so, thousands of PDFs were downloaded, ranked from most to least relevant for forecasting future outcomes or evaluating the end result of the activities, had their paged graded for relevance to the task, and had quantitative and qualitative descriptions and results extracted from the pdfs. Three time-ordered splits were used: train, validation, and test sets. Statistical models and fine-tuning experiments were done on the training set, with several methods assessed using the validation set. This informed model selection and parameter tuning, so that the generalization ability of these methods were finally assessed against the held-out test set. See Figure~\ref{fig:finaldiagram} for a representation of the entire process.
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=\linewidth]{assets/finaldiagramthesis.drawio.png}
-    \caption{Overview of the forecasting pipeline. Features are produced using IATI activity data and external by-country datasources (GDP per capita, CPIA scores, and World Bank governance indicators). More features come from ex-ante activity PDFs processed by \emph{gemini-2.5-flash} into structured data. Lastly, \emph{ChatGPT-3.5} generated more features by grading them directly, and \emph{gemini-embedding-001} was used to create more features using semantic embeddings. Next, \emph{deepseek-V3.2} was used to produce a preliminary forecast for overall ratings and outcome tags. A statistical model also trains on and forecasts overall ratings, 14 outcome tags, and cost-effectiveness, optionally using the \emph{deepseek-V3.2} forecasts as input features. \emph{gemini-2.5-flash} processes ex-post evaluation PDFs to extract the overall outcome rating and 14 tags, which serve as training targets for the statistical models. Lastly, language model forecasting is qualitatively evaluated: \emph{deepseek-V3.2} receives the outputs of both the statistical model and the ex-post extraction to produce a free-text narrative forecast of major activity outcomes, which is later graded by \emph{gemini-2.5-flash-lite}.}
+    \includegraphics[width=\linewidth]{assets/finaldiagramthesis.drawio.cropped.png}
+    \caption{Features are produced using IATI activity data and external by-country datasources (GDP per capita, CPIA scores, and World Bank governance indicators). More features come from ex-ante activity PDFs processed by \emph{gemini-2.5-flash} into structured data. Features were added by \emph{ChatGPT-3.5} grading pre-activity PDFs, and \emph{gemini-embedding-001} via semantic embeddings. \emph{deepseek-V3.2} produced a preliminary forecast for overall ratings and outcome tags. A statistical model also trains on and forecasts overall ratings, 14 outcome tags, and cost-effectiveness, optionally using the \emph{deepseek-V3.2} forecasts as input features. \emph{gemini-2.5-flash} processes evaluation PDFs to extract overall outcome ratings and 14 tags, which are training targets for the statistical models. Lastly, \emph{deepseek-V3.2} uses the outputs of both the statistical model and the ex-post extraction to write a narrative forecast of activity outcomes, later graded by \emph{gemini-2.5-flash-lite}.}
     \label{fig:finaldiagram}
 \end{figure}
 \clearpage
@@ -1353,8 +1361,6 @@ SHAP analysis reveals that increased planned expenditure and decreased duration 
 }
 \begin{tabular}{p{6cm}rrrr}
 \toprule
-Feature & Miss \% & $\Delta R^2$ $\uparrow$ & $\Delta$Pairwise $\uparrow$ & $\Delta$pred\_1sd \\
-\midrule
 Feature & Miss \% & $\Delta R^2$ $\uparrow$ & $\Delta$Pairwise $\uparrow$ & $\Delta$pred\_1sd \\
 \midrule
 Target achievability (LLM: 100=easy, 0=impossible) & 2.0 & 0.0077 & 0.0245 & 0.0920 \\[2pt]
@@ -1470,7 +1476,7 @@ As a secondary accuracy metric, the weighted accuracy across all 23 tags on the 
 
 
 \begin{table}[htbp]
-\caption{Outcome tag prediction results on the test set, with homogenous features and RF+ET parameters. Consistent features shown are those in the top 10 by |SHAP|, with the same sign, and at least 5\,\% of total importance, in every split of 3 equal random training splits (RF and ET averaged). Features are ordered by mean importance across splits; features absent from any split's top 10 or exhibiting a sign flip are omitted. $\overrightarrow{{\color[HTML]{006400}\text{Green}}}$ and $\overleftarrow{{\color[HTML]{8B0000}\text{Red}}}$ indicate positive and negative relationships respectively. Tmp.\ Corr.: temporal correction in units of 1/100\,\%/yr. Feature abbreviations: $U_x$/$U_y$/$U_z$ = UMAP semantic embedding coordinates; dist = similarity distance group (sector + country distance combined); dur = planned duration; exp = planned expenditure group (raw/log/log-per-year combined); scp = activity scope; WB = World Bank reporting-org fixed effect; loan = finance-is-loan indicator.
+\caption{Outcome tag prediction results on the test set. $p < 0.05$ determined via permutation sampling on the test set. Consistent features shown are those in the top 10 by |SHAP|, with the same sign, and at least 5\,\% of total importance, in every split of 3 equal random training splits (RF and ET averaged). Features are ordered by mean importance across splits; features absent from any split's top 10 or exhibiting a sign flip are omitted. $\overrightarrow{{\color[HTML]{006400}\text{Green}}}$ and $\overleftarrow{{\color[HTML]{8B0000}\text{Red}}}$ indicate positive and negative relationships respectively. Tmp.\ Corr.: temporal correction in units of 1/100\,\%/yr. Feature abbreviations: $U_x$/$U_y$/$U_z$ = UMAP semantic embedding coordinates; dist = similarity distance group (sector + country distance combined); dur = planned duration; exp = planned expenditure group (raw/log/log-per-year combined); scp = activity scope; WB = World Bank reporting-org fixed effect; loan = finance-is-loan indicator.
 Groups and tags sorted by accuracy vs.\ baseline descending. }
 \label{tab:tag_model_results}
 \footnotesize
@@ -1478,27 +1484,27 @@ Groups and tags sorted by accuracy vs.\ baseline descending. }
 \renewcommand{\arraystretch}{1.1}
 \begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}p{2.87cm} r r r r r r r r r >{\raggedright\arraybackslash}X@{}}
 \toprule
-Tag & \makecell{WG\\Pair.\\Prob.} & \makecell{WG\\Spear.} & \makecell{Brier} & \makecell{Brier\\Base.} & Acc. & \makecell{Acc.\\Base.} & \makecell{Frac.\ True\\(train,\ test)} & $N_\mathrm{test}$ & \makecell{Tmp.\\Corr.} & \makecell{Consistent\\Features} \\
+Tag ($\ast$ shown if $p<0.05$)  & \makecell{WG\\Pair.\\Prob.} & \makecell{WG\\Spear.} & \makecell{Brier} & \makecell{Brier\\Base.} & Acc. & \makecell{Acc.\\Base.} & \makecell{Frac.\ True\\(train,\ test)} & $N_\mathrm{test}$ & \makecell{Tmp.\\Corr.} & \makecell{Consistent\\Features} \\
 \midrule
 \multicolumn{11}{@{}l}{\textbf{Activity Rescoping}} \\
-Closing Date Extended & 0.71 & 0.35 & 0.198 & 0.257 & 0.70 & 0.53 & 0.53,\ 0.39 & 331 & -0.66 & $\overrightarrow{{\color[HTML]{006400}\text{exp}}}$, $\overrightarrow{{\color[HTML]{006400}\text{scp}}}$ \\
-Project Restructured & 0.69 & 0.33 & 0.203 & 0.263 & 0.70 & 0.60 & 0.60,\ 0.49 & 331 & -0.16 & $\overrightarrow{{\color[HTML]{006400}\text{WB}}}$, $\overrightarrow{{\color[HTML]{006400}\text{exp}}}$, $\overrightarrow{{\color[HTML]{006400}\text{loan}}}$, $\overrightarrow{{\color[HTML]{006400}\text{scp}}}$, $\overrightarrow{{\color[HTML]{006400}\text{dur}}}$ \\
-Targets Revised & 0.59 & 0.14 & 0.233 & 0.261 & 0.63 & 0.58 & 0.58,\ 0.47 & 331 & +0.12 & $\overrightarrow{{\color[HTML]{006400}\text{WB}}}$, $\overrightarrow{{\color[HTML]{006400}\text{exp}}}$, $\overrightarrow{{\color[HTML]{006400}\text{scp}}}$ \\
+Closing Date Extended* & 0.77 & 0.44 & 0.186 & 0.259 & 0.75 & 0.53 & 0.53,\ 0.38 & 200 & -0.64 & $\overrightarrow{{\color[HTML]{006400}\text{exp}}}$, $\overrightarrow{{\color[HTML]{006400}\text{scp}}}$ \\
+Project Restructured* & 0.75 & 0.42 & 0.197 & 0.270 & 0.69 & 0.60 & 0.60,\ 0.45 & 200 & -0.22 & $\overrightarrow{{\color[HTML]{006400}\text{WB}}}$, $\overrightarrow{{\color[HTML]{006400}\text{exp}}}$, $\overrightarrow{{\color[HTML]{006400}\text{loan}}}$, $\overrightarrow{{\color[HTML]{006400}\text{scp}}}$, $\overrightarrow{{\color[HTML]{006400}\text{dur}}}$ \\
+Targets Revised* & 0.61 & 0.18 & 0.219 & 0.264 & 0.65 & 0.58 & 0.58,\ 0.46 & 200 & +0.15 & $\overrightarrow{{\color[HTML]{006400}\text{WB}}}$, $\overrightarrow{{\color[HTML]{006400}\text{exp}}}$, $\overrightarrow{{\color[HTML]{006400}\text{scp}}}$ \\
 \noalign{\vspace{0.5ex}}
 \multicolumn{11}{@{}l}{\textbf{Finance \& Budget}} \\
-Improved Financial Performance & 0.60 & 0.17 & 0.243 & 0.250 & 0.56 & 0.50 & 0.50,\ 0.42 & 331 & -0.05 & \textemdash \\
-High Disbursement & 0.60 & 0.16 & 0.234 & 0.230 & 0.62 & 0.57 & 0.43,\ 0.32 & 331 & None & $\overleftarrow{{\color[HTML]{8B0000}\text{exp}}}$ \\
-Funds Reallocated & 0.56 & 0.09 & 0.222 & 0.208 & 0.66 & 0.60 & 0.40,\ 0.24 & 331 & -0.01 & $\overleftarrow{{\color[HTML]{8B0000}\text{WB}}}$, $\overleftarrow{{\color[HTML]{8B0000}\text{exp}}}$, $\overleftarrow{{\color[HTML]{8B0000}\text{loan}}}$, $\overleftarrow{{\color[HTML]{8B0000}\text{scp}}}$ \\
-Funds Cancelled or Unutilized & 0.66 & 0.27 & 0.215 & 0.245 & 0.64 & 0.61 & 0.61,\ 0.58 & 331 & -0.29 & $\overrightarrow{{\color[HTML]{006400}\text{scp}}}$, $\overrightarrow{{\color[HTML]{006400}\text{exp}}}$ \\
-Over Budget & 0.64 & 0.22 & 0.239 & 0.243 & 0.58 & 0.56 & 0.44,\ 0.42 & 101 & -0.52 & $\overleftarrow{{\color[HTML]{8B0000}\text{dist}}}$, $\overleftarrow{{\color[HTML]{8B0000}U_z}}$, $\overleftarrow{{\color[HTML]{8B0000}\text{exp}}}$ \\
+Funds Cancelled or Unutilized* & 0.66 & 0.25 & 0.222 & 0.267 & 0.66 & 0.60 & 0.60,\ 0.47 & 200 & -0.33 & $\overrightarrow{{\color[HTML]{006400}\text{scp}}}$, $\overrightarrow{{\color[HTML]{006400}\text{exp}}}$ \\
+Improved Financial Performance* & 0.53 & 0.05 & 0.247 & 0.251 & 0.59 & 0.51 & 0.51,\ 0.47 & 200 & +0.02 & \textemdash \\
+High Disbursement* & 0.59 & 0.15 & 0.239 & 0.244 & 0.60 & 0.57 & 0.43,\ 0.42 & 200 & None & $\overleftarrow{{\color[HTML]{8B0000}\text{exp}}}$ \\
+Funds Reallocated* & 0.65 & 0.24 & 0.215 & 0.219 & 0.65 & 0.60 & 0.40,\ 0.29 & 200 & +0.04 & $\overleftarrow{{\color[HTML]{8B0000}\text{WB}}}$, $\overleftarrow{{\color[HTML]{8B0000}\text{exp}}}$, $\overleftarrow{{\color[HTML]{8B0000}\text{loan}}}$, $\overleftarrow{{\color[HTML]{8B0000}\text{scp}}}$ \\
+Over Budget & 0.62 & 0.18 & 0.232 & 0.231 & 0.61 & 0.56 & 0.44,\ 0.31 & 67 & -0.51 & $\overleftarrow{{\color[HTML]{8B0000}\text{dist}}}$, $\overleftarrow{{\color[HTML]{8B0000}U_z}}$, $\overleftarrow{{\color[HTML]{8B0000}\text{exp}}}$ \\
 \noalign{\vspace{0.5ex}}
 \multicolumn{11}{@{}l}{\textbf{Target Achievement}} \\
-Policy and Regulatory Reforms & 0.61 & 0.13 & 0.161 & 0.165 & 0.80 & 0.73 & 0.73,\ 0.80 & 221 & +0.50 & \textemdash \\
-Private Sector Engagement & 0.47 & -0.05 & 0.232 & 0.233 & 0.64 & 0.60 & 0.60,\ 0.64 & 121 & +0.34 & $\overrightarrow{{\color[HTML]{006400}\text{exp}}}$, $\overrightarrow{{\color[HTML]{006400}\text{dist}}}$ \\
-Targets Met or Exceeded & 0.56 & 0.10 & 0.233 & 0.238 & 0.62 & 0.59 & 0.41,\ 0.39 & 304 & +0.04 & $\overleftarrow{{\color[HTML]{8B0000}\text{exp}}}$ \\
-Capacity Building Delivered & 0.54 & 0.06 & 0.125 & 0.126 & 0.85 & 0.85 & 0.85,\ 0.85 & 263 & +0.48 & \textemdash \\
-High Beneficiary Satisfaction or Reach & 0.56 & 0.09 & 0.194 & 0.197 & 0.73 & 0.78 & 0.78,\ 0.73 & 256 & +0.10 & \textemdash \\
-Gender-Equitable Outcomes & 0.48 & -0.03 & 0.266 & 0.265 & 0.62 & 0.79 & 0.79,\ 0.62 & 201 & +0.41 & \textemdash \\
+Targets Met or Exceeded* & 0.58 & 0.14 & 0.243 & 0.254 & 0.57 & 0.58 & 0.42,\ 0.48 & 179 & +0.14 & $\overleftarrow{{\color[HTML]{8B0000}\text{exp}}}$ \\
+Capacity Building Delivered* & 0.62 & 0.16 & 0.125 & 0.127 & 0.85 & 0.84 & 0.84,\ 0.85 & 154 & +0.46 & \textemdash \\
+Gender-Equitable Outcomes & 0.51 & 0.01 & 0.192 & 0.191 & 0.75 & 0.80 & 0.80,\ 0.75 & 111 & +0.39 & \textemdash \\
+High Beneficiary Satisfaction or Reach & 0.52 & 0.03 & 0.150 & 0.150 & 0.82 & 0.79 & 0.79,\ 0.82 & 154 & +0.13 & \textemdash \\
+Policy and Regulatory Reforms & 0.58 & 0.09 & 0.174 & 0.175 & 0.78 & 0.72 & 0.72,\ 0.78 & 145 & +0.54 & \textemdash \\
+Private Sector Engagement & 0.50 & 0.01 & 0.233 & 0.232 & 0.65 & 0.59 & 0.59,\ 0.65 & 82 & +0.36 & $\overrightarrow{{\color[HTML]{006400}\text{exp}}}$, $\overrightarrow{{\color[HTML]{006400}\text{dist}}}$ \\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -1520,6 +1526,8 @@ There were several limitations in the methods which could be improved. While sig
 Despite the extensive use of information from each International Aid and Transparency Initiative set of pre-activity documents, much more information could have been extracted. There was limited experimentation with embeddings and optimizing the embedding space, as well as with different parameter sizes for UMAP. Only the targets and pre-activity summary were embedded, which ended up being among the most important features for the statistical model. A straightforward extension would be to embed the full language model grading reasoning traces from \emph{gpt-3.5-turbo}, which could provide useful features capturing information that cannot be summarized from a single grade. Other simple text features---such as the average word length in the documents, which may correlate with the quality of the pre-activity document itself---could have provided additional signal about the care with which the application was prepared. Legal and contractual documents were not used but could also have been incorporated.
 
 Extending the existing database using data from AidData could substantially increase the total number of activities, as AidData incorporates pre-activity and evaluation documents which are not reported directly to the International Aid and Transparency Initiative.
+
+One more speculative improvement could be to use time-dependent coefficients on the nonlinear models, which allow for the shifts in influence over time of different features to be captured and projected into the future, capturing the shifting influence of various factors in activity success over time as the importance of pre-activity aspects of projects changes.
 
 Another significant improvement would be to rerun the grading scheme multiple times and ensemble the results; this was not attempted due to the high API cost involved.
 
@@ -1624,23 +1632,19 @@ We conclude with a summary of how statistical models and LLM forecasting techniq
 \FloatBarrier
 \subsection{Summary of Experimental Methods}
 
-The table below summarises the key experimental methods tested in this thesis.
-\textcolor{green!60!black}{$\checkmark$}~indicates improvement on both the validation and held-out test set;
-\textcolor{red}{$\times$}~indicates the method did not generalise to the held-out test set (or failed on validation);
-{\color{gray}?}~indicates ambiguous, mixed, or no clear improvement.
-LLM forecast methods were assessed on the validation set only.
+Table \ref{sub:methodssummary} below summarises the key experimental methods tested in this thesis.
 
 \textbf{Statistical model (overall rating).}
-The baseline methods were a mode-of-organisation predictor and a ridge regression using only an LLM-generated risk grade and organisation identity.
+The baseline methods were a mode-of-organisation predictor and a ridge regression using only an LLM-generated risk grade and organisation identity. A random forest alone was inferior to the RF+ET ensemble on the validation set and was adopted as the experimental method.
 Experimental features added to the RF+ET ensemble included seven \emph{gpt-3.5-turbo}-generated grades (financing quality, integratedness, implementer performance, contextual challenge, risk, complexity, and ease of targeted outcomes), three-dimensional UMAP embeddings of LLM-generated target text, sector and country distance features derived from those embeddings, and budget allocations clustered into 15 sectors.
 A nearest-neighbour weighted average of training ratings was also tested as a direct predictor but did not improve over the mode baseline.
 Hyperparameter tuning to restrict tree depth and leaf size improved generalisation, as did averaging the RF and ET models.
-A linear ridge regression correction fitted on start year was applied to the ensemble output.
+A linear ridge regression correction fitted on start year was applied to the ensemble output, with improvements on the validation set but mixed results on the test set.
 On the held-out test set, combining the RF+ET forecast with the LLM forecast via simple averaging and via a calibrated ridge regression were both evaluated; neither improved reliably over the RF+ET alone.
-XGBoost was also assessed on the held-out set and underperformed RF+ET.
+XGBoost was also assessed on the validation set and held-out set and underperformed RF+ET in both cases.
 
 \textbf{LLM forecast (overall rating and narrative quality).}
-The baseline was a minimal single-stage prompt with activity metadata and a generated summary.
+The baseline was a minimal single-stage prompt with activity metadata and a generated summary. Surprisingly, this was the best performing method for overall ratings.
 Multi-stage prompting added two separate prior calls eliciting reasons the activity would go badly (S1) and reasons it would go well (S2), whose outputs were inserted into the final forecast context.
 KNN retrieval incorporated summarised mock forecasts of the three most semantically similar training activities, and RAG retrieval allowed the model to pull additional document excerpts it identified as relevant.
 Instructing the LLM to match the statistical model's predicted rating was the most effective single intervention for both narrative quality and rating accuracy.
@@ -1660,7 +1664,7 @@ XGBoost and LightGBM were assessed and underperformed RF+ET on every tag.
 
 \begin{table}[htbp]
 \centering
-\caption{Summary of experimental methods by outcome target.
+\caption{Summary of most promising experimental methods on validation set by outcome target.
 \textcolor{green!60!black}{$\checkmark$}~improved on validation and held-out test;
 \textcolor{red}{$\times$}~did not generalise to held-out test;
 {\color{gray}?}~ambiguous or no clear improvement.
@@ -1670,37 +1674,49 @@ By contrast, cost-effectiveness forecasts on the held-out test set and non-stati
 \label{tab:methods_summary}
 \small
 \renewcommand{\arraystretch}{1.35}
-\begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}p{3.3cm}
+\begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}p{6.6cm}
                                >{\raggedright\arraybackslash}X
-                               >{\centering\arraybackslash}p{1.1cm}@{}}
+                               >{\centering\arraybackslash}p{2.2cm}@{}}
 \toprule
-Outcome Target & Method & Result \\
+\textbf{Outcome Target}\newline Are forecasts viable? (\textcolor{green!60!black}{$\checkmark$} / \textcolor{gray}{?} / \textcolor{red}{$\times$})   & \textbf{Variants of best method on validation set assessed} & \textbf{Should variant be adopted?} \\
 \midrule
-\multirow{6}{3.1cm}{\textbf{Statistical Model (Overall Rating)}}
+\multirow{6}{6.2cm}{\textbf{Statistical Model (Overall Rating)}\newline\textcolor{green!60!black}{$\checkmark$} (generalizes to held-out test set with 95\% confidence using a permutation test)}
   & LLM-generated features                               & \textcolor{green!60!black}{$\checkmark$} \\
   & Restricted tree complexity (RF+ET tuning)            & \textcolor{green!60!black}{$\checkmark$} \\
-  & Linear ridge regression adjustment to RF based on start year & {\color{gray}?} \\
-  & Simple average with LLM forecast                    & {\color{gray}?} \\
+  & Linear ridge regression adjustment to RF based on start year & \textcolor{gray}{?} \\
+  & Simple average with LLM forecast                    & \textcolor{gray}{?} \\
   & LLM ridge adjustment of forecast                    & \textcolor{red}{$\times$} \\
   & XGBoost                                             & \textcolor{red}{$\times$} \\
-  & Simple average with LLM forecast                    & {\color{gray}---} \\
 \midrule
-\multirow{8}{3.1cm}{\textbf{LLM Forecast (Overall Rating)}}
-  & \multicolumn{2}{l}{\textit{Narrative quality (validation set):}} \\
-  & \quad LLM instructed to forecast statistical model's rating & \textcolor{green!60!black}{$\checkmark$} \\
-  & \quad S1 (reasons would go badly) \& S2 (reasons would go well) extra prompts & \textcolor{green!60!black}{$\checkmark$} \\
-  & \quad KNN few-shot retrieval                        & \textcolor{green!60!black}{$\checkmark$} \\
-  & \multicolumn{2}{l}{\textit{Rating accuracy (validation set):}} \\
-  & \quad S1/S2 additional reasoning                    & \textcolor{red}{$\times$} \\
-  & \quad KNN few-shot retrieval                        & {\color{gray}---} \\
-  & \quad Statistical model $\to$ LLM prompt            & \textcolor{green!60!black}{$\checkmark$} \\
+\multirow{8}{6.2cm}{\textbf{LLM Forecast (Overall Rating)}\newline{\color{gray}?} (did not perform better than RF+ET model for validation set for rating, but performed well for narrative forecasts. Temporal leakage detected in held-out set, nulling those forecasts)}
+  & \multicolumn{2}{l}{\textbf{Narrative quality (validation set):}} \\
+  & \hspace{1em}\parbox[t]{\dimexpr\linewidth-1em\relax}{LLM instructed to forecast statistical model's rating} & \textcolor{green!60!black}{$\checkmark$} \\
+  & \hspace{1em}\parbox[t]{\dimexpr\linewidth-1em\relax}{S1 (reasons would go badly) \& S2 (reasons would go well)} & \textcolor{green!60!black}{$\checkmark$} \\
+  & \quad KNN similar activities retrieval                        & \textcolor{green!60!black}{$\checkmark$} \\
+  & \quad RAG additional context retrieval                        & \textcolor{green!60!black}{$\checkmark$} \\
+  & \multicolumn{2}{l}{\textbf{Rating accuracy (validation set):}} \\
+  & \hspace{1em}\parbox[t]{\dimexpr\linewidth-1em\relax}{LLM instructed to forecast statistical model's rating} & \textcolor{green!60!black}{$\checkmark$} \\
+  & \hspace{1em}\parbox[t]{\dimexpr\linewidth-1em\relax}{S1 (reasons would go badly) \& S2 (reasons would go well)} & \textcolor{red}{$\times$} \\
+  & \quad KNN similar activities retrieval                        & \textcolor{red}{$\times$} \\
+  & \quad RAG additional context retrieval                        & \textcolor{red}{$\times$} \\
 \midrule
-\textbf{Cost-Effectiveness}
-  & No methods attempted for held-out test set: validation performance not above chance & \\
+\textbf{Cost-Effectiveness}\newline\textcolor{red}{$\times$} (no methods perform better than chance in validation or held-out set using 95\% permutation test)
+  & No methods attempted for held-out test set: validation and held-out set performance not above chance & \\
 \midrule
-\textbf{Outcome Tags}
+% \multirow{6}{6.2cm}{\textbf{Outcome Tags}\newline\textcolor{green!60!black}{$\checkmark$} (12/14 were better than chance under 95\% permutation test)}
+%   % & Start-year linear trend correction                   & \textcolor{green!60!black}{$\checkmark$} \\
+%   % & Tag group averaging (low-data tags)                  & \textcolor{green!60!black}{$\checkmark$} \\
+%   % & Tag-dependent class-weight balancing                 & \textcolor{green!60!black}{$\checkmark$} \\
+%   & Per-tag feature selection \& hyperparameter tuning  & \textcolor{red}{$\times$} \\
+%   % & LLM correction blend for tag probabilities           & \textcolor{red}{$\times$} \\
+%   % & XGBoost / LightGBM                                  & \textcolor{red}{$\times$} \\
+% \bottomrule
+% \midrule
+\textbf{Outcome Tags}\newline\textcolor{green!60!black}{$\checkmark$} (\NumberTagsBetterThanChance/14 were better than chance under 95\% permutation test)
   & Per-tag features \& regularization                  & \textcolor{red}{$\times$} \\
 \bottomrule
+
+
 \end{tabularx}
 \end{table}
 
@@ -1746,7 +1762,7 @@ Outcome Target & Method & Result \\
 %   & \quad S1 (reasons would go badly) \& S2 (reasons would go well) extra prompts & \textcolor{green!60!black}{$\checkmark$} \\
 %   & \quad KNN few-shot retrieval                        & \textcolor{green!60!black}{$\checkmark$} \\
 %   & \quad RAG document retrieval                        & \textcolor{green!60!black}{$\checkmark$} \\
-%   & \quad LLM instructed to forecast statistical model's rating & \textcolor{green!60!black}{$\checkmark$} \\
+%   & \hspace{1em}\parbox[t]{\dimexpr\linewidth-1em\relax}{LLM instructed to forecast statistical model's rating} & \textcolor{green!60!black}{$\checkmark$} \\
 %   & \quad Fine-tuning (DPO, \emph{gemini-2.5-flash})   & $\sim$ \\
 %   & \quad Larger model (\emph{gemini-3-pro})             & \textcolor{green!60!black}{$\checkmark$} \\
 %   & \quad Ensembling LLM forecasts                      & \textcolor{red}{$\times$} \\
@@ -1755,7 +1771,7 @@ Outcome Target & Method & Result \\
 %   & \quad S1 (reasons would go badly) \& S2 (reasons would go well) extra prompts & \textcolor{red}{$\times$} \\
 %   & \quad KNN few-shot retrieval                        & {\color{gray}---} \\
 %   & \quad RAG document retrieval                        & {\color{gray}---} \\
-%   & \quad LLM instructed to forecast statistical model's rating & \textcolor{green!60!black}{$\checkmark$} \\
+%   & \hspace{1em}\parbox[t]{\dimexpr\linewidth-1em\relax}{LLM instructed to forecast statistical model's rating} & \textcolor{green!60!black}{$\checkmark$} \\
 %   & \quad Fine-tuning (DPO, \emph{gemini-2.5-flash})   & \textcolor{red}{$\times$} \\
 %   & \quad Larger model (\emph{gemini-3-pro})             & \textcolor{green!60!black}{$\checkmark$} \\
 %   & \quad Ensembling LLM forecasts                      & \textcolor{red}{$\times$} \\
