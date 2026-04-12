@@ -1673,6 +1673,7 @@ Outcome Target & Method & Result \\
   & Simple average with LLM forecast                    & {\color{gray}?} \\
   & LLM ridge adjustment of forecast                    & \textcolor{red}{$\times$} \\
   & XGBoost                                             & \textcolor{red}{$\times$} \\
+  & Simple average with LLM forecast                    & {\color{gray}---} \\
 \midrule
 \multirow{8}{3.1cm}{\textbf{LLM Forecast (Overall Rating)}}
   & \multicolumn{2}{l}{\textit{Narrative quality (validation set):}} \\
@@ -1680,9 +1681,9 @@ Outcome Target & Method & Result \\
   & \quad S1 (reasons would go badly) \& S2 (reasons would go well) extra prompts & \textcolor{green!60!black}{$\checkmark$} \\
   & \quad KNN few-shot retrieval                        & \textcolor{green!60!black}{$\checkmark$} \\
   & \multicolumn{2}{l}{\textit{Rating accuracy (validation set):}} \\
-  & \quad LLM instructed to forecast statistical model's rating & \textcolor{green!60!black}{$\checkmark$} \\
-  & \quad S1 (reasons would go badly) \& S2 (reasons would go well) extra prompts & \textcolor{red}{$\times$} \\
-  & \quad KNN few-shot retrieval                        & \textcolor{red}{$\times$} \\
+  & \quad S1/S2 additional reasoning                    & \textcolor{red}{$\times$} \\
+  & \quad KNN few-shot retrieval                        & {\color{gray}---} \\
+  & \quad Statistical model $\to$ LLM prompt            & \textcolor{green!60!black}{$\checkmark$} \\
 \midrule
 \textbf{Cost-Effectiveness}
   & No methods attempted for held-out test set: validation performance not above chance & \\
