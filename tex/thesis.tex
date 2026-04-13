@@ -89,14 +89,14 @@
 \input{\dictfile}
 \makeatother
 
-% --- Load the dictionary with a safe fallback ---
+%:Load the dictionary with a safe fallback ---
 \makeatletter
 \edef\dictfile{macros/dictionary-\DICT.tex}
 %\typeout{Using dictionary: \dictfile}%
 \input{\dictfile}
 \makeatother
 
-% --- Simple conditional helpers based on \DICT ---
+%:Simple conditional helpers based on \DICT ---
 \newcommand{\ifdev}[1]{%
   \IfStrEq{\DICT}{development}{#1}{}%
 }
@@ -764,7 +764,7 @@ The algorithm incorporates both L1 and L2 regularization terms to penalize model
 
 \textbf{LLM-generated scores}
 
-Seven additional features were extracted as \emph{gpt-3.5-turbo}-generated scores (0--100) from pre-activity project document PDFs, to enrich the feature set with information available at the start of the activity. GPT-3.5-turbo was used to reduce leakage of information after the September 2021 model cutoff date. Inspection of grades did not reveal significant usage of knowledge that would not be available at the beginning of the activity. The majority of activities in the test set ended after the model cutoff date. These seven features were based on important aspects revealed by the literature review and consultation. One novel feature was added: ease of targeted outcomes. Unlike technical complexity, which captures only one dimension of difficulty, or overall risk, which aggregates financial, legal, and regulatory threat sources, ease of targeted outcomes is distinct. It specifically reflects whether the activity's intended outputs are inherently measurable and achievable given typical implementation constraints---a factor theorized to independently contribute to evaluation success.
+Seven additional features were extracted as \emph{gpt-3.5-turbo}-generated scores (0--100) from pre-activity project document PDFs, to enrich the feature set with information available at the start of the activity. GPT-3.5-turbo was used to reduce leakage of information after the September 2021 model cutoff date. Inspection of grades did not reveal significant usage of knowledge that would not be available at the beginning of the activity. The majority of activities in the test set ended after the model cutoff date. These seven features were based on important aspects revealed by the literature review and consultation. One novel feature was added: ease of targeted outcomes. Unlike technical complexity, which captures only one dimension of difficulty, or overall risk, which aggregates financial, legal, and regulatory threat sources, ease of targeted outcomes is distinct. It specifically reflects whether the activity's intended outputs are inherently measurable and achievable given typical implementation constraints, a factor theorized to independently contribute to evaluation success.
 
 The features added for this method included the seven features and one interaction term
 
@@ -955,13 +955,13 @@ Finally, the distribution of rating outcomes was inserted into the prompt, to pr
 The full prompt is composed of the following blocks, assembled in the order listed:
 
 \begin{enumerate}[noitemsep,topsep=2pt]
-  \item \textbf{Activity metadata} --- title, planned start/end dates, scope, planned disbursement (USD), location(s), GDP per capita, reporting organisation.
-  \item \textbf{Baseline description \& targets} --- a \emph{gemini-2.5-flash}-generated activity description, targets summary, contextual challenge description, complexity details, integratedness description, financing summary, and implementer-performance context.
-  \item \textbf{Risk summary} --- a \emph{gemini-2.5-flash}-generated structured summary of key project risks.
-  \item \textbf{Retrieved baseline excerpts (RAG)} --- additional activity-specific information retrieved by the model from the available documents and synthesised into a short passage (\texttt{\{rag\_synthesis\_additional\_info\}}).
-  \item \textbf{KNN few-shot block} --- summarised mock forecasts of the three most semantically similar training activities, one from each broad rating tier (see Section~\ref{ssub:nearest_neighbor_vector_similarity}).
-  \item \textbf{Multi-stage reasoning (S1/S2)} --- outputs of two prior LLM calls: reasons the activity may have been rated ``Moderately Satisfactory'' or worse (S1) and reasons it may have been rated ``Satisfactory'' or ``Highly Satisfactory'' (S2). This left approximately 50\% if responses above and below the threshold for consideration.
-  \item \textbf{Rating distribution prior} --- a short description of the empirical distribution of rating outcomes in the training data, prepended to the scratchpad method instruction block (not appended as the final block).
+  \item \textbf{Activity metadata}:title, planned start/end dates, scope, planned disbursement (USD), location(s), GDP per capita, reporting organisation.
+  \item \textbf{Baseline description \& targets}:a \emph{gemini-2.5-flash}-generated activity description, targets summary, contextual challenge description, complexity details, integratedness description, financing summary, and implementer-performance context.
+  \item \textbf{Risk summary}:a \emph{gemini-2.5-flash}-generated structured summary of key project risks.
+  \item \textbf{Retrieved baseline excerpts (RAG)}:additional activity-specific information retrieved by the model from the available documents and synthesised into a short passage (\texttt{\{rag\_synthesis\_additional\_info\}}).
+  \item \textbf{KNN few-shot block}:summarised mock forecasts of the three most semantically similar training activities, one from each broad rating tier (see Section~\ref{ssub:nearest_neighbor_vector_similarity}).
+  \item \textbf{Multi-stage reasoning (S1/S2)}:outputs of two prior LLM calls: reasons the activity may have been rated ``Moderately Satisfactory'' or worse (S1) and reasons it may have been rated ``Satisfactory'' or ``Highly Satisfactory'' (S2). This left approximately 50\% if responses above and below the threshold for consideration.
+  \item \textbf{Rating distribution prior}:a short description of the empirical distribution of rating outcomes in the training data, prepended to the scratchpad method instruction block (not appended as the final block).
 \end{enumerate}
 
 The full prompt template for the LLM Forecast is shown in Figure~\ref{fig:forecast-prompt-multistage}. LLMs in all prompts were instructed to ``think like a superforecaster'' \citep{tetlockSuperforecastingArtScience2015}. Superforecasters typically outperform domain experts by maintaining broad judgement and cultivating calibrated probability estimates, rather than relying on a single strategy such as econometric analysis. This replicates prior methods which found this instruction to be the highest performing in the geopolitical domain \cite{halawiApproachingHumanLevelForecasting2024}.
@@ -1344,7 +1344,7 @@ Plain OLS GLM & -0.136 & 0.987 & 0.767 & 0.410 & 0.054 & 0.529 \\[3pt]
 
 SHAP (SHapley Additive exPlanations) is used to interpret model predictions by attributing changes in the output to individual features using Shapley values. For each observation, SHAP decomposes the prediction into a baseline (the mean model output) plus additive feature contributions. Each feature’s SHAP value represents its average marginal contribution across all possible feature subsets.
 
-SHAP analysis reveals that increased planned expenditure and decreased duration strongly correlate with activity success. The reporting organization dummy variable---in this case identifying World Bank activities, which have below-average ratings in this dataset---was among the most important features. The urban/rural indicator from the embeddings tended to decrease ratings, indicating that activities with less typical objectives for their context tended to perform worse. Contextual challenge weakly shifted ratings downwards, while ease of targets shifted predictions upwards. Projects spanning many countries tended to perform slightly worse.
+SHAP analysis reveals that increased planned expenditure and decreased duration strongly correlate with activity success. The reporting organization dummy variable, here identifying World Bank activities with below-average ratings in this dataset, was among the most important features. The urban/rural indicator from the embeddings tended to decrease ratings, indicating that activities with less typical objectives for their context tended to perform worse. Contextual challenge weakly shifted ratings downwards, while ease of targets shifted predictions upwards. Projects spanning many countries tended to perform slightly worse.
 
 \begin{figure}[!htbp]
   \centering
@@ -1522,7 +1522,7 @@ Another major change in the direction of the research was in the choice of scori
 \subsection{Limitations}
 Several limitations in the methodology could be addressed in future work. While significant attention was paid to assessing future leakage risk, LLM grades used as features for statistical forecasts may still inadvertently leak signals from post-activity information, such as rating the context as more difficult because of information that could not be known at the time of approval. Lastly, the dataset used was of limited size, limiting the statistical strength of conclusions. A further limitation is that BMZ pre-approval documents were unavailable, so the LLM was instructed to extract data from evaluation documents while minimizing temporal leakage. The held-out set demonstrated a slight performance improvement in forecasting BMZ outcomes, which may have to do with this limitation.
 
-Despite extensive use of IATI pre-activity documents, more information could have been extracted. There was limited experimentation with embeddings and optimizing the embedding space, as well as with different parameter sizes for UMAP. Only the targets and pre-activity summary were embedded, which ended up being among the most important features for the statistical model. A straightforward extension would be to embed the full language model grading reasoning traces from \emph{gpt-3.5-turbo}, which could provide useful features capturing information that cannot be summarized from a single grade. Other simple text features---such as the average word length in the documents, which may correlate with the quality of the pre-activity document itself---could have provided additional signal about the care with which the application was prepared. Legal and contractual documents were not used but could also have been incorporated.
+Despite extensive use of IATI pre-activity documents, more information could have been extracted. There was limited experimentation with embeddings and optimizing the embedding space, as well as with different parameter sizes for UMAP. Only the targets and pre-activity summary were embedded, which ended up being among the most important features for the statistical model. A straightforward extension would be to embed the full language model grading reasoning traces from \emph{gpt-3.5-turbo}, which could provide useful features capturing information that cannot be summarized from a single grade. Other simple text features, such as the average word length in the documents (which may correlate with the quality of the pre-activity document itself), could have provided additional signal about the care with which the application was prepared. Legal and contractual documents were not used but could also have been incorporated.
 
 Extending the existing database using data from AidData could substantially increase the total number of activities, as AidData incorporates pre-activity and evaluation documents which are not reported directly to the International Aid and Transparency Initiative.
 
@@ -1540,13 +1540,13 @@ A related conceptual limitation is that the model forecasts evaluator ratings, n
 
 The training data covers only the environmental and sustainability subset of IATI, roughly 20\% of the full database. Even setting aside the quantity argument made in the Extensions section, it is unclear whether the learned feature importances generalize to activities in health, education, or infrastructure, which may have structurally different risk profiles and evaluation criteria.
 
-No baseline from experienced development professionals making judgmental forecasts was available for comparison. The closest proxy is the ridge regression on the LLM-graded overall risk and reporting organisation (\emph{Ridge Baseline (risks + org only)}), which achieved \PairwiseHuman\,\% pairwise ranking on the held-out set---only just above chance---suggesting that reading stated risks alone provides little forecasting power. A proper expert judgmental baseline would more directly situate the statistical system relative to current practitioner decisions, and would be a valuable addition in future work.
+No baseline from experienced development professionals making judgmental forecasts was available for comparison. The closest proxy is the ridge regression on the LLM-graded overall risk and reporting organisation (\emph{Ridge Baseline (risks + org only)}), which achieved \PairwiseHuman\,\% pairwise ranking on the held-out set, only just above chance, suggesting that reading stated risks alone provides little forecasting power. A proper expert judgmental baseline would more directly situate the statistical system relative to current practitioner decisions, and would be a valuable addition in future work.
 
 \subsection{Extensions and Future Work}
 \textbf{More data} A straightforward extension of this work would be to include the entire IATI database, rather than the  $\sim$20\% of the dataset pertaining to the environment and sustainability. Fitting an exponential saturation curve to performance improvements and extrapolating to the remaining IATI records suggests that the 14 tags would show average improvements in within-group ranking probability from the current average of \PairwiseModel \% to \PairwiseModelExtrapolated \%, and overall ratings from the current \OutcomeTagPairwiseAvg \% to \OutcomeTagPairwiseAvgExtrapolated \%.
 
 \textbf{Cross-organization and real-time application}
-The method is not limited to BMZ but could be applied to a range of other organizations---such as the World Bank---wherever sufficient evaluation data are available. The overlap in effectiveness data between organizations suggests that cross-organization models are feasible and beneficial: an organization such as BMZ may not have enough labeled evaluations on its own to train a reliable model, but the combined dataset of BMZ and World Bank records may be sufficient. Such a pooled model can transfer predictive signal learned from one reporting organization to another, improving forecasting performance for data-sparse donors. The method could also be applied in real-time: the underlying database could update automatically as new activities are published to IATI, and forecasting models could be evaluated on a rolling basis. Once a sufficient volume of new evaluation data accumulates after a model's training cutoff, the argument against temporal leakage becomes considerably stronger, providing a cleaner basis for assessing true out-of-sample performance.
+The method is not limited to BMZ but could be applied to a range of other organizations, such as the World Bank, wherever sufficient evaluation data are available. The overlap in effectiveness data between organizations suggests that cross-organization models are feasible and beneficial: an organization such as BMZ may not have enough labeled evaluations on its own to train a reliable model, but the combined dataset of BMZ and World Bank records may be sufficient. Such a pooled model can transfer predictive signal learned from one reporting organization to another, improving forecasting performance for data-sparse donors. The method could also be applied in real-time: the underlying database could update automatically as new activities are published to IATI, and forecasting models could be evaluated on a rolling basis. Once a sufficient volume of new evaluation data accumulates after a model's training cutoff, the argument against temporal leakage becomes considerably stronger, providing a cleaner basis for assessing true out-of-sample performance.
 
 \textbf{Policy and legislation}
 The codebase developed here can be extended beyond Earth system science to other domains where impact forecasts are useful. A similar system could be applied with relatively little modification to public health, finance, and policy evaluation. Assessing the impact of policies before they are enacted is one clear use case. Paired legislative and evaluation data already exist across multiple jurisdictions, though
@@ -1719,7 +1719,7 @@ By contrast, cost-effectiveness forecasts on the held-out test set and non-stati
 \end{tabularx}
 \end{table}
 
-% --- Detailed methods comparison (all methods tried, 3-column format) ---
+%:Detailed methods comparison (all methods tried, 3-column format) ---
 %
 % \begin{table}[htbp]
 % \centering
