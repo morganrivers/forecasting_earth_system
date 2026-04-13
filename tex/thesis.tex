@@ -1173,7 +1173,7 @@ The ridge model takes both the RF+ET prediction and the LLM Forecast as inputs f
 The percent of the time the correct rating is forecast. Non-integers are rounded to integers for overall ratings. While accuracy has the advantage of intuitive simplicity, it is not strictly proper \citep{gneitingStrictlyProperScoring2007}, meaning that maximizing the model accuracy may not maximize a model's reported true belief about the probability of an outcome. This can be problematic when being used to select between models.
 
 \textbf{RMSE (Root Mean Square Error)}
-The square root of the mean squared difference between each prediction and the true value. Lower is better. Since ratings range from 1 to 6, the maximum possible RMSE is 5. This metric heavily penalizes large errors. RMSE is only used in this work for overall ratings.
+The square root of the mean of the squared differences between each prediction and the true value; a measure of average error. Lower is better. Since ratings range from 1 to 6, the maximum possible RMSE is 5. This metric heavily penalizes large errors. RMSE is only used in this work for overall ratings.
 
 \textbf{MAE (Mean Absolute Error)}
 The mean of the absolute residuals between predictions and true values. Lower is better; the maximum is 5 since ratings range from 1 to 6. For overall success ratings, MAE tends to favor integer-rounded predictions, which are often exactly correct, over the continuous outputs of statistical models. Unlike RMSE, MAE does not disproportionately penalize large errors. MAE is only used in this work for overall success ratings.
@@ -1446,9 +1446,9 @@ No consistent difference was found between \emph{gemini-2.5-flash} and \emph{dee
 
 \FloatBarrier
 \subsection{Forecasting Cost-Effectiveness}
-When normalizing by total expenditure reported in IATI, the correlation of aggregate cost-effectiveness Z-scores with the baseline is not statistically significant.
+When dividing by total expenditure reported in IATI, the correlation of aggregate cost-effectiveness Z-scores with the baseline is not statistically significant.
 
-Extracting sufficient data for reliable cost-effectiveness prediction proved more challenging than anticipated. Obtaining cost-effectiveness metrics also proved more challenging than obtaining ratings, contrary to claims in prior literature \citep{goldembergMindingGapAid2025}. 
+Precisely extracting cost-effectiveness proved more difficult than extracting ratings, owing to inconsistent reporting and unit definitions. \citet{goldembergMindingGapAid2025} found cost-effectiveness easier to forecast than overall ratings; the inverse was found here: cost-effectiveness forecasting did not exceed chance, whereas rating forecasting achieved statistically significant above-chance performance. 
 
 Omitting the division by total disbursement increased predictability. This is partly because total expenditure is noisy, and because, without dividing by expenditure, the model learns that higher expenditure correlates with higher cost-effectiveness. 
 
