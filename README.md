@@ -1,4 +1,4 @@
-# [Latest paper version (Work in progress)](https://github.com/morganrivers/forecasting_earth_system/blob/previews/master/thesis.pdf)
+# [Latest paper version (Completed!)](https://github.com/morganrivers/forecasting_earth_system/blob/previews/master/thesis.pdf)
 [![CI](https://github.com/morganrivers/forecasting_earth_system/actions/workflows/CI.yml/badge.svg)](https://github.com/morganrivers/forecasting_earth_system/actions/workflows/CI.yml) [[__View Paper Preview__](https://github.com/morganrivers/forecasting_earth_system/blob/previews/master/thesis.pdf)]
 
 ## What's the deal with this repository?
